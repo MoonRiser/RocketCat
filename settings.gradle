@@ -1,0 +1,2 @@
+rootProject.name='RocketCat'
+include ':app'
