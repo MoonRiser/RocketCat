@@ -1,7 +1,8 @@
-package com.example.rocketcat
+package com.example.rocketcat.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.rocketcat.R
 
 class MainActivity : AppCompatActivity() {
 
