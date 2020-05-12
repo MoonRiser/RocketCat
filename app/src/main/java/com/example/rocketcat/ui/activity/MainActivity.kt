@@ -1,13 +1,12 @@
 package com.example.rocketcat.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.example.rocketcat.R
+import com.example.rocketcat.base.BaseActivity
+import com.example.rocketcat.base.BaseViewModel
+import com.example.rocketcat.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<BaseViewModel,ActivityMainBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
+    override fun layoutId() = R.layout.activity_main
+
 }
