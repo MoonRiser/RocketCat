@@ -19,10 +19,10 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
     private var isFirst: Boolean = true
 
     //该类负责绑定视图数据的Viewmodel
-    lateinit var mViewModel: VM
+    lateinit var viewModel: VM
 
     //该类绑定的ViewDataBinding
-    lateinit var mDatabind: DB
+    lateinit var dataBinding: DB
 
     /**
      * 当前Fragment绑定的视图布局
@@ -34,14 +34,14 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mDatabind = DataBindingUtil.inflate(inflater, layoutId(), container, false)
-        mDatabind.lifecycleOwner = this
-        return mDatabind.root
+        dataBinding= DataBindingUtil.inflate(inflater, layoutId(), container, false)
+        dataBinding.lifecycleOwner = this
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel = createViewModel()
+        viewModel= createViewModel()
         initView(savedInstanceState)
         onVisible()
         initData()
@@ -70,7 +70,7 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
     /**
      * 懒加载
      */
-    abstract fun lazyLoadData()
+    open fun lazyLoadData(){}
 
     /**
      * 创建观察者
