@@ -39,6 +39,7 @@ dependencies {
     //jetpack Room
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$room_version"
 
     def dynamicanimation_version = "1.0.0"
