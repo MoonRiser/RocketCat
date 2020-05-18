@@ -18,6 +18,12 @@
         android:title="Bubble"
         />
 
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="Setting"
+        />
+
 
 
 </menu>

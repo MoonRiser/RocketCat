@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
+abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
 
 
     //是否第一次加载
@@ -34,14 +34,14 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dataBinding= DataBindingUtil.inflate(inflater, layoutId(), container, false)
+        dataBinding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
         dataBinding.lifecycleOwner = this
         return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel= createViewModel()
+        viewModel = createViewModel()
         initView(savedInstanceState)
         onVisible()
         initData()
@@ -57,8 +57,7 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
      */
     private fun createViewModel(): VM {
         return ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory(this.requireActivity().application)
+            this
         ).get(getVmClazz(this))
     }
 
@@ -70,7 +69,7 @@ abstract class BaseFragment<VM:ViewModel,DB:ViewDataBinding> : Fragment() {
     /**
      * 懒加载
      */
-    open fun lazyLoadData(){}
+    open fun lazyLoadData() {}
 
     /**
      * 创建观察者

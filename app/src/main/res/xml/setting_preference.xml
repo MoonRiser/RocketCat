@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="base"
+        android:title="基本设置">
+        <Preference
+            android:key="cache"
+            android:title="清除缓存"/>
+        <Preference
+            android:key="logout"
+            android:title="登出"
+            android:summary="退出登录"/>
+    </PreferenceCategory>
+</PreferenceScreen>

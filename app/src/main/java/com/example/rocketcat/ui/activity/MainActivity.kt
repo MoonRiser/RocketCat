@@ -11,6 +11,7 @@ import com.example.rocketcat.ext.init
 import com.example.rocketcat.ui.fragment.BubbleFragment
 import com.example.rocketcat.ui.fragment.DashboardFragment
 import com.example.rocketcat.ui.fragment.HomeFragment
+import com.example.rocketcat.ui.fragment.SettingFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
@@ -20,6 +21,7 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
     private val homeFragment: HomeFragment by lazy { HomeFragment() }
     private val dashboardFragment: DashboardFragment by lazy { DashboardFragment() }
     private val bubbleFragment: BubbleFragment by lazy { BubbleFragment() }
+    private val settingFragment: SettingFragment by lazy { SettingFragment() }
 
 
     init {
@@ -27,6 +29,7 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
             add(homeFragment)
             add(dashboardFragment)
             add(bubbleFragment)
+            add(settingFragment)
         }
     }
 
@@ -52,6 +55,10 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
                     }
                     R.id.navigation_bubble -> {
                         vp2_home.setCurrentItem(2, false)
+                        true
+                    }
+                    R.id.navigation_setting -> {
+                        vp2_home.setCurrentItem(3, false)
                         true
                     }
                     else -> false

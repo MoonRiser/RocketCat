@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseActivity<VM : ViewModel ,DB:ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatActivity() {
 
 
-    lateinit var viewModel:VM
+    lateinit var viewModel: VM
     lateinit var dataBinding: DB
 
 
@@ -28,29 +28,20 @@ abstract class BaseActivity<VM : ViewModel ,DB:ViewDataBinding> : AppCompatActiv
     }
 
 
-
-
-
     /**
      * 创建viewModel
      */
     private fun createViewModel(): VM {
         return ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory(application)
+            this
         ).get(getVmClazz(this))
     }
 
 
-
-
-   @Suppress("UNCHECKED_CAST")
-   private fun <VM> getVmClazz(obj: Any): VM {
+    @Suppress("UNCHECKED_CAST")
+    private fun <VM> getVmClazz(obj: Any): VM {
         return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as VM
     }
-
-
-
 
 
 }
