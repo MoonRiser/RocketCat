@@ -18,9 +18,10 @@ class HomeFragment : BaseFragment<BaseViewModel, FragmentHomeBinding>() {
 
     init {
 
-        repeat(5) {
+        repeat(4) {
             fragments.add(Tab1Fragment())
         }
+        fragments.add(Tab2Fragment())
     }
 
 
