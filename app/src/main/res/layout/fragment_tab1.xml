@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
-    </data>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,6 +12,37 @@
             android:textSize="24sp"
             android:layout_centerInParent="true"/>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="8dp"
+            app:errorEnabled="true"
+            app:endIconMode="clear_text"
+            app:passwordToggleEnabled="true"
+            app:counterEnabled="true"
+            app:counterMaxLength="8">
+
+            <EditText
+                android:id="@+id/ETpwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="8"
+                android:hint="请输入密码"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/bt_test"
+            android:text="test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
     </RelativeLayout>
+
+
 
 </layout>
