@@ -41,4 +41,6 @@ class ChoiceDialogAdapter(val viewPager2: ViewPager2) :
     } else {
         DIALOG_TWO
     }
+
+
 }

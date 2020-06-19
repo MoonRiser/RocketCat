@@ -18,7 +18,7 @@ class Tab1Fragment : BaseFragment<BaseViewModel, FragmentTab1Binding>() {
     override fun initView(savedInstanceState: Bundle?) {
 
         val viewPager2 = ViewPager2(requireActivity()).apply {
-            adapter = ChoiceDialogAdapter()
+//            adapter = ChoiceDialogAdapter()
         }
 
 

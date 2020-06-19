@@ -29,7 +29,7 @@ fun ViewPager2.init(
 ): ViewPager2 {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
-    this.offscreenPageLimit = 1
+    this.offscreenPageLimit = offscreenPageLimit
     //设置适配器
     adapter = object : FragmentStateAdapter(activity) {
         override fun createFragment(position: Int) = fragments[position]

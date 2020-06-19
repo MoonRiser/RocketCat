@@ -1,8 +1,8 @@
-package com.example.rocketcat.dialog
+package com.szlanyou.iov.common.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.TypedValue
@@ -14,122 +14,156 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.LifecycleOwner
-import com.example.rocketcat.ext.dpValue
-import com.example.rocketcat.utils.dp2px
-
+import com.szlanyou.iov.common.ext.DialogCallback
+import com.szlanyou.iov.common.ext.dpValue
+import com.szlanyou.iov.common.utils.AndroidUtil
+import com.szlanyou.iov.common.utils.dp2px
+import com.szlanyou.nissaniov.dialog.DialogLifecycleObserver
 
 /**
  * @Author:         Xres
  * @CreateDate:     2020/5/18 10:44
  * @Description:
  */
-typealias Callback = () -> Unit
-
-class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context) {
 
 
-    private var root: LinearLayout
+open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialog(context) {
+
+
+
 
     init {
         apply {
             setCanceledOnTouchOutside(builder.canBeCancledOutside)
-            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            builder.windowsAnimation?.let { window?.setWindowAnimations(it) }
         }
-
         builder.lifecycleOwner?.lifecycle?.addObserver(DialogLifecycleObserver(::dismiss))
 
-        val linearLayout = LinearLayout(getContext()).apply {
-            layoutParams = ViewGroup.LayoutParams(dp2px(300F), ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun onAttachedToWindow() {
+        window?.apply {
+            setBackgroundDrawableResource(android.R.color.transparent)
+            setGravity(builder.gravity)
+            attributes = attributes.apply {
+                width = builder.fullScreenWidth.let {
+                    if (it) {
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    } else {
+                        (AndroidUtil.getScreenSize().x * 0.8f).toInt()
+                    }
+                }
+                height = builder.ratioScreenHeight.let {
+                    if (it == 0f) {
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    } else {
+                        (AndroidUtil.getScreenSize().y * it).toInt()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //根线性布局
+        val linearLayout = LinearLayout(context).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            gravity = Gravity.CENTER_HORIZONTAL
             orientation = LinearLayout.VERTICAL
             background = GradientDrawable().apply {
                 setColor(builder.bgColor)
                 cornerRadius = builder.roundCorner.dpValue().toFloat()
             }
         }
-
-        builder.title?.let {
-            TextView(getContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    topMargin = dp2px(25f)
-                }
+        //标题布局、 包括标题和副标题
+        val titleView: View = builder.title?.let {
+            val title = TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT)
                 text = builder.title
                 gravity = Gravity.CENTER_HORIZONTAL
-                setTextColor(Color.BLACK)
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f)
+                setTextColor(builder.titleColor)
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
             }
-        }?.also { linearLayout.addView(it) }
+            val subTitle = builder.subTitle?.let {
+                TextView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                        topMargin = dp2px(10f)
+                    }
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    text = it
+                    setTextColor(builder.titleColor)
+                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15f)
+                }
+            }
+            LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    topMargin = dp2px(20f)
+                }
+            }.apply {
+                addView(title)
+                subTitle?.also { addView(it) }
+            }
 
-        val middleContent: View = builder.customView?.apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
+        } ?: TextView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                10f.dpValue())
+        }
+        //中间布局、文字内容或者自定义布局二选一
+        val middleContent: View = onCreateCustomView(context) ?: builder.customView?.apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-        } ?: TextView(getContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(20f.dpValue(), 25f.dpValue(), 20f.dpValue(), 25f.dpValue())
-                gravity = Gravity.CENTER
+        } ?: TextView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(30f.dpValue(), 10f.dpValue(), 30f.dpValue(), 20f.dpValue())
             }
             text = builder.content
-            setLineSpacing(10f.dpValue().toFloat(), 1f)
-            setTextColor(Color.BLACK)
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15f)
+            minHeight = 56f.dpValue()
+            gravity = Gravity.CENTER_VERTICAL
+            setLineSpacing(6f.dpValue().toFloat(), 1f)
+            setTextColor(Color.parseColor("#353535"))
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
         }
-
-        linearLayout.addView(middleContent)
-
-        val divider1 = View(getContext()).apply {
-            layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dpValue())
+        linearLayout.apply {
+            addView(titleView)
+            addView(middleContent)
+        }
+        //横向的分割线
+        val divider1 = View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dpValue())
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
-
         val cornerRadius = builder.roundCorner.dpValue().toFloat()
-        val linearLayout2 = LinearLayout(getContext()).apply {
+        //按钮布局
+        val bottomLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50f.dpValue())
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dpValue())
             background = GradientDrawable().apply {
                 setColor(Color.WHITE)
-                cornerRadii = floatArrayOf(
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    cornerRadius,
-                    cornerRadius,
-                    cornerRadius,
-                    cornerRadius
-                )
+                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
             }
         }
-
         val tvLeft = builder.textLeft?.let {
-            TextView(getContext()).apply {
+            TextView(context).apply {
                 text = builder.textLeft
                 gravity = Gravity.CENTER
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
                 setTextColor(builder.textLeftColor)
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    1F
-                )
+                setTypeface(null, Typeface.BOLD)
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F)
                 setOnClickListener {
-                    cancel()
-                    builder.leftOnClickListener?.invoke()
+                    builder.leftOnClickListener?.onClick(this@CustomDialog) ?: dismiss()
                 }
             }
         }
-
         val tvRight = builder.textRight?.let {
 
             TextView(getContext()).apply {
@@ -137,55 +171,46 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
                 gravity = Gravity.CENTER
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
                 setTextColor(builder.textRightColor)
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    1F
-                )
+                setTypeface(null, Typeface.BOLD)
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F)
                 setOnClickListener {
-                    builder.rightOnClickListener?.invoke()
-                    dismiss()
+                    builder.rightOnClickListener?.onClick(this@CustomDialog)
                 }
 
             }
         }
-
-        val divider2 = View(getContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(1f.dpValue(), 24f.dpValue())
-                .apply { gravity = Gravity.CENTER }
+        val divider2 = View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(1f.dpValue(), 24f.dpValue()).apply { gravity = Gravity.CENTER }
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
-
-
         val button = tvLeft?.also {
             linearLayout.addView(divider1)
-            linearLayout2.addView(tvLeft)
+            bottomLayout.addView(tvLeft)
             tvRight?.also {
-                linearLayout2.addView(divider2)
-                linearLayout2.addView(tvRight)
+                bottomLayout.addView(divider2)
+                bottomLayout.addView(tvRight)
             }
         } ?: tvRight?.also {
             linearLayout.addView(divider1)
-            linearLayout2.addView(tvRight)
+            bottomLayout.addView(tvRight)
         }
-
-        root = linearLayout.apply {
+        val root = linearLayout.apply {
             button?.let {
-                addView(linearLayout2)
+                addView(bottomLayout)
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setContentView(root)
     }
 
-    class Builder(val context: Context) {
+    open fun onCreateCustomView(context: Context): View? = null
 
-        private var dialog: Dialog? = null
+    open class Builder(val context: Context) {
+
+//        private var dialog: CustomDialog? = null
 
         var title: String? = null
+            private set
+        var subTitle: String? = null
             private set
         var content: String = "assert content not be empty"
             private set
@@ -193,14 +218,33 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
             private set
         var textRight: String? = null
             private set
-        var leftOnClickListener: Callback? = null
+        var leftOnClickListener: DialogCallback? = null
             private set
-        var rightOnClickListener: Callback? = null
+        var rightOnClickListener: DialogCallback? = null
             private set
         var customView: View? = null
             private set
 
         var canBeCancledOutside: Boolean = true
+            private set
+
+        var windowsAnimation: Int? = null
+            private set
+
+        var gravity: Int = Gravity.CENTER
+            private set
+
+        var fullScreenWidth: Boolean = false
+            private set
+
+        /**
+         * 写死dialog高度占屏幕高度的百分比，当为0时，表示WRAP_CONTENT
+         */
+        var ratioScreenHeight: Float = 0f
+            private set
+
+        @ColorInt
+        var titleColor: Int = Color.parseColor("#FF353535")
             private set
 
 
@@ -209,11 +253,11 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
             private set
 
         @ColorInt
-        var textLeftColor: Int = Color.parseColor("#FF333333")
+        var textLeftColor: Int = Color.parseColor("#FF353535")
             private set
 
         @ColorInt
-        var textRightColor: Int = Color.parseColor("#FF00D863")
+        var textRightColor: Int = Color.parseColor("#FF0096DF")
             private set
 
         var roundCorner: Float = 16f
@@ -222,35 +266,29 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
         var lifecycleOwner: LifecycleOwner? = null
             private set
 
+        fun subTitle(subTitle: String) = apply { this.subTitle = subTitle }
         fun title(title: String) = apply { this.title = title }
         fun content(content: String) = apply { this.content = content }
         fun textLeft(textLeft: String) = apply { this.textLeft = textLeft }
         fun textRight(textRight: String) = apply { this.textRight = textRight }
-        fun leftOnClickListener(callback: Callback) = apply { this.leftOnClickListener = callback }
-        fun rightOnClickListener(callback: Callback) =
-            apply { this.rightOnClickListener = callback }
-
+        fun leftOnClickListener(callback: DialogCallback) = apply { this.leftOnClickListener = callback }
+        fun rightOnClickListener(callback: DialogCallback) = apply { this.rightOnClickListener = callback }
         fun customView(customView: View) = apply { this.customView = customView }
         fun bgColor(@ColorInt bgColor: Int) = apply { this.bgColor = bgColor }
         fun roundCorner(roundCorner: Float) = apply { this.roundCorner = roundCorner }
-        fun lifecycleOwner(lifecycleOwner: LifecycleOwner) =
-            apply { this.lifecycleOwner = lifecycleOwner }
+        fun lifecycleOwner(lifecycleOwner: LifecycleOwner) = apply { this.lifecycleOwner = lifecycleOwner }
+        fun canBeCancledOutside(canBeCancledOutside: Boolean) = apply { this.canBeCancledOutside = canBeCancledOutside }
+        fun textLeftColor(@ColorInt textLeftColor: Int) = apply { this.textLeftColor = textLeftColor }
+        fun textRightColor(@ColorInt textRightColor: Int) = apply { this.textRightColor = textRightColor }
+        fun windowsAnimation(windowsAnimation: Int) = apply { this.windowsAnimation = windowsAnimation }
+        fun gravity(gravity: Int) = apply { this.gravity = gravity }
+        fun fullScreenWidth(fullScreenWidth: Boolean) = apply { this.fullScreenWidth = fullScreenWidth }
+        fun ratioScreenHeight(ratioScreenHeight: Float) = apply { this.ratioScreenHeight = ratioScreenHeight }
 
-        fun canBeCancledOutside(canBeCancledOutside: Boolean) =
-            apply { this.canBeCancledOutside = canBeCancledOutside }
+        open fun build() = CustomDialog(this, context)
 
-        fun textLeftColor(@ColorInt textLeftColor: Int) =
-            apply { this.textLeftColor = textLeftColor }
-
-        fun textRightColor(@ColorInt textRightColor: Int) =
-            apply { this.textRightColor = textRightColor }
-
-        fun show() {
-            run {
-                dialog ?: CustomDialog(this, context).also {
-                    dialog = it
-                }
-            }.show()
+        open fun show() {
+            build().show()
         }
 
 
