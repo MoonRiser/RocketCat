@@ -1,4 +1,4 @@
-package com.szlanyou.iov.common.dialog
+package com.example.rocketcat.dialog
 
 import android.content.Context
 import android.graphics.Color
@@ -14,11 +14,11 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.LifecycleOwner
-import com.szlanyou.iov.common.ext.DialogCallback
-import com.szlanyou.iov.common.ext.dpValue
-import com.szlanyou.iov.common.utils.AndroidUtil
-import com.szlanyou.iov.common.utils.dp2px
-import com.szlanyou.nissaniov.dialog.DialogLifecycleObserver
+import com.example.rocketcat.ext.DialogCallback
+import com.example.rocketcat.ext.dpValue
+import com.example.rocketcat.utils.dp2px
+import com.example.rocketcat.utils.getScreenSize
+
 
 /**
  * @Author:         Xres
@@ -50,14 +50,14 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                     if (it) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     } else {
-                        (AndroidUtil.getScreenSize().x * 0.8f).toInt()
+                        (getScreenSize().x * 0.8f).toInt()
                     }
                 }
                 height = builder.ratioScreenHeight.let {
                     if (it == 0f) {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     } else {
-                        (AndroidUtil.getScreenSize().y * it).toInt()
+                        (getScreenSize().y * it).toInt()
                     }
                 }
             }
@@ -68,7 +68,10 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         super.onCreate(savedInstanceState)
         //根线性布局
         val linearLayout = LinearLayout(context).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             gravity = Gravity.CENTER_HORIZONTAL
             orientation = LinearLayout.VERTICAL
             background = GradientDrawable().apply {
@@ -79,8 +82,10 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         //标题布局、 包括标题和副标题
         val titleView: View = builder.title?.let {
             val title = TextView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
                 text = builder.title
                 gravity = Gravity.CENTER_HORIZONTAL
                 setTextColor(builder.titleColor)
@@ -88,8 +93,10 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
             }
             val subTitle = builder.subTitle?.let {
                 TextView(context).apply {
-                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    ).apply {
                         topMargin = dp2px(10f)
                     }
                     gravity = Gravity.CENTER_HORIZONTAL
@@ -100,8 +107,10 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
             }
             LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply {
                     topMargin = dp2px(20f)
                 }
             }.apply {
@@ -110,18 +119,24 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
             }
 
         } ?: TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                10f.dpValue())
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                10f.dpValue()
+            )
         }
         //中间布局、文字内容或者自定义布局二选一
         val middleContent: View = onCreateCustomView(context) ?: builder.customView?.apply {
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
                 gravity = Gravity.CENTER
             }
         } ?: TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
                 setMargins(30f.dpValue(), 10f.dpValue(), 30f.dpValue(), 20f.dpValue())
             }
             text = builder.content
@@ -138,17 +153,28 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         }
         //横向的分割线
         val divider1 = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dpValue())
+            layoutParams =
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dpValue())
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
         val cornerRadius = builder.roundCorner.dpValue().toFloat()
         //按钮布局
         val bottomLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dpValue())
+            layoutParams =
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dpValue())
             background = GradientDrawable().apply {
                 setColor(Color.WHITE)
-                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
+                cornerRadii = floatArrayOf(
+                    0f,
+                    0f,
+                    0f,
+                    0f,
+                    cornerRadius,
+                    cornerRadius,
+                    cornerRadius,
+                    cornerRadius
+                )
             }
         }
         val tvLeft = builder.textLeft?.let {
@@ -158,7 +184,11 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
                 setTextColor(builder.textLeftColor)
                 setTypeface(null, Typeface.BOLD)
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    1F
+                )
                 setOnClickListener {
                     builder.leftOnClickListener?.onClick(this@CustomDialog) ?: dismiss()
                 }
@@ -172,7 +202,11 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)
                 setTextColor(builder.textRightColor)
                 setTypeface(null, Typeface.BOLD)
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    1F
+                )
                 setOnClickListener {
                     builder.rightOnClickListener?.onClick(this@CustomDialog)
                 }
@@ -180,7 +214,8 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
             }
         }
         val divider2 = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(1f.dpValue(), 24f.dpValue()).apply { gravity = Gravity.CENTER }
+            layoutParams = LinearLayout.LayoutParams(1f.dpValue(), 24f.dpValue())
+                .apply { gravity = Gravity.CENTER }
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
         val button = tvLeft?.also {
@@ -271,19 +306,36 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         fun content(content: String) = apply { this.content = content }
         fun textLeft(textLeft: String) = apply { this.textLeft = textLeft }
         fun textRight(textRight: String) = apply { this.textRight = textRight }
-        fun leftOnClickListener(callback: DialogCallback) = apply { this.leftOnClickListener = callback }
-        fun rightOnClickListener(callback: DialogCallback) = apply { this.rightOnClickListener = callback }
+        fun leftOnClickListener(callback: DialogCallback) =
+            apply { this.leftOnClickListener = callback }
+
+        fun rightOnClickListener(callback: DialogCallback) =
+            apply { this.rightOnClickListener = callback }
+
         fun customView(customView: View) = apply { this.customView = customView }
         fun bgColor(@ColorInt bgColor: Int) = apply { this.bgColor = bgColor }
         fun roundCorner(roundCorner: Float) = apply { this.roundCorner = roundCorner }
-        fun lifecycleOwner(lifecycleOwner: LifecycleOwner) = apply { this.lifecycleOwner = lifecycleOwner }
-        fun canBeCancledOutside(canBeCancledOutside: Boolean) = apply { this.canBeCancledOutside = canBeCancledOutside }
-        fun textLeftColor(@ColorInt textLeftColor: Int) = apply { this.textLeftColor = textLeftColor }
-        fun textRightColor(@ColorInt textRightColor: Int) = apply { this.textRightColor = textRightColor }
-        fun windowsAnimation(windowsAnimation: Int) = apply { this.windowsAnimation = windowsAnimation }
+        fun lifecycleOwner(lifecycleOwner: LifecycleOwner) =
+            apply { this.lifecycleOwner = lifecycleOwner }
+
+        fun canBeCancledOutside(canBeCancledOutside: Boolean) =
+            apply { this.canBeCancledOutside = canBeCancledOutside }
+
+        fun textLeftColor(@ColorInt textLeftColor: Int) =
+            apply { this.textLeftColor = textLeftColor }
+
+        fun textRightColor(@ColorInt textRightColor: Int) =
+            apply { this.textRightColor = textRightColor }
+
+        fun windowsAnimation(windowsAnimation: Int) =
+            apply { this.windowsAnimation = windowsAnimation }
+
         fun gravity(gravity: Int) = apply { this.gravity = gravity }
-        fun fullScreenWidth(fullScreenWidth: Boolean) = apply { this.fullScreenWidth = fullScreenWidth }
-        fun ratioScreenHeight(ratioScreenHeight: Float) = apply { this.ratioScreenHeight = ratioScreenHeight }
+        fun fullScreenWidth(fullScreenWidth: Boolean) =
+            apply { this.fullScreenWidth = fullScreenWidth }
+
+        fun ratioScreenHeight(ratioScreenHeight: Float) =
+            apply { this.ratioScreenHeight = ratioScreenHeight }
 
         open fun build() = CustomDialog(this, context)
 
