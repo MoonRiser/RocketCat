@@ -1,7 +1,7 @@
-package com.example.rocketcat.ext
+package com.example.common.ext
 
 import android.view.View
-import com.example.rocketcat.dialog.CustomDialog
+import com.example.common.dialog.CustomDialog
 
 /**
  * @Author:         Xres

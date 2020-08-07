@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Point
 import android.view.WindowManager
-import com.example.rocketcat.App
 
 fun dp2px(dpValue: Float): Int {
     return (0.5f + dpValue * Resources.getSystem()
@@ -16,9 +15,8 @@ fun px2dp(pxValue: Int): Float {
         .displayMetrics.density
 }
 
-fun getScreenSize(): Point {
-    val windowManager = App.INSTANCE
-        .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+fun getScreenSize(context: Context): Point {
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val display = windowManager.defaultDisplay
     val outPoint = Point()
     // 可能有虚拟按键的情况

@@ -36,8 +36,7 @@ class HomeFragment : BaseFragment<BaseViewModel, FragmentHomeBinding>() {
         vp2_tab.init(this, fragments)
         TabLayoutMediator(tab_home, vp2_tab) { tab, position ->
             tab.text = "Title" + (position + 1)
-        }
-            .attach()
+        }.attach()
 
     }
 

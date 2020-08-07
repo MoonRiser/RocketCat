@@ -1,4 +1,4 @@
-package com.example.rocketcat.dialog
+package com.example.common.dialog
 
 import android.content.Context
 import android.graphics.Color
@@ -13,11 +13,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
+import androidx.core.graphics.alpha
 import androidx.lifecycle.LifecycleOwner
-import com.example.rocketcat.ext.DialogCallback
-import com.example.rocketcat.ext.dpValue
-import com.example.rocketcat.utils.dp2px
-import com.example.rocketcat.utils.getScreenSize
+import com.example.common.ext.DialogCallback
+import com.example.common.ext.dpValue
+import com.example.common.utils.dp2px
+import com.example.common.utils.getScreenSize
 
 
 /**
@@ -50,14 +51,14 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                     if (it) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     } else {
-                        (getScreenSize().x * 0.8f).toInt()
+                        (getScreenSize(context).x * 0.8f).toInt()
                     }
                 }
                 height = builder.ratioScreenHeight.let {
                     if (it == 0f) {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     } else {
-                        (getScreenSize().y * it).toInt()
+                        (getScreenSize(context).y * it).toInt()
                     }
                 }
             }
@@ -80,8 +81,8 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
             }
         }
 
-        builder.title?.let {
-            TextView(getContext()).apply {
+        val titleView = builder.title?.let {
+            TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -93,8 +94,6 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                 setTextColor(Color.BLACK)
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f)
             }
-        }?.also { linearLayout.addView(it) }
-
         } ?: TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -261,7 +260,7 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
 
 
         @ColorInt
-        var bgColor: Int = Color.WHITE
+        var bgColor: Int = Color.parseColor("#EEFFFFFF")
             private set
 
         @ColorInt
