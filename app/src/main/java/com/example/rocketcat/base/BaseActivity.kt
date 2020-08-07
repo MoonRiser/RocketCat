@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.common.BR
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatActivity() {
@@ -13,28 +14,36 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
 
     lateinit var viewModel: VM
     lateinit var dataBinding: DB
+    val sharedViewModel: SharedViewModel by lazy {
+        (application as BaseApplication).getAppViewModelProvider()
+            .get(SharedViewModel::class.java)
+    }
 
 
     abstract fun layoutId(): Int
 
-    open fun initView(savedInstanceState: Bundle?) {}
+    abstract fun initView(savedInstanceState: Bundle?)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = createViewModel()
         dataBinding = DataBindingUtil.setContentView(this, layoutId())
+        dataBinding.setVariable(getViewModelBR(), viewModel)
+
+
         initView(savedInstanceState)
     }
+
+
+    open fun getViewModelBR(): Int = BR.viewModel
 
 
     /**
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        return ViewModelProvider(
-            this
-        ).get(getVmClazz(this))
+        return ViewModelProvider(this).get(getVmClazz(this))
     }
 
 

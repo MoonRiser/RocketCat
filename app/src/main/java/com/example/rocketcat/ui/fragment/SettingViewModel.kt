@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.viewmodel
+package com.example.rocketcat.ui.fragment
 
 import com.example.rocketcat.base.BaseViewModel
 

@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.Tab2Fragment">
+        tools:context=".ui.fragment.tab.Tab2Fragment">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView

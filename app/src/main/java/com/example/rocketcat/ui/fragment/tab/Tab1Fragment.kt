@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment
+package com.example.rocketcat.ui.fragment.tab
 
 import android.os.Bundle
 import com.example.rocketcat.R
@@ -11,8 +11,10 @@ class Tab1Fragment : BaseFragment<BaseViewModel, FragmentTab1Binding>() {
     override fun layoutId() = R.layout.fragment_tab1
 
     override fun initView(savedInstanceState: Bundle?) {
+
+
+
     }
 
-    override fun createObserver() {
-    }
+
 }

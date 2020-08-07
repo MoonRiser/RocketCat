@@ -93,8 +93,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
 
     }
 
-    override fun createObserver() {
-        // TODO("Not yet implemented")
-    }
+
 }
 

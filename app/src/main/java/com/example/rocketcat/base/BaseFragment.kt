@@ -74,7 +74,7 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
     /**
      * 创建观察者
      */
-    abstract fun createObserver()
+    open fun initObserver(){}
 
 
     override fun onResume() {
@@ -89,7 +89,7 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
         if (lifecycle.currentState == Lifecycle.State.STARTED && isFirst) {
             lazyLoadData()
             isFirst = false
-            createObserver()
+            initObserver()
 
         }
 

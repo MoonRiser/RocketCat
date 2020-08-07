@@ -1,4 +1,4 @@
-package com.example.rocketcat.dialog
+package com.example.common.dialog
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

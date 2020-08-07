@@ -1,4 +1,4 @@
-package com.example.rocketcat.utils
+package com.example.common.utils
 
 import android.view.View
 import android.widget.ImageView
@@ -10,11 +10,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.jakewharton.rxbinding2.view.RxView
 import java.util.concurrent.TimeUnit
 
-@BindingAdapter(value = ["RoundedCorners"])
+@BindingAdapter(value = ["CornerRadius"])
 fun ImageView.roundedCorners(roundingRadius: Int) {
     Glide.with(this.context)
         .load(this.drawable)
-        .apply(RequestOptions.bitmapTransform(RoundedCorners(dp2px(roundingRadius.toFloat()))))
+        .apply(RequestOptions.bitmapTransform(RoundedCorners(
+            dp2px(
+                roundingRadius.toFloat()
+            )
+        )))
         .into(this)
 }
 
@@ -34,7 +38,7 @@ typealias OnClickCallback = (view: View) -> Unit
 
 const val FAST_CLICK_DELAY_TIME = 1000L
 
-@BindingAdapter(value = ["onClick"])
+@BindingAdapter(value = ["android:onClick"])
 fun View.click(onclick: OnClickCallback) {
     this.setOnClickListener {
         RxView.clicks(this)

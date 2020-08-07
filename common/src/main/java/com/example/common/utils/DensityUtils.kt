@@ -1,4 +1,4 @@
-package com.example.rocketcat.utils
+package com.example.common.utils
 
 import android.content.res.Resources
 

@@ -12,6 +12,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import com.example.rocketcat.R
 import java.util.*
 
+const val MAX_RADIUS = 120
 class BubbleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -24,13 +25,11 @@ class BubbleView @JvmOverloads constructor(
     private val bubbles: MutableList<Bubble> = ArrayList()
     lateinit var states: BooleanArray //false远离；true接近
     private val bubbleNum: Int
-    private var anim: ValueAnimator = ValueAnimator.ofFloat(0f, 1f)
+    var anim: ValueAnimator = ValueAnimator.ofFloat(0f, 1f)
     private var tg = 0f
 
-    internal inner class Bubble(var center: PointF, var radius: Int) {
+    class Bubble(var center: PointF, var radius: Int)
 
-
-    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -75,13 +74,11 @@ class BubbleView @JvmOverloads constructor(
         anim.apply {
             interpolator = AccelerateDecelerateInterpolator()
             duration = 15000
-            //        anim.setRepeatMode(ValueAnimator.RESTART);
-//        anim.setRepeatCount(-1);
-            addUpdateListener(AnimatorUpdateListener { animation -> //设置当前绘制的爆炸图片index
+            addUpdateListener { animation -> //设置当前绘制的爆炸图片index
                 //mCurDrawableIndex = (int) animation.getAnimatedValue();
                 tg = animation.animatedValue as Float
                 invalidate()
-            })
+            }
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     //修改动画执行标志
@@ -167,9 +164,7 @@ class BubbleView @JvmOverloads constructor(
         return path
     }
 
-    companion object {
-        private const val MAX_RADIUS = 120
-    }
+
 
     init {
         val array =
@@ -187,4 +182,5 @@ class BubbleView @JvmOverloads constructor(
         bbPaint.color = bubbleColor
         bbPaint.style = Paint.Style.FILL
     }
+
 }

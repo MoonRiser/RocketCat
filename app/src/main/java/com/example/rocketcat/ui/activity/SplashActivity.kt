@@ -8,12 +8,12 @@ import android.view.View
 import android.view.WindowManager
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.example.common.utils.dp2px
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.base.BaseActivity
 import com.example.rocketcat.base.BaseViewModel
 import com.example.rocketcat.databinding.ActivitySplashBinding
-import com.example.rocketcat.utils.dp2px
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
@@ -36,7 +36,13 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         vp2_welcome.apply {
             adapter = adapter1
             offscreenPageLimit = 1
-            setPageTransformer(MarginPageTransformer(dp2px(32f)))
+            setPageTransformer(
+                MarginPageTransformer(
+                    dp2px(
+                        32f
+                    )
+                )
+            )
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
                     position: Int,

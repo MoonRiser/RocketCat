@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment
+package com.example.rocketcat.ui.fragment.tab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import com.example.rocketcat.R
 import com.example.rocketcat.base.BaseFragment
 import com.example.rocketcat.base.BaseViewModel
 import com.example.rocketcat.databinding.FragmentTab2Binding
-import com.example.rocketcat.ext.dpValue
+import com.example.common.ext.dpValue
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
@@ -42,8 +42,6 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
     }
 
-    override fun createObserver() {
 
-    }
 
 }

@@ -1,6 +1,5 @@
-package com.example.rocketcat.dialog
+package com.example.common.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -14,8 +13,8 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.LifecycleOwner
-import com.example.rocketcat.ext.dpValue
-import com.example.rocketcat.utils.dp2px
+import com.example.common.ext.dpValue
+import com.example.common.utils.dp2px
 
 
 /**
@@ -25,21 +24,26 @@ import com.example.rocketcat.utils.dp2px
  */
 typealias Callback = () -> Unit
 
-class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context) {
+class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
 
 
     private var root: LinearLayout
 
     init {
-        apply {
-            setCanceledOnTouchOutside(builder.canBeCancledOutside)
-            window?.setBackgroundDrawableResource(android.R.color.transparent)
-        }
 
-        builder.lifecycleOwner?.lifecycle?.addObserver(DialogLifecycleObserver(::dismiss))
+
+        builder.lifecycleOwner?.lifecycle?.addObserver(
+            DialogLifecycleObserver(
+                ::dismiss
+            )
+        )
 
         val linearLayout = LinearLayout(getContext()).apply {
-            layoutParams = ViewGroup.LayoutParams(dp2px(300F), ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams = ViewGroup.LayoutParams(
+                dp2px(
+                    300F
+                ), ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             orientation = LinearLayout.VERTICAL
             background = GradientDrawable().apply {
                 setColor(builder.bgColor)
@@ -176,6 +180,12 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
         }
     }
 
+    override fun onAttachedToWindow() {
+
+        setCanceledOnTouchOutside(builder.canBeCancledOutside)
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(root)
@@ -183,7 +193,6 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
 
     class Builder(val context: Context) {
 
-        private var dialog: Dialog? = null
 
         var title: String? = null
             private set
@@ -245,12 +254,10 @@ class CustomDialog(builder: Builder, context: Context) : AppCompatDialog(context
         fun textRightColor(@ColorInt textRightColor: Int) =
             apply { this.textRightColor = textRightColor }
 
+        fun build() = CustomDialog(this, context)
+
         fun show() {
-            run {
-                dialog ?: CustomDialog(this, context).also {
-                    dialog = it
-                }
-            }.show()
+            build().show()
         }
 
 

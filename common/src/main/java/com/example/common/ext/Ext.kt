@@ -1,10 +1,10 @@
-package com.example.rocketcat.ext
+package com.example.common.ext
 
 import android.graphics.Color
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
-import com.example.rocketcat.utils.dp2px
-import com.example.rocketcat.utils.px2dp
+import com.example.common.utils.dp2px
+import com.example.common.utils.px2dp
 
 /**
  * @Author:         Xres

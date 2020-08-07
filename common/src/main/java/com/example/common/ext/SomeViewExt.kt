@@ -1,5 +1,7 @@
-package com.example.rocketcat.ext
+package com.example.common.ext
 
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -36,4 +38,13 @@ fun ViewPager2.init(
         override fun getItemCount() = fragments.size
     }
     return this
+}
+
+
+fun AppCompatActivity.showToast(msg:String){
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+}
+
+fun Fragment.showToast(msg:String){
+    Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
 }

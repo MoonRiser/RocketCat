@@ -7,7 +7,7 @@ import com.example.rocketcat.R
 import com.example.rocketcat.base.BaseActivity
 import com.example.rocketcat.base.BaseViewModel
 import com.example.rocketcat.databinding.ActivityMainBinding
-import com.example.rocketcat.ext.init
+import com.example.common.ext.init
 import com.example.rocketcat.ui.fragment.BubbleFragment
 import com.example.rocketcat.ui.fragment.DashboardFragment
 import com.example.rocketcat.ui.fragment.HomeFragment
@@ -38,7 +38,6 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
-        super.initView(savedInstanceState)
 
         vp2_home.init(this, fragments, false)
 

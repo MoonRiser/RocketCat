@@ -1,4 +1,4 @@
-package com.example.rocketcat.utils
+package com.example.common.utils
 
 
 import android.app.Notification
@@ -12,6 +12,8 @@ import androidx.core.app.NotificationCompat.*
 
 typealias Callback = ((Builder) -> Builder)
 
+const val NORMAL_CHANNEL_NAME: String = "普通通知"
+const val URGENT_CHANNEL_NAME: String = "重要通知"
 class MyNotification(base: Context) : ContextWrapper(base) {
 
 
@@ -24,8 +26,7 @@ class MyNotification(base: Context) : ContextWrapper(base) {
 
 
     private val notificationManager: NotificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
-    private val NORMAL_CHANNEL_NAME: String = "普通通知"
-    private val URGENT_CHANNEL_NAME: String = "重要通知"
+
 
 
     init {
@@ -102,7 +103,7 @@ class MyNotification(base: Context) : ContextWrapper(base) {
      * 可深度定制的builder模式的通知
      * @param id 通知的id，-1表示自增id
      * @param channelID 通知通道的id
-     * @param builderE 函数参数，用于自定义通知,可为空
+     * @param callback 函数参数(高阶函数)，用于自定义通知,可为空
      */
     @JvmOverloads
     fun send(
@@ -142,7 +143,9 @@ class MyNotification(base: Context) : ContextWrapper(base) {
         id: Int = -1,
         urgent: Boolean = true
     ) {
-        val builder = if (urgent) getBuilder(URGENT_CHANNEL_ID) else getBuilder(NORMAL_CHANNEL_ID)
+        val builder = if (urgent) getBuilder(URGENT_CHANNEL_ID) else getBuilder(
+            NORMAL_CHANNEL_ID
+        )
         builder.apply {
             setContentTitle(title)
             setContentText(content)

@@ -1,8 +1,8 @@
 package com.example.rocketcat
 
-import android.app.Application
+import com.example.rocketcat.base.BaseApplication
 
-class App : Application() {
+class App : BaseApplication() {
 
 
     companion object {
