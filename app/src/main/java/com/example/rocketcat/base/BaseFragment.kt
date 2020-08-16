@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
@@ -56,9 +57,7 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        return ViewModelProvider(
-            this
-        ).get(getVmClazz(this))
+        return ViewModelProvider(getViewModelOwner()).get(getVmClazz(this))
     }
 
     /**
@@ -74,7 +73,9 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
     /**
      * 创建观察者
      */
-    open fun initObserver(){}
+    open fun initObserver() {}
+
+    open fun getViewModelOwner(): ViewModelStoreOwner = this
 
 
     override fun onResume() {

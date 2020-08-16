@@ -29,6 +29,9 @@ class Tab1Fragment : BaseFragment<BaseViewModel, FragmentTab1Binding>() {
                 })
                 .show()
         }
+        btLoading.setOnClickListener {
+            loading.switchState()
+        }
     }
 
 

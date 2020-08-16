@@ -3,7 +3,6 @@ package com.example.rocketcat.customview
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -13,6 +12,7 @@ import com.example.rocketcat.R
 import java.util.*
 
 const val MAX_RADIUS = 120
+
 class BubbleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -26,6 +26,8 @@ class BubbleView @JvmOverloads constructor(
     lateinit var states: BooleanArray //false远离；true接近
     private val bubbleNum: Int
     var anim: ValueAnimator = ValueAnimator.ofFloat(0f, 1f)
+
+    //贝塞尔曲线的控制变量
     private var tg = 0f
 
     class Bubble(var center: PointF, var radius: Int)
@@ -165,7 +167,6 @@ class BubbleView @JvmOverloads constructor(
     }
 
 
-
     init {
         val array =
             context.obtainStyledAttributes(attrs, R.styleable.BubbleView, defStyleAttr, 0)
@@ -174,6 +175,7 @@ class BubbleView @JvmOverloads constructor(
             array.getColor(R.styleable.BubbleView_bubble_color, Color.BLUE)
         bubbleNum = array.getInteger(R.styleable.BubbleView_bubble_num, 4)
         array.recycle()
+
         bandPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         bandPaint.color = bubbleColor
         bandPaint.alpha = 128
