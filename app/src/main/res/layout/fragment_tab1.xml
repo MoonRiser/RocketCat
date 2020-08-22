@@ -54,6 +54,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+        <Button
+            android:id="@+id/btTest2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="test2"
+            app:layout_constraintBottom_toBottomOf="@+id/btLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btLoading" />
+
         <com.example.rocketcat.customview.BallsLoading
             android:id="@+id/loading"
             android:layout_width="160dp"

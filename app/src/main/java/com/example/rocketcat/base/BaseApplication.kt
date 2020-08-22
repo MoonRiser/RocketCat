@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.github.promeg.pinyinhelper.Pinyin
+import com.github.promeg.pinyinhelper.PinyinMapDict
+
 
 open class BaseApplication : Application(), ViewModelStoreOwner {
 
@@ -18,6 +21,17 @@ open class BaseApplication : Application(), ViewModelStoreOwner {
         super.onCreate()
         INSTANCE = this
         mViewModelStore = ViewModelStore()
+        Pinyin.init(
+            Pinyin.newConfig()
+                .with(object : PinyinMapDict() {
+                    override fun mapping(): Map<String, Array<String>> {
+                        val map = HashMap<String, Array<String>>()
+                        map["重"] = arrayOf("CHONG")
+                        return map
+                    }
+                })
+        )
+
     }
 
     override fun getViewModelStore() = mViewModelStore
