@@ -62,9 +62,7 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 
-    override fun getItemCount() = dataList.size.let {
-        if (it < 1) it else it + 1
-    }
+    override fun getItemCount() = dataList.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {

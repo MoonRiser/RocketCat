@@ -6,9 +6,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.example.common.utils.dp2px
+import com.example.common.ext.dpValue
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.base.BaseActivity
@@ -22,9 +26,10 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         R.drawable.jump, R.drawable.paint, R.drawable.sit
     )
     private val adapter1 = MyGalleryAdapter(imgs)
-    private val values = listOf("#3E44D9", "#3D2161", "#EB8127")
-    private val colors = values.map { Color.parseColor(it) }
+//    private val values = listOf("#3E44D9", "#3D2161", "#EB8127")
+
     val evaluator = ArgbEvaluator()
+
 
     override fun layoutId() = R.layout.activity_splash
 
@@ -32,16 +37,14 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        val colors = imgs.map { createPaletteSync(it).dominantSwatch?.rgb }
+
 
         vp2_welcome.apply {
             adapter = adapter1
             offscreenPageLimit = 1
             setPageTransformer(
-                MarginPageTransformer(
-                    dp2px(
-                        32f
-                    )
-                )
+                MarginPageTransformer(32f.dpValue())
             )
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
@@ -70,4 +73,7 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
+
+    private fun createPaletteSync(@DrawableRes resourceId: Int): Palette =
+        Palette.from(ContextCompat.getDrawable(this, resourceId)!!.toBitmap()).generate()
 }
