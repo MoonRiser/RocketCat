@@ -27,9 +27,7 @@ import com.example.common.utils.getScreenSize
  */
 
 
-open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialog(context) {
-
-
+open class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
 
 
     init {
@@ -55,7 +53,7 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                 }
                 height = builder.ratioScreenHeight.let {
                     if (it == 0f) {
-                        ViewGroup.LayoutParams.MATCH_PARENT
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                     } else {
                         (getScreenSize(context).y * it).toInt()
                     }

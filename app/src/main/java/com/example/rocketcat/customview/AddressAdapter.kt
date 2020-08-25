@@ -1,6 +1,7 @@
 package com.example.rocketcat.customview
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.common.ext.ClickCallback
 import com.example.rocketcat.R
 import com.example.rocketcat.data.db.entity.Division
+import com.example.rocketcat.data.db.entity.Street
 import com.github.promeg.pinyinhelper.Pinyin
 
 
@@ -21,19 +23,29 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     private lateinit var context: Context
     var clickListener: ClickCallback? = null
+    private var currentClickPosition: Int = -1
+     var  selectedColor : Int = Color.BLUE
 
     //当前的首字母
     private var currentCap: String = ""
 
     private var dataList = mutableListOf<Division>()
-
     fun getDataList(): List<Division> = dataList
     fun setDataList(list: List<Division>) {
         dataList.clear()
+        currentClickPosition = -1
         dataList.addAll(list)
+        //最后一级，街道级别需要显示“暂不选择”，
+        if (list.isNotEmpty()) {
+            if (list.first() is Street) {
+                dataList.add(Street("0", "暂不选择", "0"))
+            }
+        }
         sortAddressName(dataList)
         notifyDataSetChanged()
     }
+
+
 
     class MyViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
         val capView: TextView = root.findViewById(R.id.tvCap)
@@ -57,9 +69,22 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
             } else {
                 capView.text = ""
             }
-            nameView.text = dataList[position].name()
-            root.tag = position//给view加上标签，方便监听
-            root.setOnClickListener(clickListener)
+            nameView.apply {
+                val color = if (currentClickPosition == position) {
+                    selectedColor
+                } else {
+                    Color.BLACK
+                }
+                setTextColor(color)
+                text = dataList[position].name()
+                tag = position//给view加上标签，方便监听
+                setOnClickListener {
+                    currentClickPosition = position
+                    notifyDataSetChanged()
+                    clickListener?.onClick(it)
+                }
+            }
+
         }
 
     }

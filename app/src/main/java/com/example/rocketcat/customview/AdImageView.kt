@@ -21,7 +21,7 @@ class AdImageView(
     private var realHeight: Int = 0
 
 
-    private var offset: Float = 0f
+    private var offset: Float = 1f
     private lateinit var myDrawable: Drawable
 
 
@@ -38,7 +38,7 @@ class AdImageView(
     override fun onDraw(canvas: Canvas) {
 
         canvas.save()
-        canvas.translate(0f, offset * (minHeight - realHeight))
+        canvas.translate(0f, (offset - 0.5f) * (minHeight - realHeight))
         super.onDraw(canvas)
         canvas.restore()
 

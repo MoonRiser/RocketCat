@@ -1,15 +1,17 @@
 package com.example.rocketcat.customview
 
-import android.view.Gravity
+import android.content.Context
+import android.graphics.Color
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.FragmentActivity
+import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.viewpager2.widget.ViewPager2
-import com.example.common.dialog.CustomDialog
 import com.example.common.ext.ClickCallback
+import com.example.common.ext.activity
 import com.example.common.ext.init
 import com.example.rocketcat.R
 import com.example.rocketcat.data.db.AppDatabase
@@ -22,19 +24,21 @@ import com.google.android.material.tabs.TabLayoutMediator
  * @CreateDate:     2020/8/20 10:36
  * @Description:
  */
-class AddressSelectorView(private val context: FragmentActivity) {
+class AddressSelectorView(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
 
     private var listener: OnSelectListener? = null
-    private val dialogBuilder = CustomDialog.Builder(context)
-    private lateinit var dialog: CustomDialog
     private var customView: View =
-        LayoutInflater.from(context).inflate(R.layout.address_select_view, null)
+        LayoutInflater.from(context).inflate(R.layout.address_select_view, this, true)
     private var viewPager2: ViewPager2
     private var tabLayout: TabLayout
     private var mediator: TabLayoutMediator
     private val fragments = arrayListOf<AddressFragment>()
 
-    //分别是省级、市级、县级、乡级、街道
+    //分别是省级、市级、区级、街道
     private val adapterProvince = AddressAdapter()
     private val adapterCity = AddressAdapter()
     private val adapterArea = AddressAdapter()
@@ -60,7 +64,7 @@ class AddressSelectorView(private val context: FragmentActivity) {
     }
 
     private val _provinceRq = MutableLiveData<String>()
-    private var provinceLiveData: LiveData<List<Province>> =
+    private val provinceLiveData: LiveData<List<Province>> =
         Transformations.switchMap(_provinceRq) {
             AppDatabase.getInstance(context.applicationContext).divisionDao().getProvinceList()
         }
@@ -72,7 +76,7 @@ class AddressSelectorView(private val context: FragmentActivity) {
     }
 
     private val _provinceCode = MutableLiveData<String>()
-    private var cityLiveData: LiveData<List<City>> = Transformations.switchMap(_provinceCode) {
+    private val cityLiveData: LiveData<List<City>> = Transformations.switchMap(_provinceCode) {
         AppDatabase.getInstance(context.applicationContext).divisionDao().getCityList(it)
     }
 
@@ -83,22 +87,39 @@ class AddressSelectorView(private val context: FragmentActivity) {
     }
 
     private val _cityCode = MutableLiveData<String>()
-    private var areaLiveData: LiveData<List<Area>> = Transformations.switchMap(_cityCode) {
+    private val areaLiveData: LiveData<List<Area>> = Transformations.switchMap(_cityCode) {
         AppDatabase.getInstance(context.applicationContext).divisionDao().getAreaList(it)
     }
 
 
-    //刷新街道级数据
+    /**刷新街道级数据
+     *
+     */
     private fun refreshStreet(areaCode: String) {
         _areaCode.value = areaCode
     }
 
     private val _areaCode = MutableLiveData<String>()
-    private var streetLiveData: LiveData<List<Street>> = Transformations.switchMap(_areaCode) {
+    private val streetLiveData: LiveData<List<Street>> = Transformations.switchMap(_areaCode) {
         AppDatabase.getInstance(context.applicationContext).divisionDao().getStreetList(it)
     }
 
     init {
+
+        tabLayout = customView.findViewById(R.id.tab_as)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddressSelectorView)
+        val color = typedArray.getColor(R.styleable.AddressSelectorView_select_color, Color.BLUE)
+        val tabIndicatorColor =
+            typedArray.getColor(R.styleable.AddressSelectorView_tabIndicatorColor, Color.MAGENTA)
+        adapterProvince.selectedColor = color
+        adapterCity.selectedColor = color
+        adapterArea.selectedColor = color
+        adapterStreet.selectedColor = color
+        tabLayout.apply {
+            setSelectedTabIndicatorColor(tabIndicatorColor)
+            setTabTextColors(Color.BLACK, color)
+        }
+        typedArray.recycle()
 
         //初始化地址数据信息
         initAddressData()
@@ -110,8 +131,7 @@ class AddressSelectorView(private val context: FragmentActivity) {
         refreshProvince()
         //初始化viewpager
         viewPager2 = customView.findViewById(R.id.vp2_as)
-        viewPager2.init(context, fragments, false)
-        tabLayout = customView.findViewById(R.id.tab_as)
+        viewPager2.init(context.activity()!!, fragments, false)
         mediator = TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             when (position) {
                 0 -> tab.text = currentProvince?.name() ?: "请选择"
@@ -122,23 +142,27 @@ class AddressSelectorView(private val context: FragmentActivity) {
         }
         mediator.attach()
 
-        dialogBuilder.title("请选择地址")
-            .customView(customView)
-            .fullScreenWidth(true)
-            .ratioScreenHeight(0.7f)
-            .gravity(Gravity.BOTTOM)
+
     }
 
+
+    /**
+     * 这个初始化省级数据注释写得很明白，下面三个init方法也是一样的，故省略
+     */
     private fun initProvince() {
         fragments.add(fragmentProvince)
         adapterProvince.clickListener = ClickCallback {
             val position = it.tag as Int
+            //mediator.detach和attach用于更新tab
             mediator.detach()
             currentProvince = adapterProvince.getDataList()[position]
             currentProvince?.code()?.let { it1 -> refreshCity(it1) }
+            //点击省级行政区时，要把省后面已经选择的市县行政区（如果有选择的话）移除掉
             fragments.removeFromIndex(1)
+            //再把市级加回来，因为第一次加载的时候，只有省级，所以点击item的时候要加载下一级的数据
             fragments.add(1, fragmentCity)
             currentCity = null
+            //通知viewpager2的内容发生了变化
             viewPager2.adapter?.notifyDataSetChanged()
             mediator.attach()
             viewPager2.currentItem = 1
@@ -192,8 +216,7 @@ class AddressSelectorView(private val context: FragmentActivity) {
      * 最后一项、街道级地址被选中时
      */
     private fun onLastSelected() {
-        dialog.dismiss()
-        listener?.onSelect(
+        listener?.invoke(
             currentProvince as Province,
             currentCity as City,
             currentArea as Area,
@@ -201,37 +224,27 @@ class AddressSelectorView(private val context: FragmentActivity) {
         )
     }
 
-
     /**
      *  初始化地址数据，到时候应该改成从数据库获取
      */
     private fun initAddressData() {
-        provinceLiveData.observe(context, { list ->
+        val activity = context.activity()!!
+        provinceLiveData.observe(activity, { list ->
             adapterProvince.setDataList(list)
         })
-        cityLiveData.observe(context, { list ->
+        cityLiveData.observe(activity, { list ->
             adapterCity.setDataList(list)
         })
-        areaLiveData.observe(context, { list ->
+        areaLiveData.observe(activity, { list ->
             adapterArea.setDataList(list)
         })
-        streetLiveData.observe(context, { list ->
+        streetLiveData.observe(activity, { list ->
             adapterStreet.setDataList(list)
         })
     }
 
     fun setOnSelectCompletedListener(listener: OnSelectListener) {
         this.listener = listener
-    }
-
-    fun show() {
-        if (::dialog.isInitialized) {
-            dialog.show()
-        } else {
-            dialogBuilder.build().also {
-                dialog = it
-            }.show()
-        }
     }
 
     //从某个索引开始往后删除
@@ -243,10 +256,10 @@ class AddressSelectorView(private val context: FragmentActivity) {
         }
     }
 
+
 }
 
-interface OnSelectListener {
-    fun onSelect(province: Province, city: City, area: Area, street: Street)
-}
+typealias OnSelectListener = (province: Province, city: City, area: Area, street: Street) -> Unit
+
 
 

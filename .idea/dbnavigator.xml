@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -23,18 +23,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="2a085604-c0eb-47d0-add7-2d888c3a5992">
-        <schema name="main" object-types="view, table" />
-      </connection>
-      <connection connection-id="15df8e8d-a825-4cdd-b437-41257d54d004">
-        <schema name="main" object-types="dataset trigger, constraint, column, index, view, table" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="2a085604-c0eb-47d0-add7-2d888c3a5992">
-      <console name="Connection1" type="STANDARD" schema="main" session="Main"><![CDATA[select * from street_old]]></console>
+      <console name="Connection1" type="STANDARD" schema="main" session="Main"><![CDATA[select * from province]]></console>
     </connection>
     <connection id="15df8e8d-a825-4cdd-b437-41257d54d004">
       <console name="Connection2" type="STANDARD" schema="main" session="Main"><![CDATA[vacuum]]></console>
