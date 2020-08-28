@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.ext.ClickCallback
@@ -24,7 +25,8 @@ import com.google.android.material.tabs.TabLayoutMediator
  * @CreateDate:     2020/8/20 10:36
  * @Description:
  */
-class AddressSelectorView(
+class AddressSelectorView
+@JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -104,6 +106,21 @@ class AddressSelectorView(
         AppDatabase.getInstance(context.applicationContext).divisionDao().getStreetList(it)
     }
 
+    //四个级别的liveData的监听器
+    private val provinceObserver = Observer<List<Province>> { list ->
+        adapterProvince.setDataList(list)
+    }
+    private val cityObserver = Observer<List<City>> { list ->
+        adapterCity.setDataList(list)
+    }
+    private val areaObserver = Observer<List<Area>> { list ->
+        adapterArea.setDataList(list)
+    }
+    private val streetObserver = Observer<List<Street>> { list ->
+        adapterStreet.setDataList(list)
+    }
+
+
     init {
 
         tabLayout = customView.findViewById(R.id.tab_as)
@@ -142,9 +159,16 @@ class AddressSelectorView(
         }
         mediator.attach()
 
-
     }
 
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        provinceLiveData.removeObserver(provinceObserver)
+        cityLiveData.removeObserver(cityObserver)
+        areaLiveData.removeObserver(areaObserver)
+        streetLiveData.removeObserver(streetObserver)
+    }
 
     /**
      * 这个初始化省级数据注释写得很明白，下面三个init方法也是一样的，故省略
@@ -225,22 +249,13 @@ class AddressSelectorView(
     }
 
     /**
-     *  初始化地址数据，到时候应该改成从数据库获取
+     *  初始化地址数据，从数据库获取
      */
     private fun initAddressData() {
-        val activity = context.activity()!!
-        provinceLiveData.observe(activity, { list ->
-            adapterProvince.setDataList(list)
-        })
-        cityLiveData.observe(activity, { list ->
-            adapterCity.setDataList(list)
-        })
-        areaLiveData.observe(activity, { list ->
-            adapterArea.setDataList(list)
-        })
-        streetLiveData.observe(activity, { list ->
-            adapterStreet.setDataList(list)
-        })
+        provinceLiveData.observeForever(provinceObserver)
+        cityLiveData.observeForever(cityObserver)
+        areaLiveData.observeForever(areaObserver)
+        streetLiveData.observeForever(streetObserver)
     }
 
     fun setOnSelectCompletedListener(listener: OnSelectListener) {
@@ -256,10 +271,6 @@ class AddressSelectorView(
         }
     }
 
-
 }
 
 typealias OnSelectListener = (province: Province, city: City, area: Area, street: Street) -> Unit
-
-
-
