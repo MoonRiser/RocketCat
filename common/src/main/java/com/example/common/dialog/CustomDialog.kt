@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
-import androidx.core.graphics.alpha
 import androidx.lifecycle.LifecycleOwner
 import com.example.common.ext.DialogCallback
 import com.example.common.ext.dpValue
@@ -56,7 +55,7 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
                 }
                 height = builder.ratioScreenHeight.let {
                     if (it == 0f) {
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        ViewGroup.LayoutParams.MATCH_PARENT
                     } else {
                         (getScreenSize(context).y * it).toInt()
                     }
@@ -104,7 +103,7 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         val middleContent: View = onCreateCustomView(context) ?: builder.customView?.apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT
             ).apply {
                 gravity = Gravity.CENTER
             }
@@ -172,7 +171,7 @@ open class CustomDialog(val builder: Builder, context: Context) : AppCompatDialo
         }
         val tvRight = builder.textRight?.let {
 
-            TextView(getContext()).apply {
+            TextView(context).apply {
                 text = it
                 gravity = Gravity.CENTER
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16f)

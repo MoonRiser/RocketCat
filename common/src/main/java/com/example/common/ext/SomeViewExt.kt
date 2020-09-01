@@ -25,7 +25,7 @@ fun ViewPager2.init(
 
 fun ViewPager2.init(
     activity: FragmentActivity,
-    fragments: ArrayList<Fragment>,
+    fragments: ArrayList<out Fragment>,
     isUserInputEnabled: Boolean = true,
     offscreenPageLimit: Int = 1
 ): ViewPager2 {

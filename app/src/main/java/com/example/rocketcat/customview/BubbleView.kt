@@ -10,6 +10,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.example.rocketcat.R
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 const val MAX_RADIUS = 120
 
@@ -134,10 +136,9 @@ class BubbleView @JvmOverloads constructor(
         val f2 = getBezPathDot(tg, b2) //圆心o2坐标
         val anchorX = (f1.x + f2.x) / 2
         val anchorY = (f1.y + f2.y) / 2
-        val h = Math.abs(f2.x - f1.x) //水平边
-        val v = Math.abs(f2.y - f1.y) //竖边
-        val x =
-            Math.sqrt(h * h + v * v.toDouble()).toFloat() //斜边。勾股定理
+        val h = abs(f2.x - f1.x) //水平边
+        val v = abs(f2.y - f1.y) //竖边
+        val x = sqrt(h * h + v * v.toDouble()).toFloat() //斜边。勾股定理
         val cos0 = h / x
         val sin0 = v / x
         val Ax = f1.x - b1.radius * sin0
