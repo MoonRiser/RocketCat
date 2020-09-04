@@ -76,7 +76,6 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         R.drawable.cp
                     )
                 )
-//                Glide.with(mContext).load(R.drawable.cp).into(holder.imageView)
 
             }
 
@@ -85,7 +84,7 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun getItemViewType(position: Int) = when (position) {
-        5 -> AD_TYPE
+        6 -> AD_TYPE
         else -> NORMAL_TYPE
     }
 }

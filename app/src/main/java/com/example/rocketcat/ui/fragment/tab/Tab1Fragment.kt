@@ -20,16 +20,14 @@ import kotlinx.android.synthetic.main.fragment_tab1.*
 
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
-    private lateinit var tab: TabLayout
-    private lateinit var vp2: ViewPager2
+
     private lateinit var selectorView: AddressSelectorView
 
     override fun layoutId() = R.layout.fragment_tab1
 
     override fun initView(savedInstanceState: Bundle?) {
 
-        val customView =
-            LayoutInflater.from(requireActivity()).inflate(R.layout.address_select_view, null)
+
 
         bt_test.setOnClickListener {
             viewModel.mediator.apply {
@@ -37,17 +35,7 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
                 viewModel.fragments.add(Tab2Fragment())
                 attach()
             }
-//            CustomDialog.Builder(requireActivity())
-//                .title("hello,title here")
-////                .customView(customView)
-//                .content("what's your trouble")
-//                .textRight("OK")
-//                .rightOnClickListener(object : DialogCallback {
-//                    override fun onClick(dialog: CustomDialog) {
-//                        dialog.dismiss()
-//                    }
-//                })
-//                .show()
+
         }
         selectorView = AddressSelectorView(requireActivity()).apply {
             setOnSelectCompletedListener(object : OnSelectListener {

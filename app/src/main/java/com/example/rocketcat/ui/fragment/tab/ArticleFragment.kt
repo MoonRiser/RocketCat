@@ -1,7 +1,6 @@
 package com.example.rocketcat.ui.fragment.tab
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,13 +47,13 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
             })
         }
         fab.setOnClickListener {
-            viewModel.getAriticle()
+            viewModel.getArticle()
         }
 
     }
 
     override fun initObserver() {
-        viewModel.articleList.observe(this, Observer {
+        viewModel.articleList.observe(this, {
             mAdapter.dataList = it
         })
     }

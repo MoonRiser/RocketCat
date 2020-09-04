@@ -19,7 +19,7 @@ class ArticleViewModel : BaseViewModel() {
     private val _articleList = MutableLiveData(arrayListOf<ArticleResponse>())
 
 
-    fun getAriticle() {
+    fun getArticle() {
         viewModelScope.launch {
             val dataList = withContext(Dispatchers.IO) {
                 RequestManager.getHomeData(0)

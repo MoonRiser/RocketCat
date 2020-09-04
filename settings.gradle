@@ -1,10 +1,10 @@
 include ':common'
 rootProject.name='RocketCat'
 include ':app',':common'
-//setBinding(new Binding([gradle: this]))
-//evaluate(new File(
-//        settingsDir.parentFile,
-//        'flutter_module/.android/include_flutter.groovy'
-//))
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+        settingsDir.parentFile,
+        'flutter_module/.android/include_flutter.groovy'
+))
 
 
