@@ -27,7 +27,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="2a085604-c0eb-47d0-add7-2d888c3a5992">
-      <console name="Connection1" type="STANDARD" schema="main" session="Main"><![CDATA[select * from street_old]]></console>
+      <console name="Connection1" type="STANDARD" schema="main" session="Main"><![CDATA[select * from province]]></console>
     </connection>
     <connection id="15df8e8d-a825-4cdd-b437-41257d54d004">
       <console name="Connection2" type="STANDARD" schema="main" session="Main"><![CDATA[vacuum]]></console>

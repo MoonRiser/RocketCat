@@ -9,3 +9,4 @@ interface Division {
     fun code(): String
     fun name(): String
 }
+

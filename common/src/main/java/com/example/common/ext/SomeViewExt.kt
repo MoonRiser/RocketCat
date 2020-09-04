@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 
 fun ViewPager2.init(
     fragment: Fragment,
-    fragments: ArrayList<Fragment>,
+    fragments: List<Fragment>,
     isUserInputEnabled: Boolean = true
 ): ViewPager2 {
     //是否可滑动
@@ -25,7 +25,7 @@ fun ViewPager2.init(
 
 fun ViewPager2.init(
     activity: FragmentActivity,
-    fragments: ArrayList<out Fragment>,
+    fragments: List<Fragment>,
     isUserInputEnabled: Boolean = true,
     offscreenPageLimit: Int = 1
 ): ViewPager2 {
@@ -41,10 +41,10 @@ fun ViewPager2.init(
 }
 
 
-fun AppCompatActivity.showToast(msg:String){
+fun AppCompatActivity.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
-fun Fragment.showToast(msg:String){
+fun Fragment.showToast(msg: String) {
     Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
 }
