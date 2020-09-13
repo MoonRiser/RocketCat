@@ -1,7 +1,7 @@
 package com.example.rocketcat.ui.fragment
 
 import androidx.fragment.app.Fragment
-import com.example.rocketcat.base.BaseViewModel
+import com.example.common.base.BaseViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**

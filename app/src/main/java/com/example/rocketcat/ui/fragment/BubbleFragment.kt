@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
-import com.example.rocketcat.base.BaseFragment
-import com.example.rocketcat.base.BaseViewModel
+import com.example.common.base.BaseFragment
+import com.example.common.base.BaseViewModel
 import com.example.common.ext.showToast
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentBubbleBinding

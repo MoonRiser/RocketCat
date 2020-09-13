@@ -35,7 +35,7 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'androidx.core:core-ktx:1.3.1'
     api 'androidx.constraintlayout:constraintlayout:2.0.1'
-    api 'com.google.android.material:material:1.2.0'
+    api 'com.google.android.material:material:1.2.1'
     api 'androidx.preference:preference:1.1.1'
     api "androidx.dynamicanimation:dynamicanimation:$dynamicanimation_version"
     //lifecycle

@@ -9,7 +9,7 @@
 
         <variable
             name="articleViewModel"
-            type="com.example.rocketcat.data.network.response.ArticleResponse" />
+            type="com.example.common.data.network.response.ArticleResponse" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

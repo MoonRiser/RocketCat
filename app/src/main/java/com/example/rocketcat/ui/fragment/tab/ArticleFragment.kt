@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.ArticleAdapter
-import com.example.rocketcat.base.BaseFragment
+import com.example.common.base.BaseFragment
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import kotlinx.android.synthetic.main.fragment_article.*
 

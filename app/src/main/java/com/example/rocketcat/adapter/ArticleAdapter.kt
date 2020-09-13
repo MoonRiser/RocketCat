@@ -12,7 +12,7 @@ import com.example.common.ext.dpValue
 import com.example.rocketcat.BR
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
-import com.example.rocketcat.data.network.response.ArticleResponse
+import com.example.common.data.network.response.ArticleResponse
 import com.example.rocketcat.databinding.ItemRvArticleBinding
 
 private const val AD_TYPE = 816

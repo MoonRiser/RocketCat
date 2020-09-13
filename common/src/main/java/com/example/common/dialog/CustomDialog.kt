@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -98,14 +99,9 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             )
         }
         //中间布局、文字内容或者自定义布局二选一
-        val middleContent: View = onCreateCustomView(context) ?: builder.customView?.apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            ).apply {
-                gravity = Gravity.CENTER
-            }
-        } ?: TextView(context).apply {
+        val middleContent: View = onCreateCustomView(context) ?: builder.inflater?.inflate(
+            LayoutInflater.from(context), linearLayout
+        ) ?: TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -214,7 +210,6 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     open class Builder(val context: Context) {
 
-//        private var dialog: CustomDialog? = null
 
         var title: String? = null
             private set
@@ -230,7 +225,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             private set
         var rightOnClickListener: DialogCallback? = null
             private set
-        var customView: View? = null
+        var inflater: CustomViewInflater? = null
             private set
 
         var canBeCancledOutside: Boolean = true
@@ -285,7 +280,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun rightOnClickListener(callback: DialogCallback) =
             apply { this.rightOnClickListener = callback }
 
-        fun customView(customView: View) = apply { this.customView = customView }
+        fun customView(inflater: CustomViewInflater) = apply { this.inflater = inflater }
         fun bgColor(@ColorInt bgColor: Int) = apply { this.bgColor = bgColor }
         fun roundCorner(roundCorner: Float) = apply { this.roundCorner = roundCorner }
         fun lifecycleOwner(lifecycleOwner: LifecycleOwner) =
@@ -310,7 +305,9 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun ratioScreenHeight(ratioScreenHeight: Float) =
             apply { this.ratioScreenHeight = ratioScreenHeight }
 
-        open fun build() = CustomDialog(this, context)
+        open fun build() = CustomDialog(this, context).apply {
+            create()
+        }
 
         open fun show() {
             build().show()
@@ -320,4 +317,8 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
     }
 
 
+}
+
+interface CustomViewInflater {
+    fun inflate(inflater: LayoutInflater, parent: ViewGroup): View
 }

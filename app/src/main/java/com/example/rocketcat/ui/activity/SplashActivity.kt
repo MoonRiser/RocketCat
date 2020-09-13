@@ -15,8 +15,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.common.ext.dpValue
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
-import com.example.rocketcat.base.BaseActivity
-import com.example.rocketcat.base.BaseViewModel
+import com.example.common.base.BaseActivity
+import com.example.common.base.BaseViewModel
 import com.example.rocketcat.databinding.ActivitySplashBinding
 import kotlinx.android.synthetic.main.activity_splash.*
 

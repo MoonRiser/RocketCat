@@ -1,6 +1,6 @@
 package com.example.rocketcat
 
-import com.example.rocketcat.base.BaseApplication
+import com.example.common.base.BaseApplication
 
 class App : BaseApplication() {
 

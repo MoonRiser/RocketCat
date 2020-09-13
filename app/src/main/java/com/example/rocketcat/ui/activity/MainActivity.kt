@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.example.rocketcat.R
-import com.example.rocketcat.base.BaseActivity
-import com.example.rocketcat.base.BaseViewModel
+import com.example.common.base.BaseActivity
+import com.example.common.base.BaseViewModel
 import com.example.rocketcat.databinding.ActivityMainBinding
 import com.example.common.ext.init
 import com.example.rocketcat.ui.fragment.BubbleFragment

@@ -3,9 +3,9 @@ package com.example.rocketcat.ui.fragment.tab
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.rocketcat.base.BaseViewModel
-import com.example.rocketcat.data.network.RequestManager
-import com.example.rocketcat.data.network.response.ArticleResponse
+import com.example.common.base.BaseViewModel
+import com.example.common.data.network.RequestManager
+import com.example.common.data.network.response.ArticleResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

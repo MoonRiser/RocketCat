@@ -8,8 +8,8 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
-import com.example.rocketcat.base.BaseFragment
-import com.example.rocketcat.base.BaseViewModel
+import com.example.common.base.BaseFragment
+import com.example.common.base.BaseViewModel
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
 import com.example.rocketcat.customview.transformer.HorizontalStackTransformer
 import com.example.rocketcat.databinding.FragmentDashBoardBinding

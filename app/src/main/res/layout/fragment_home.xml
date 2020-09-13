@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.rocketcat.base.BaseViewModel" />
+            type="com.example.common.base.BaseViewModel" />
 
     </data>
 
