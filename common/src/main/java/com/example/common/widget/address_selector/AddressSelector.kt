@@ -1,4 +1,4 @@
-package com.example.common.widget
+package com.example.common.widget.address_selector
 
 import android.view.Gravity
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.common.widget
+package com.example.common.widget.address_selector
 
 import android.content.Context
 import android.graphics.Color

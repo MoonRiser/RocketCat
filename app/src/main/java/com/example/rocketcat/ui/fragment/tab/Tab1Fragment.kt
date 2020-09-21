@@ -6,8 +6,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.common.ext.showToast
 import com.example.rocketcat.R
 import com.example.common.base.BaseFragment
-import com.example.common.widget.AddressSelector
-import com.example.common.widget.OnSelectedListener
+import com.example.common.widget.address_selector.AddressSelector
+import com.example.common.widget.address_selector.OnSelectedListener
 import com.example.common.data.db.entity.Area
 import com.example.common.data.db.entity.City
 import com.example.common.data.db.entity.Province
