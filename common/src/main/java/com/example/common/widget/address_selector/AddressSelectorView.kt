@@ -154,10 +154,10 @@ class AddressSelectorView
         viewPager2.init(context.activity()!!, fragments, false)
         mediator = TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             when (position) {
-                0 -> tab.text = currentProvince?.name() ?: "请选择"
-                1 -> tab.text = currentCity?.name() ?: "请选择"
-                2 -> tab.text = currentArea?.name() ?: "请选择"
-                3 -> tab.text = currentStreet?.name() ?: "请选择"
+                0 -> tab.text = currentProvince?.name ?: "请选择"
+                1 -> tab.text = currentCity?.name ?: "请选择"
+                2 -> tab.text = currentArea?.name ?: "请选择"
+                3 -> tab.text = currentStreet?.name ?: "请选择"
             }
         }
         mediator.attach()
@@ -190,7 +190,7 @@ class AddressSelectorView
             //mediator.detach和attach用于更新tab
             mediator.detach()
             currentProvince = adapterProvince.getDataList()[position]
-            currentProvince?.code()?.let { it1 -> refreshCity(it1) }
+            currentProvince?.code?.let { it1 -> refreshCity(it1) }
             //点击省级行政区时，要把省后面已经选择的市县行政区（如果有选择的话）移除掉
             fragments.removeFromIndex(1)
             fragmentCity.mAdapter.resetClickPosition()
@@ -212,7 +212,7 @@ class AddressSelectorView
         adapterCity.clickListener = ClickCallback {
             mediator.detach()
             currentCity = adapterCity.getDataList()[it.tag as Int]
-            currentCity?.code()?.let { it1 -> refreshArea(it1) }
+            currentCity?.code?.let { it1 -> refreshArea(it1) }
             fragments.removeFromIndex(2)
             fragmentArea.mAdapter.resetClickPosition()
             fragments.add(2, fragmentArea)
@@ -228,7 +228,7 @@ class AddressSelectorView
         adapterArea.clickListener = ClickCallback {
             mediator.detach()
             currentArea = adapterArea.getDataList()[it.tag as Int]
-            currentArea?.code()?.let { it1 -> refreshStreet(it1) }
+            currentArea?.code?.let { it1 -> refreshStreet(it1) }
             fragments.removeFromIndex(3)
             fragmentStreet.mAdapter.resetClickPosition()
             fragments.add(3, fragmentStreet)

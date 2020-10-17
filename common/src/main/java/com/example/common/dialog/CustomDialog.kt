@@ -12,12 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.LifecycleOwner
 import com.example.common.ext.DialogCallback
-import com.example.common.ext.dpValue
-import com.example.common.utils.dp2px
+import com.example.common.ext.dp
 import com.example.common.utils.getScreenSize
 
 
@@ -31,12 +31,17 @@ import com.example.common.utils.getScreenSize
 open class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
 
 
+    private val observer = DialogLifecycleObserver(::dismiss)
+    private val gradientDrawable = GradientDrawable().apply {
+        setColor(Color.WHITE)
+    }
+
     init {
         apply {
-            setCanceledOnTouchOutside(builder.canBeCancledOutside)
+            setCanceledOnTouchOutside(builder.canBeCancelOutside)
             builder.windowsAnimation?.let { window?.setWindowAnimations(it) }
         }
-        builder.lifecycleOwner?.lifecycle?.addObserver(DialogLifecycleObserver(::dismiss))
+        builder.lifecycleOwner?.lifecycle?.addObserver(observer)
 
     }
 
@@ -65,6 +70,22 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val radius = builder.roundCorner.dp.toFloat()
+        //设置圆角属性
+        if (builder.bottomWithRoundCorner) {
+            gradientDrawable.cornerRadius = radius
+        } else {
+            gradientDrawable.cornerRadii = floatArrayOf(
+                radius,
+                radius,
+                radius,
+                radius,
+                0f,
+                0f,
+                0f,
+                0f
+            )
+        }
         //根线性布局
         val linearLayout = LinearLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -73,10 +94,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             )
             gravity = Gravity.CENTER_HORIZONTAL
             orientation = LinearLayout.VERTICAL
-            background = GradientDrawable().apply {
-                setColor(builder.bgColor)
-                cornerRadius = builder.roundCorner.dpValue().toFloat()
-            }
+            background = gradientDrawable
         }
 
         val titleView = builder.title?.let {
@@ -85,7 +103,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 ).apply {
-                    topMargin = dp2px(25f)
+                    topMargin = 25f.dp
                 }
                 text = builder.title
                 gravity = Gravity.CENTER_HORIZONTAL
@@ -95,7 +113,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         } ?: TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                10f.dpValue()
+                10f.dp
             )
         }
         //中间布局、文字内容或者自定义布局二选一
@@ -106,12 +124,12 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(30f.dpValue(), 10f.dpValue(), 30f.dpValue(), 20f.dpValue())
+                setMargins(30f.dp, 10f.dp, 30f.dp, 20f.dp)
             }
             text = builder.content
-            minHeight = 56f.dpValue()
+            minHeight = 56f.dp
             gravity = Gravity.CENTER_VERTICAL
-            setLineSpacing(6f.dpValue().toFloat(), 1f)
+            setLineSpacing(6f.dp.toFloat(), 1f)
             setTextColor(Color.parseColor("#353535"))
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
@@ -123,27 +141,28 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         //横向的分割线
         val divider1 = View(context).apply {
             layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dpValue())
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dp)
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
-        val cornerRadius = builder.roundCorner.dpValue().toFloat()
         //按钮布局
         val bottomLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dpValue())
-            background = GradientDrawable().apply {
-                setColor(Color.WHITE)
-                cornerRadii = floatArrayOf(
-                    0f,
-                    0f,
-                    0f,
-                    0f,
-                    cornerRadius,
-                    cornerRadius,
-                    cornerRadius,
-                    cornerRadius
-                )
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dp)
+            if (builder.bottomWithRoundCorner) {
+                background = GradientDrawable().apply {
+                    setColor(Color.WHITE)
+                    cornerRadii = floatArrayOf(
+                        0f,
+                        0f,
+                        0f,
+                        0f,
+                        radius,
+                        radius,
+                        radius,
+                        radius
+                    )
+                }
             }
         }
         val tvLeft = builder.textLeft?.let {
@@ -183,7 +202,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             }
         }
         val divider2 = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(1f.dpValue(), 24f.dpValue())
+            layoutParams = LinearLayout.LayoutParams(1f.dp, 24f.dp)
                 .apply { gravity = Gravity.CENTER }
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
@@ -204,6 +223,12 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             }
         }
         setContentView(root)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        builder.lifecycleOwner?.lifecycle?.removeObserver(observer)
+
     }
 
     open fun onCreateCustomView(context: Context): View? = null
@@ -228,13 +253,16 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         var inflater: CustomViewInflater? = null
             private set
 
-        var canBeCancledOutside: Boolean = true
+        var canBeCancelOutside: Boolean = true
             private set
 
         var windowsAnimation: Int? = null
             private set
 
         var gravity: Int = Gravity.CENTER
+            private set
+
+        var bottomWithRoundCorner: Boolean = true
             private set
 
         var fullScreenWidth: Boolean = false
@@ -287,7 +315,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             apply { this.lifecycleOwner = lifecycleOwner }
 
         fun canBeCancledOutside(canBeCancledOutside: Boolean) =
-            apply { this.canBeCancledOutside = canBeCancledOutside }
+            apply { this.canBeCancelOutside = canBeCancledOutside }
 
         fun textLeftColor(@ColorInt textLeftColor: Int) =
             apply { this.textLeftColor = textLeftColor }
@@ -302,11 +330,17 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun fullScreenWidth(fullScreenWidth: Boolean) =
             apply { this.fullScreenWidth = fullScreenWidth }
 
+        fun bottomWithRoundCorner(bottomWithRoundCorner: Boolean) =
+            apply { this.bottomWithRoundCorner = bottomWithRoundCorner }
+
         fun ratioScreenHeight(ratioScreenHeight: Float) =
             apply { this.ratioScreenHeight = ratioScreenHeight }
 
         open fun build() = CustomDialog(this, context).apply {
             create()
+            if (context is ComponentActivity) {
+                lifecycleOwner = context as ComponentActivity
+            }
         }
 
         open fun show() {

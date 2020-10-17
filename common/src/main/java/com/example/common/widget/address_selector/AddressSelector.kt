@@ -32,6 +32,7 @@ class AddressSelector(context: FragmentActivity) {
             })
             .fullScreenWidth(true)
             .ratioScreenHeight(0.7f)
+            .bottomWithRoundCorner(false)
             .gravity(Gravity.BOTTOM)
     }
 

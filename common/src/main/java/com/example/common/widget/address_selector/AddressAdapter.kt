@@ -23,11 +23,11 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     private lateinit var context: Context
     var clickListener: ClickCallback? = null
+    var preparedListener: DataPreparedListener? = null
     private var currentClickPosition: Int = -1
     var selectedColor: Int = Color.BLUE
 
-    //当前的首字母
-    private var currentCap: String = ""
+    private val capIndexMap = mutableMapOf<String, Int>()
 
     private var dataList = mutableListOf<Division>()
     fun getDataList(): List<Division> = dataList
@@ -41,6 +41,8 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
             }
         }
         sortAddressName(dataList)
+        preparedListener?.onPrerared(dataList.map { it.name })
+        computeCapIndex()
         notifyDataSetChanged()
     }
 
@@ -51,6 +53,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     class MyViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
         val capView: TextView = root.findViewById(R.id.tvCap)
+        val divider: View = root.findViewById(R.id.divider)
         val nameView: TextView = root.findViewById(R.id.tvAddressName)
     }
 
@@ -70,13 +73,15 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val firstCap: String = dataList[position].name().getPinYinFirstCap()
+        val firstCap: String = dataList[position].name.getPinYinFirstCap()
         holder.apply {
-            if (currentCap != firstCap) {
+            if (capIndexMap[firstCap] == position) {
+                capView.visibility = View.VISIBLE
+                divider.visibility = View.VISIBLE
                 capView.text = firstCap
-                currentCap = firstCap
             } else {
-                capView.text = ""
+                capView.visibility = View.GONE
+                divider.visibility = View.GONE
             }
             nameView.apply {
                 val color = if (currentClickPosition == position) {
@@ -85,7 +90,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
                     Color.BLACK
                 }
                 setTextColor(color)
-                text = dataList[position].name()
+                text = dataList[position].name
                 tag = position//给view加上标签，方便监听
             }
 
@@ -102,11 +107,28 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
      */
     private fun sortAddressName(list: MutableList<Division>) {
         list.sortWith { str0, str1 ->
-            str0.name().getPinYinFirstCap().compareTo(str1.name().getPinYinFirstCap())
+            str0.name.getPinYinFirstCap().compareTo(str1.name.getPinYinFirstCap())
         }
     }
 
+    /**
+     * 计算需要显示的首字母索引
+     */
+    private fun computeCapIndex() {
+        var current = ""
+        dataList.map { it.name.getPinYinFirstCap() }.forEachIndexed { index, s ->
+            if (s != current) {
+                capIndexMap[s] = index
+                current = s
+            }
+        }
 
+    }
+
+}
+
+interface DataPreparedListener {
+    fun onPrerared(list: List<String>)
 }
 
 

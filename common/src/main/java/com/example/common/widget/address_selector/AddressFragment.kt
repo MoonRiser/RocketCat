@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.R
+import kotlinx.android.synthetic.main.fragment_address.*
 
 /**
  * @Author:         Xres
@@ -16,7 +17,7 @@ import com.example.common.R
  */
 class AddressFragment(val mAdapter: AddressAdapter) : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var mLayoutManager: LinearLayoutManager
 
 
     override fun onCreateView(
@@ -28,11 +29,20 @@ class AddressFragment(val mAdapter: AddressAdapter) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = view.findViewById(R.id.rvAddress)
-        recyclerView.apply {
+        rvAddress.apply {
             adapter = mAdapter
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false).also {
+                    mLayoutManager = it
+                }
         }
+        sideBar.mLayoutManager = mLayoutManager
+        mAdapter.preparedListener = object : DataPreparedListener {
+            override fun onPrerared(list: List<String>) {
+                sideBar.setRawList(list)
+            }
+        }
+
 
     }
 }

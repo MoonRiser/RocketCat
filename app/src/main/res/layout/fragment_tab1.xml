@@ -82,6 +82,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <Button
+            android:id="@+id/btTest3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Test3"
+            app:layout_constraintEnd_toEndOf="@+id/btLoading"
+            app:layout_constraintStart_toStartOf="@+id/btLoading"
+            app:layout_constraintTop_toBottomOf="@+id/btLoading" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

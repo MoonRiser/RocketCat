@@ -6,7 +6,7 @@ package com.example.common.data.db.entity
  * @Description:
  */
 interface Division {
-    fun code(): String
-    fun name(): String
+    val code: String
+    val name: String
 }
 

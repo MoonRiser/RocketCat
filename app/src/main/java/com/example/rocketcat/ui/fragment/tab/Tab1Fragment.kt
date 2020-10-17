@@ -12,6 +12,7 @@ import com.example.common.data.db.entity.Area
 import com.example.common.data.db.entity.City
 import com.example.common.data.db.entity.Province
 import com.example.common.data.db.entity.Street
+import com.example.common.dialog.CustomDialog
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
 import com.google.android.material.tabs.TabLayout
@@ -27,7 +28,6 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
     override fun layoutId() = R.layout.fragment_tab1
 
     override fun initView(savedInstanceState: Bundle?) {
-
 
 
         bt_test.setOnClickListener {
@@ -55,6 +55,14 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
         btTest2.setOnClickListener {
             selector.show()
+        }
+        btTest3.setOnClickListener {
+            CustomDialog.Builder(requireActivity())
+                .title("FBI WARNING")
+                .content("Why so serious")
+                .textLeft("取消")
+                .textRight("OK")
+                .show()
         }
         btLoading.setOnClickListener {
             loading.switchState()

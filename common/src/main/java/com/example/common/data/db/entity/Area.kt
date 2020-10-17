@@ -17,21 +17,9 @@ import kotlinx.android.parcel.Parcelize
 class Area(
     @PrimaryKey
     @ColumnInfo(name = "code")
-    val code: String,
+    override val code: String,
     @ColumnInfo(name = "name")
-    val name: String,
+    override val name: String,
     @ColumnInfo(name = "cityCode")
     val cityCode: String
-) : Parcelable, Division {
-    @Ignore
-    override fun code(): String {
-        return code
-    }
-
-    @Ignore
-    override fun name(): String {
-        return name
-    }
-
-
-}
+) : Parcelable, Division
