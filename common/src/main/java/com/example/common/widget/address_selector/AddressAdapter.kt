@@ -41,7 +41,9 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
             }
         }
         sortAddressName(dataList)
-        preparedListener?.onPrerared(dataList.map { it.name })
+        if (dataList.size > 0) {
+            preparedListener?.onPrerared(dataList.map { it.name })
+        }
         computeCapIndex()
         notifyDataSetChanged()
     }

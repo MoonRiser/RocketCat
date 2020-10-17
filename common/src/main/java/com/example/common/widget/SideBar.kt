@@ -151,6 +151,7 @@ class SideBar @JvmOverloads constructor(
      * 计算需要显示的首字母索引
      */
     private fun computeCapIndex() {
+        characters.clear()
         var current = ""
         rawDataList.forEachIndexed { index, s ->
             if (s != current) {
