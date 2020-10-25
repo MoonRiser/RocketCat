@@ -35,7 +35,11 @@ Gradle依赖 （中间的版本号代表数据更新的年份）
 
 ```
     setOnSelectCompletedListener()
+        自定义属性
+        <attr name="tabIndicatorColor" format="color" />
+        <attr name="select_color" format="color" />
 ```
+tabLayout的选中字体颜色和indicator默认颜色分别为colors.xml中定义的colorPrimary和colorAccent
 
 ## 最后
 有什么bug问题可以提issue，我会抽空解决
