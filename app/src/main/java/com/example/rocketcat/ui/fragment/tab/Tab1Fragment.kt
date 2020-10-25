@@ -3,19 +3,21 @@ package com.example.rocketcat.ui.fragment.tab
 import android.os.Bundle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager2.widget.ViewPager2
-import com.example.common.ext.showToast
 import com.example.rocketcat.R
 import com.example.common.base.BaseFragment
-import com.example.common.widget.address_selector.AddressSelector
-import com.example.common.widget.address_selector.OnSelectedListener
-import com.example.common.data.db.entity.Area
-import com.example.common.data.db.entity.City
-import com.example.common.data.db.entity.Province
-import com.example.common.data.db.entity.Street
-import com.example.common.dialog.CustomDialog
+import com.example.common.dialog.ListDialog
+import com.example.common.dialog.ListDialog.Builder.OnItemSelectListener
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
 import com.google.android.material.tabs.TabLayout
+import com.xres.address_selector.db.entity.Area
+import com.xres.address_selector.db.entity.City
+import com.xres.address_selector.db.entity.Province
+import com.xres.address_selector.db.entity.Street
+import com.xres.address_selector.dialog.CustomDialog
+import com.xres.address_selector.ext.showToast
+import com.xres.address_selector.widget.address_selector.AddressSelector
+import com.xres.address_selector.widget.address_selector.OnSelectedListener
 import kotlinx.android.synthetic.main.fragment_tab1.*
 
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
@@ -52,7 +54,6 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
                 }
             })
         }
-
         btTest2.setOnClickListener {
             selector.show()
         }
@@ -67,8 +68,23 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
         btLoading.setOnClickListener {
             loading.switchState()
         }
+        bt4.setOnClickListener {
+            test()
+        }
     }
 
     override fun getViewModelOwner(): ViewModelStoreOwner = requireParentFragment()
+
+    private fun test() {
+        ListDialog.Builder<Int>(requireActivity())
+            .title("FBI WARNING")
+            .dataList(listOf(3, 1, 4, 5, 9, 2))
+            .itemListener(object : OnItemSelectListener<Int> {
+                override fun onSelect(index: Int, item: Int) {
+                    showToast("click $index,the value is $item")
+                }
+            })
+            .show()
+    }
 
 }

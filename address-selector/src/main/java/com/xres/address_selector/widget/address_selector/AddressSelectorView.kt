@@ -1,4 +1,4 @@
-package com.example.common.widget.address_selector
+package com.xres.address_selector.widget.address_selector
 
 import android.content.Context
 import android.graphics.Color
@@ -11,15 +11,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.viewpager2.widget.ViewPager2
-import com.example.common.R
-import com.example.common.data.db.AppDatabase
-import com.example.common.data.db.entity.*
-import com.example.common.ext.ClickCallback
-import com.example.common.ext.activity
-import com.example.common.ext.init
-import com.google.android.material.color.MaterialColors
+import com.xres.address_selector.db.AppDatabase
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.xres.address_selector.R
+import com.xres.address_selector.db.entity.*
+import com.xres.address_selector.ext.*
 
 /**
  * @Author:         Xres
@@ -40,8 +37,8 @@ class AddressSelectorView
     private var tabLayout: TabLayout
     private var mediator: TabLayoutMediator
     private val fragments = arrayListOf<AddressFragment>()
-    private val primaryColor = MaterialColors.getColor(this, R.attr.colorPrimary)
-    private val accentColor = MaterialColors.getColor(this, R.attr.colorAccent)
+//    private val primaryColor = MaterialColors.getColor(this, R.attr.colorPrimary)
+//    private val accentColor = MaterialColors.getColor(this, R.attr.colorAccent)
 
 
     //分别是省级、市级、区级、街道

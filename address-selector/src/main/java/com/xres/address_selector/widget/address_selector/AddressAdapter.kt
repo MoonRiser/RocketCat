@@ -1,4 +1,4 @@
-package com.example.common.widget.address_selector
+package com.xres.address_selector.widget.address_selector
 
 import android.content.Context
 import android.graphics.Color
@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.RecyclerView
-import com.example.common.R
-import com.example.common.data.db.entity.Division
-import com.example.common.data.db.entity.Street
-import com.example.common.ext.ClickCallback
+import com.xres.address_selector.ext.ClickCallback
 import com.github.promeg.pinyinhelper.Pinyin
+import com.xres.address_selector.R
+import com.xres.address_selector.db.entity.Division
+import com.xres.address_selector.db.entity.Street
 
 
 /**
@@ -19,6 +20,7 @@ import com.github.promeg.pinyinhelper.Pinyin
  * @CreateDate:     2020/8/20 11:21
  * @Description:
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     private lateinit var context: Context
@@ -41,10 +43,10 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
             }
         }
         sortAddressName(dataList)
-        if (dataList.size > 0) {
-            preparedListener?.onPrerared(dataList.map { it.name })
-        }
         computeCapIndex()
+        if (capIndexMap.isNotEmpty()) {
+            preparedListener?.onPrepared(capIndexMap)
+        }
         notifyDataSetChanged()
     }
 
@@ -117,6 +119,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
      * 计算需要显示的首字母索引
      */
     private fun computeCapIndex() {
+        capIndexMap.clear()
         var current = ""
         dataList.map { it.name.getPinYinFirstCap() }.forEachIndexed { index, s ->
             if (s != current) {
@@ -130,7 +133,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 }
 
 interface DataPreparedListener {
-    fun onPrerared(list: List<String>)
+    fun onPrepared(map: Map<String, Int>)
 }
 
 

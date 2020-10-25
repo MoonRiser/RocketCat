@@ -16,16 +16,7 @@ open class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
-        Pinyin.init(
-            Pinyin.newConfig()
-                .with(object : PinyinMapDict() {
-                    override fun mapping(): Map<String, Array<String>> {
-                        val map = HashMap<String, Array<String>>()
-                        map["重"] = arrayOf("CHONG")
-                        return map
-                    }
-                })
-        )
+
 
     }
 

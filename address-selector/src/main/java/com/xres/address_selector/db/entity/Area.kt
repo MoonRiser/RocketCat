@@ -1,9 +1,8 @@
-package com.example.common.data.db.entity
+package com.xres.address_selector.db.entity
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
@@ -14,12 +13,12 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 @Entity
-class Street(
+class Area(
     @PrimaryKey
     @ColumnInfo(name = "code")
     override val code: String,
     @ColumnInfo(name = "name")
     override val name: String,
-    @ColumnInfo(name = "areaCode")
-    val areaCode: String
+    @ColumnInfo(name = "cityCode")
+    val cityCode: String
 ) : Parcelable, Division

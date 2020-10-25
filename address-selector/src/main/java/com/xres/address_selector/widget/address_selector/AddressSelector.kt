@@ -1,16 +1,16 @@
-package com.example.common.widget.address_selector
+package com.xres.address_selector.widget.address_selector
 
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import com.example.common.data.db.entity.Area
-import com.example.common.data.db.entity.City
-import com.example.common.data.db.entity.Province
-import com.example.common.data.db.entity.Street
-import com.example.common.dialog.CustomDialog
-import com.example.common.dialog.CustomViewInflater
+import com.xres.address_selector.db.entity.Area
+import com.xres.address_selector.db.entity.City
+import com.xres.address_selector.db.entity.Province
+import com.xres.address_selector.db.entity.Street
+import com.xres.address_selector.dialog.CustomDialog
+import com.xres.address_selector.dialog.CustomViewInflater
 
 /**
  * @Author:         Xres

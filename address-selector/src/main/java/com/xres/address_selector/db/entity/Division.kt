@@ -1,4 +1,4 @@
-package com.example.common.data.db.entity
+package com.xres.address_selector.db.entity
 
 /**
  * @Author:         Xres

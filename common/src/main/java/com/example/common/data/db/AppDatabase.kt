@@ -4,23 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.common.data.db.dao.DivisionDao
-import com.example.common.data.db.entity.Area
-import com.example.common.data.db.entity.City
-import com.example.common.data.db.entity.Province
-import com.example.common.data.db.entity.Street
 
 
 const val DATABASE_NAME = "divisions_data_cn"
 
-@Database(
-    entities = [Province::class, City::class, Area::class, Street::class],
-    version = 1,
-    exportSchema = false
-)
+//@Database(
+//    entities = [Province::class, City::class, Area::class, Street::class],
+//    version = 1,
+//    exportSchema = false
+//)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun divisionDao(): DivisionDao
+//    abstract fun divisionDao(): DivisionDao
 
     companion object {
         @Volatile

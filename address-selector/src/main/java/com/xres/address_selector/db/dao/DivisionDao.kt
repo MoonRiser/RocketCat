@@ -1,12 +1,12 @@
-package com.example.common.data.db.dao
+package com.xres.address_selector.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
-import com.example.common.data.db.entity.Area
-import com.example.common.data.db.entity.City
-import com.example.common.data.db.entity.Province
-import com.example.common.data.db.entity.Street
+import com.xres.address_selector.db.entity.Area
+import com.xres.address_selector.db.entity.City
+import com.xres.address_selector.db.entity.Province
+import com.xres.address_selector.db.entity.Street
 
 /**
  * @Author:         Xres

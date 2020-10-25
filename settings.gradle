@@ -1,5 +1,7 @@
+include ':address-selector'
+include ':app'
+include ':common'
 //rootProject.name='RocketCat'
-include ':app',':common'
 //setBinding(new Binding([gradle: this]))
 //evaluate(new File(
 //        settingsDir.parentFile,

@@ -1,4 +1,4 @@
-package com.example.common.widget
+package com.xres.address_selector.widget
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,12 +8,13 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.common.ext.color
-import com.example.common.ext.dp
-import com.example.common.ext.dpValue
-import com.example.common.ext.primaryColor
-import com.example.common.widget.address_selector.getPinYinFirstCap
+import com.xres.address_selector.ext.color
+import com.xres.address_selector.ext.dp
+import com.xres.address_selector.ext.primaryColor
+
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 
 const val BG_COLOR = "#E0E0E0"
 
@@ -26,8 +27,7 @@ class SideBar @JvmOverloads constructor(
     //不带重复值的，用于展示的首字母数组
     private val characters = arrayListOf<String>()
 
-    //带有重复值的首字母数组
-    private val rawDataList = arrayListOf<String>()
+    //
     private val capIndexMap = mutableMapOf<String, Int>()
 
     private var selectedIndex = -1
@@ -137,31 +137,36 @@ class SideBar @JvmOverloads constructor(
         return true
     }
 
-    fun setRawList(list: List<String>) {
-        rawDataList.apply {
+    fun setRawList(map: Map<String, Int>) {
+        characters.apply {
             clear()
-            addAll(list.map { it.getPinYinFirstCap() })
+            addAll(map.keys)
         }
-        computeCapIndex()
+        capIndexMap.putAll(map)
+//        rawDataList.apply {
+//            clear()
+//            addAll(list.map { it.getPinYinFirstCap() })
+//        }
+//        computeCapIndex()
         requestLayout()
     }
 
 
-    /**
-     * 计算需要显示的首字母索引
-     */
-    private fun computeCapIndex() {
-        characters.clear()
-        var current = ""
-        rawDataList.forEachIndexed { index, s ->
-            if (s != current) {
-                characters.add(s)
-                capIndexMap[s] = index
-                current = s
-            }
-        }
-
-    }
+//    /**
+//     * 计算需要显示的首字母索引
+//     */
+//    private fun computeCapIndex() {
+//        characters.clear()
+//        var current = ""
+//        rawDataList.forEachIndexed { index, s ->
+//            if (s != current) {
+//                characters.add(s)
+//                capIndexMap[s] = index
+//                current = s
+//            }
+//        }
+//
+//    }
 }
 
 interface OnSlideListener {

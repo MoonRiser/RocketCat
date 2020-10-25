@@ -1,13 +1,14 @@
-package com.example.common.widget.address_selector
+package com.xres.address_selector.widget.address_selector
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.common.R
+import com.xres.address_selector.R
 import kotlinx.android.synthetic.main.fragment_address.*
 
 /**
@@ -15,9 +16,10 @@ import kotlinx.android.synthetic.main.fragment_address.*
  * @CreateDate:     2020/8/19 16:54
  * @Description:
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class AddressFragment(val mAdapter: AddressAdapter) : Fragment() {
 
-    private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var myLayoutManager: LinearLayoutManager
 
 
     override fun onCreateView(
@@ -33,13 +35,13 @@ class AddressFragment(val mAdapter: AddressAdapter) : Fragment() {
             adapter = mAdapter
             layoutManager =
                 LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false).also {
-                    mLayoutManager = it
+                    myLayoutManager = it
                 }
         }
-        sideBar.mLayoutManager = mLayoutManager
+        mySideBar.mLayoutManager = myLayoutManager
         mAdapter.preparedListener = object : DataPreparedListener {
-            override fun onPrerared(list: List<String>) {
-                sideBar.setRawList(list)
+            override fun onPrepared(map: Map<String, Int>) {
+                mySideBar.setRawList(map)
             }
         }
 
