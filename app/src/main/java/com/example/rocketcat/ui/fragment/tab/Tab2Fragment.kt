@@ -30,7 +30,7 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
             this.peekHeight=40f.dpValue()
 
         }
-        bottomSheetDialog.show()
+//        bottomSheetDialog.show()
 
 //        BottomSheetDialog dialog = new BottomSheetDialog(context);
 //        View view = getLayoutInflater.inflate(R.layout.layout_bsd, null);

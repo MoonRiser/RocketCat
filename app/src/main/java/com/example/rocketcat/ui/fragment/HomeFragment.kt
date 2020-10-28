@@ -8,6 +8,7 @@ import com.example.rocketcat.databinding.FragmentHomeBinding
 import com.example.rocketcat.ui.fragment.tab.ArticleFragment
 import com.example.rocketcat.ui.fragment.tab.Tab1Fragment
 import com.example.rocketcat.ui.fragment.tab.Tab2Fragment
+import com.example.rocketcat.ui.fragment.tab.Tab3Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -24,6 +25,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             add(Tab1Fragment())
             add(ArticleFragment())
             add(Tab2Fragment())
+            add(Tab3Fragment())
         }
 
         vp2_tab.init(this, viewModel.fragments)
