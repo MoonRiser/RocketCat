@@ -15,7 +15,8 @@
 
 
 ## 使用
-Gradle依赖 （中间的版本号代表数据更新的年份）
+Gradle依赖 （中间的版本号代表数据更新的年份），Jcenter仓库托管
+
 `implementation  'com.xres.selecor:address-selector:0.2019.13'`
 
 ### 主要api
@@ -23,12 +24,12 @@ Gradle依赖 （中间的版本号代表数据更新的年份）
     
 ```
     AddressSelector(context) 
-    show()；
-    dismiss()；
-    setOnSelectCompletedListener((addressSelector, province, city, area, street) ->{
-    addressSelector.dismiss;
-    city.name;//名称
-    city.code;//对应的行政编码
+      show()；
+      dismiss()；
+      setOnSelectCompletedListener((addressSelector, province, city, area, street) ->{
+        addressSelector.dismiss;
+        city.name;//名称
+        city.code;//对应的行政编码
     } )
 ```
 * AddressSelectorView 不包含对话框，可以自行定制
