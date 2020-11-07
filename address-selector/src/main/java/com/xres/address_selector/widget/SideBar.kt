@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xres.address_selector.ext.color
 import com.xres.address_selector.ext.dp
 import com.xres.address_selector.ext.primaryColor
+import kotlin.math.ceil
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 
@@ -90,14 +91,9 @@ class SideBar @JvmOverloads constructor(
         }.also {
             baseLine = it.fontMetrics.run { (bottom - top) / 2 - bottom }
         }
-        mSlideListener = object : OnSlideListener {
-            override fun onSlide(index: Int, finished: Boolean) {
-                capIndexMap[characters[index]]?.let {
-                    mLayoutManager?.scrollToPositionWithOffset(
-                        it,
-                        0
-                    )
-                }
+        mSlideListener = OnSlideListener { index, finished ->
+            capIndexMap[characters[index]]?.let {
+                mLayoutManager?.scrollToPositionWithOffset(it, 0)
             }
         }
 
@@ -121,19 +117,20 @@ class SideBar @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val index: Int =
-            ((event.y - paddingV) / charHeight).toInt().coerceAtMost(characters.size)
-        when (event.action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                mSlideListener.onSlide(index, false)
+        val index: Int = ceil((event.y - paddingV) / charHeight).toInt() - 1
+        if (index in 0..characters.lastIndex) {
+            selectedIndex = index
+            when (event.action) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                    mSlideListener.onSlide(index, false)
+                }
+                MotionEvent.ACTION_UP -> {
+                    mSlideListener.onSlide(index, true)
+                }
             }
-            MotionEvent.ACTION_UP -> {
-                mSlideListener.onSlide(index, true)
-                selectedIndex = index
-                invalidate()
-            }
-
+            invalidate()
         }
+
         return true
     }
 
@@ -169,6 +166,6 @@ class SideBar @JvmOverloads constructor(
 //    }
 }
 
-interface OnSlideListener {
+fun interface OnSlideListener {
     fun onSlide(index: Int, finished: Boolean)
 }

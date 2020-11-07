@@ -20,6 +20,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.example.common.widget.PasswordInputView
+            android:id="@+id/passwordInputView"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
@@ -29,6 +30,16 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv1" />
+
+        <Button
+            android:id="@+id/bt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="测试1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passwordInputView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

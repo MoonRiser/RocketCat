@@ -178,7 +178,8 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                     1F
                 )
                 setOnClickListener {
-                    builder.leftOnClickListener?.onClick(this@CustomDialog) ?: dismiss()
+                    dismiss()
+                    builder.leftOnClickListener?.onClick(this@CustomDialog)
                 }
             }
         }
@@ -353,6 +354,6 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
 }
 
-interface CustomViewInflater {
+fun interface CustomViewInflater {
     fun inflate(inflater: LayoutInflater, parent: ViewGroup): View
 }

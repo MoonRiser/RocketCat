@@ -31,7 +31,7 @@ class PasswordInputView @JvmOverloads constructor(
     private val recRoundCorner = 4f.dp.toFloat()
     private val spacing = 8f.dp.toFloat()
 
-    private var currentIndex = 0
+    private var currentIndex = -1
     private val selectedColor = primaryColor
     private val maxCount = 6
 
@@ -51,26 +51,13 @@ class PasswordInputView @JvmOverloads constructor(
     private val rect = RectF()
 
     init {
+        isFocusableInTouchMode = true
         isFocusable = true
+        isCursorVisible = false
         filters = arrayOf(InputFilter.LengthFilter(maxCount))
         setOnClickListener {
             SoftKeyboardUtil.toggleSoftInput(this)
         }
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence, p1: Int, p2: Int, p3: Int) {
-                currentIndex = p0.length - 1
-                invalidate()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                invalidate()
-
-            }
-        })
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -101,11 +88,14 @@ class PasswordInputView @JvmOverloads constructor(
 
     }
 
-
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
         if (selStart == selEnd) {
-            text?.length?.let { setSelection(it) }
+            text?.length?.let {
+                setSelection(it)
+                currentIndex = it - 1
+            }
+
         }
         invalidate()
     }
