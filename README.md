@@ -11,12 +11,12 @@
 ## 数据源
 国内的地址数据来源于Github上开源项目[Administrative-divisions-of-China](https://github.com/modood/Administrative-divisions-of-China#administrative-divisions-of-china)，该项目所爬数据的最终来源是国家统计局等政府权威部门，目前最新的数据是2019年（2020年2月发布）
 ## 预览
+![QQ20201107-185553-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20201107190129.jpg)
 
-![demo](https://raw.githubusercontent.com/MoonRiser/images/master/20201025212745.jpg)
+
 ## 使用
 Gradle依赖 （中间的版本号代表数据更新的年份）
-
-`implementation  'com.xres.selecor:address-selector:0.2019.12'`
+`implementation  'com.xres.selecor:address-selector:0.2019.13'`
 
 ### 主要api
 * AddressSelector 已实现的带对话框样式，可以直接使用
@@ -35,11 +35,7 @@ Gradle依赖 （中间的版本号代表数据更新的年份）
 
 ```
     setOnSelectCompletedListener()
-        自定义属性
-        <attr name="tabIndicatorColor" format="color" />
-        <attr name="select_color" format="color" />
 ```
-tabLayout的选中字体颜色和indicator默认颜色分别为colors.xml中定义的colorPrimary和colorAccent
 
 ## 最后
 有什么bug问题可以提issue，我会抽空解决
