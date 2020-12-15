@@ -17,7 +17,7 @@
 ## 使用
 Gradle依赖 （中间的版本号代表数据更新的年份），Jcenter仓库托管
 
-`implementation  'com.xres.selecor:address-selector:0.2019.13'`
+`implementation  'com.xres.selecor:address-selector:0.2019.14'`
 
 ### 主要api
 * AddressSelector 已实现的带对话框样式，可以直接使用
