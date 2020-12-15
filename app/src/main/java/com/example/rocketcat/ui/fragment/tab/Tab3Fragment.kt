@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.liveData
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseFragment
 import com.example.rocketcat.R
@@ -15,6 +16,7 @@ import com.xres.address_selector.ext.DialogCallback
 import com.xres.address_selector.ext.init
 import com.xres.address_selector.ext.showToast
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.flow
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -45,8 +47,6 @@ class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
             })
 
         }
-
-
     }
 
 

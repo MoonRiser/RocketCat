@@ -11,10 +11,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.viewpager2.widget.ViewPager2
-import com.xres.address_selector.db.AppDatabase
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.xres.address_selector.R
+import com.xres.address_selector.db.AppDatabase
 import com.xres.address_selector.db.entity.*
 import com.xres.address_selector.ext.*
 
@@ -37,6 +37,7 @@ class AddressSelectorView
     private var tabLayout: TabLayout
     private var mediator: TabLayoutMediator
     private val fragments = arrayListOf<AddressFragment>()
+    private val dao = AppDatabase.getInstance(context.applicationContext).divisionDao()
 //    private val primaryColor = MaterialColors.getColor(this, R.attr.colorPrimary)
 //    private val accentColor = MaterialColors.getColor(this, R.attr.colorAccent)
 
@@ -69,7 +70,7 @@ class AddressSelectorView
     private val _provinceRq = MutableLiveData<String>()
     private val provinceLiveData: LiveData<List<Province>> =
         Transformations.switchMap(_provinceRq) {
-            AppDatabase.getInstance(context.applicationContext).divisionDao().getProvinceList()
+            dao.getProvinceList()
         }
 
 
@@ -80,7 +81,7 @@ class AddressSelectorView
 
     private val _provinceCode = MutableLiveData<String>()
     private val cityLiveData: LiveData<List<City>> = Transformations.switchMap(_provinceCode) {
-        AppDatabase.getInstance(context.applicationContext).divisionDao().getCityList(it)
+        dao.getCityList(it)
     }
 
 
@@ -91,7 +92,7 @@ class AddressSelectorView
 
     private val _cityCode = MutableLiveData<String>()
     private val areaLiveData: LiveData<List<Area>> = Transformations.switchMap(_cityCode) {
-        AppDatabase.getInstance(context.applicationContext).divisionDao().getAreaList(it)
+        dao.getAreaList(it)
     }
 
 
@@ -103,9 +104,11 @@ class AddressSelectorView
     }
 
     private val _areaCode = MutableLiveData<String>()
-    private val streetLiveData: LiveData<List<Street>> = Transformations.switchMap(_areaCode) {
-        AppDatabase.getInstance(context.applicationContext).divisionDao().getStreetList(it)
-    }
+    private val streetLiveData: LiveData<List<Street>> =
+
+        Transformations.switchMap(_areaCode) {
+            dao.getStreetList(it)
+        }
 
     //四个级别的liveData的监听器
     private val provinceObserver = Observer<List<Province>> { list ->
@@ -149,7 +152,7 @@ class AddressSelectorView
         //初始化viewpager
         viewPager2 = customView.findViewById(R.id.vp2_as)
         viewPager2.init(context.activity()!!, fragments, false)
-        mediator = TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+        mediator = TabLayoutMediator(tabLayout, viewPager2, true, false) { tab, position ->
             when (position) {
                 0 -> tab.text = currentProvince?.name ?: "请选择"
                 1 -> tab.text = currentCity?.name ?: "请选择"
@@ -195,8 +198,6 @@ class AddressSelectorView
             fragments.add(1, fragmentCity)
             //当前选中城市设null，标题会变成"请选择"
             currentCity = null
-            //通知viewpager2的内容发生了变化
-            viewPager2.adapter?.notifyDataSetChanged()
             //tab开始以新的vp2adapter数据更新
             mediator.attach()
             //跳转到下一级选中
@@ -214,7 +215,6 @@ class AddressSelectorView
             fragmentArea.mAdapter.resetClickPosition()
             fragments.add(2, fragmentArea)
             currentArea = null
-            viewPager2.adapter?.notifyDataSetChanged()
             mediator.attach()
             viewPager2.currentItem = 2
         }
@@ -230,7 +230,6 @@ class AddressSelectorView
             fragmentStreet.mAdapter.resetClickPosition()
             fragments.add(3, fragmentStreet)
             currentStreet = null
-            viewPager2.adapter?.notifyDataSetChanged()
             mediator.attach()
             viewPager2.currentItem = 3
         }
