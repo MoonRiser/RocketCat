@@ -49,9 +49,8 @@ public class MyGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Glide.with(context)
+                .asBitmap()
                 .load(imgs.get(position))
-                .centerCrop()
-                // .transform(new MultiTransformation(new CenterCrop(), new RoundedCorners(16)))
                 .into(((MyViewHolder) holder).imageView);
 
     }

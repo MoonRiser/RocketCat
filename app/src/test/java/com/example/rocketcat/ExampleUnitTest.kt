@@ -1,7 +1,10 @@
 package com.example.rocketcat
 
+import android.os.Handler
+import android.os.Message
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -25,6 +28,9 @@ class ExampleUnitTest {
         val formatter = SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS")
         runBlocking {
             println("00##${formatter.format(Date())}")
+            launch {
+                val a  =
+            }
             val aa = async {
                 println("11##${formatter.format(Date())}")
             }

@@ -23,7 +23,7 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
     lateinit var viewModel: VM
 
     //该类绑定的ViewDataBinding
-    lateinit var dataBinding: DB
+    lateinit var binding: DB
 
     /**
      * 当前Fragment绑定的视图布局
@@ -35,9 +35,9 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dataBinding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
-        dataBinding.lifecycleOwner = this
-        return dataBinding.root
+        binding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
+        binding.lifecycleOwner = this
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -6,14 +6,14 @@ apply plugin: 'kotlin-kapt'
 //apply plugin: 'com.novoda.bintray-release' // 添加bintray插件
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
     android.buildFeatures.dataBinding = true
 
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 

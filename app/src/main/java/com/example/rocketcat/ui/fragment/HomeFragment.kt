@@ -23,12 +23,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun initView(savedInstanceState: Bundle?) {
         viewModel.fragments.apply {
             add(Tab1Fragment())
-            add(ArticleFragment())
             add(Tab2Fragment())
             add(Tab3Fragment())
+            add(ArticleFragment())
         }
 
-        vp2_tab.init(this, viewModel.fragments)
+        vp2_tab.init(this, viewModel.fragments,false)
         viewModel.mediator = TabLayoutMediator(tab_home, vp2_tab) { tab, position ->
             tab.text = "Title" + (position + 1)
         }

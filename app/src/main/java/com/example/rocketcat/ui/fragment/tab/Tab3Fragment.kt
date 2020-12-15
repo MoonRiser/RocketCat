@@ -4,12 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseFragment
 import com.example.rocketcat.R
+import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.FragmentTab3Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
 import com.xres.address_selector.dialog.CustomDialog
 import com.xres.address_selector.ext.DialogCallback
+import com.xres.address_selector.ext.init
 import com.xres.address_selector.ext.showToast
 import kotlinx.coroutines.*
 import kotlin.coroutines.resume
@@ -22,14 +25,28 @@ import kotlin.coroutines.suspendCoroutine
 
 class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
 
+    private val imgs = arrayListOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
+
     override fun layoutId() = R.layout.fragment_tab3
 
     override fun initView(savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
-            async {  }
-            val msg = awaitDialog(requireActivity())
-            showToast(msg)
+        binding.ivAbove.pageCount = imgs.size
+        binding.vp2below.apply {
+            adapter = MyGalleryAdapter(imgs)
+            offscreenPageLimit = 2
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                   binding.ivAbove.setPageOffset(position,positionOffset)
+                }
+            })
+
         }
+
+
     }
 
 

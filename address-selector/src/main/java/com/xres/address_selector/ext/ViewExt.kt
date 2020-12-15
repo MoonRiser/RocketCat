@@ -15,6 +15,7 @@ fun ViewPager2.init(
 ): ViewPager2 {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
+    this.offscreenPageLimit = fragments.size
     //设置适配器
     adapter = object : FragmentStateAdapter(fragment) {
         override fun createFragment(position: Int) = fragments[position]
@@ -28,11 +29,10 @@ fun ViewPager2.init(
     activity: FragmentActivity,
     fragments: List<Fragment>,
     isUserInputEnabled: Boolean = true,
-    offscreenPageLimit: Int = 1
 ): ViewPager2 {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
-    this.offscreenPageLimit = offscreenPageLimit
+    this.offscreenPageLimit = fragments.size
     //设置适配器
     adapter = object : FragmentStateAdapter(activity) {
         override fun createFragment(position: Int) = fragments[position]
