@@ -28,13 +28,17 @@ class HImageView @JvmOverloads constructor(
     //页面的索引和偏移量、页数
     private var pageIndex = 0
     private var pageOffset = 0f
-    var pageCount = 1
+    var pageCount = 2
         set(value) {
             field = if (value > 0) value else 1
         }
 
     //供绘制的drawable
     private lateinit var myDrawable: Drawable
+
+    init {
+        scaleType = ScaleType.CENTER_CROP
+    }
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -49,8 +53,10 @@ class HImageView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
 
+        //如果vp有三页，实际上只能滑动两页的距离
+        val mOffset: Float = (pageOffset + pageIndex) / (pageCount - 1)
         canvas.save()
-        canvas.translate(((pageOffset + pageIndex) / pageCount) * (visibleWidth - realWidth), 0f)
+        canvas.translate((0.5f - mOffset) * (realWidth - visibleWidth), 0f)
         super.onDraw(canvas)
         canvas.restore()
 
