@@ -2,6 +2,7 @@ package com.xres.address_selector.widget.address_selector
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
     private lateinit var context: Context
     var clickListener: ClickCallback? = null
     var preparedListener: DataPreparedListener? = null
+    var visibleListener: HostVisibleListener? = null
     private var currentClickPosition: Int = -1
     var selectedColor: Int = Color.BLUE
 
@@ -132,10 +134,11 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
 }
 
+typealias HostVisibleListener = () -> Unit
+
 interface DataPreparedListener {
     fun onPrepared(map: Map<String, Int>)
 }
-
 
 /**
  * 获取汉字对应拼音的首字母

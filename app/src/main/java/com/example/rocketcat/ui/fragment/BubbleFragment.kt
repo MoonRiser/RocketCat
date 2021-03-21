@@ -11,7 +11,6 @@ import com.example.common.base.BaseViewModel
 import com.example.common.ext.showToast
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentBubbleBinding
-import kotlinx.android.synthetic.main.fragment_bubble.*
 
 class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
 
@@ -24,7 +23,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
     @SuppressLint("ClickableViewAccessibility")
     override fun initView(savedInstanceState: Bundle?) {
 
-        animator = bubbleView.anim
+        animator = binding.bubbleView.anim
         val listener: SimpleOnGestureListener = object : SimpleOnGestureListener() {
 
             //这里return true，下面的双击事件才能响应
@@ -58,7 +57,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
             }
         }
         mDetector = GestureDetector(requireActivity(), listener)
-        rlRoot.setOnTouchListener { _, motionEvent ->
+        binding.rlRoot.setOnTouchListener { _, motionEvent ->
             mDetector.onTouchEvent(motionEvent)
         }
 

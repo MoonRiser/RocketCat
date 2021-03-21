@@ -1,5 +1,6 @@
 package com.example.rocketcat.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Toast
@@ -13,7 +14,6 @@ import com.example.common.base.BaseViewModel
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
 import com.example.rocketcat.customview.transformer.HorizontalStackTransformer
 import com.example.rocketcat.databinding.FragmentDashBoardBinding
-import kotlinx.android.synthetic.main.fragment_dash_board.*
 
 class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>() {
 
@@ -34,15 +34,16 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
 
     override fun layoutId() = R.layout.fragment_dash_board
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initView(savedInstanceState: Bundle?) {
 
-        vp2_stack.apply {
+        binding.vp2Stack.apply {
             adapter = adapter1
             offscreenPageLimit = 3
             setPageTransformer(HorizontalStackTransformer(this))
 
         }
-        vp2_carou.apply {
+        binding.vp2Carou.apply {
             adapter = adapter2
             offscreenPageLimit = 3
             currentItem = 2
@@ -50,7 +51,7 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
         }
 
 
-        val (anim1X, anim1Y) = fab.let { view1 ->
+        val (anim1X, anim1Y) = binding.fab.let { view1 ->
             SpringAnimation(view1, DynamicAnimation.TRANSLATION_X) to
                     SpringAnimation(view1, DynamicAnimation.TRANSLATION_Y)
         }.apply {
@@ -58,23 +59,24 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
             second.spring = springForce
         }
 
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             Toast.makeText(requireContext(), "look carefully", Toast.LENGTH_LONG).show()
         }
-        fab.setOnTouchListener { view, event ->
+
+        binding.fab.setOnTouchListener { view, event ->
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    xDiffLeft = event.rawX - fab.x
-                    yDiffTop = event.rawY - fab.y
+                    xDiffLeft = event.rawX - binding.fab.x
+                    yDiffTop = event.rawY - binding.fab.y
                     anim1X.cancel()
                     anim1Y.cancel()
                     isMoved = false
                 }
                 MotionEvent.ACTION_MOVE -> {
                     isMoved = true
-                    fab.x = event.rawX - xDiffLeft
-                    fab.y = event.rawY - yDiffTop
+                    binding.fab.x = event.rawX - xDiffLeft
+                    binding.fab.y = event.rawY - yDiffTop
                 }
                 MotionEvent.ACTION_UP -> {
                     //处理重写触摸事件后的冲突

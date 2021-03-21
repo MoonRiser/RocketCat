@@ -10,7 +10,6 @@ import com.example.rocketcat.ui.fragment.tab.Tab1Fragment
 import com.example.rocketcat.ui.fragment.tab.Tab2Fragment
 import com.example.rocketcat.ui.fragment.tab.Tab3Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
@@ -28,8 +27,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             add(ArticleFragment())
         }
 
-        vp2_tab.init(this, viewModel.fragments,false)
-        viewModel.mediator = TabLayoutMediator(tab_home, vp2_tab) { tab, position ->
+        binding.vp2Tab.init(this, viewModel.fragments,false)
+        viewModel.mediator = TabLayoutMediator(binding.tabHome, binding.vp2Tab) { tab, position ->
             tab.text = "Title" + (position + 1)
         }
         viewModel.mediator.attach()

@@ -34,7 +34,7 @@ class AddressSelectorView
     private var customView: View =
         LayoutInflater.from(context).inflate(R.layout.address_select_view, this, true)
     private var viewPager2: ViewPager2
-    private var tabLayout: TabLayout
+    private var tabLayout: TabLayout = customView.findViewById(R.id.tab_as)
     private var mediator: TabLayoutMediator
     private val fragments = arrayListOf<AddressFragment>()
     private val dao = AppDatabase.getInstance(context.applicationContext).divisionDao()
@@ -80,9 +80,10 @@ class AddressSelectorView
     }
 
     private val _provinceCode = MutableLiveData<String>()
-    private val cityLiveData: LiveData<List<City>> = Transformations.switchMap(_provinceCode) {
-        dao.getCityList(it)
-    }
+    private val cityLiveData: LiveData<List<City>> =
+        Transformations.switchMap(_provinceCode) {
+            dao.getCityList(it)
+        }
 
 
     //刷新区级数据
@@ -128,7 +129,6 @@ class AddressSelectorView
     init {
 
 
-        tabLayout = customView.findViewById(R.id.tab_as)
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AddressSelectorView)
         val color = typedArray.getColor(R.styleable.AddressSelectorView_select_color, primaryColor)
         val tabIndicatorColor =
@@ -144,6 +144,7 @@ class AddressSelectorView
         typedArray.recycle()
 
         //初始时，将省的数据先加载
+        initListener()
         initProvince()
         initCity()
         initArea()
@@ -179,6 +180,19 @@ class AddressSelectorView
         areaLiveData.removeObserver(areaObserver)
         streetLiveData.removeObserver(streetObserver)
     }
+
+    private fun initListener() {
+        fragmentCity.mAdapter.visibleListener = {
+            currentProvince?.code?.let { it1 -> refreshCity(it1) }
+        }
+        fragmentArea.mAdapter.visibleListener = {
+            currentCity?.code?.let { it1 -> refreshArea(it1) }
+        }
+        fragmentStreet.mAdapter.visibleListener = {
+            currentArea?.code?.let { it1 -> refreshStreet(it1) }
+        }
+    }
+
 
     /**
      * 这个初始化省级数据注释写得很明白，下面三个init方法也是一样的，故省略

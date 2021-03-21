@@ -13,7 +13,7 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
 
 
     lateinit var viewModel: VM
-    lateinit var dataBinding: DB
+    lateinit var binding: DB
 
 
     abstract fun layoutId(): Int
@@ -24,8 +24,8 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
         super.onCreate(savedInstanceState)
 
         viewModel = createViewModel()
-        dataBinding = DataBindingUtil.setContentView(this, layoutId())
-        dataBinding.setVariable(getViewModelBR(), viewModel)
+        binding = DataBindingUtil.setContentView(this, layoutId())
+        binding.setVariable(getViewModelBR(), viewModel)
         initView(savedInstanceState)
     }
 

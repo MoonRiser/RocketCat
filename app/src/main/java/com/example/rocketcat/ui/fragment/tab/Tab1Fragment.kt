@@ -18,7 +18,6 @@ import com.xres.address_selector.dialog.CustomDialog
 import com.xres.address_selector.ext.showToast
 import com.xres.address_selector.widget.address_selector.AddressSelector
 import com.xres.address_selector.widget.address_selector.OnSelectedListener
-import kotlinx.android.synthetic.main.fragment_tab1.*
 
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
@@ -32,7 +31,7 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
     override fun initView(savedInstanceState: Bundle?) {
 
 
-        bt_test.setOnClickListener {
+        binding.btTest.setOnClickListener {
             viewModel.mediator.apply {
                 detach()
                 viewModel.fragments.add(Tab2Fragment())
@@ -54,10 +53,10 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
                 }
             })
         }
-        btTest2.setOnClickListener {
+        binding.btTest2.setOnClickListener {
             selector.show()
         }
-        btTest3.setOnClickListener {
+        binding.btTest3.setOnClickListener {
             CustomDialog.Builder(requireActivity())
                 .title("FBI WARNING")
                 .content("Why so serious")
@@ -65,10 +64,10 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
                 .textRight("OK")
                 .show()
         }
-        btLoading.setOnClickListener {
-            loading.switchState()
+        binding.btLoading.setOnClickListener {
+            binding.loading.switchState()
         }
-        bt4.setOnClickListener {
+        binding.bt4.setOnClickListener {
             test()
         }
     }

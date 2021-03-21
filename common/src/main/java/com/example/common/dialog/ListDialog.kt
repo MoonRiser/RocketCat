@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDialog
 import androidx.cardview.widget.CardView
-import androidx.core.view.setPadding
 import com.example.common.R
 import com.example.common.ext.ClickCallback
 import com.example.common.ext.dp
@@ -78,7 +77,6 @@ class ListDialog<T> private constructor(private val builder: Builder<T>, context
         setContentView(linearLayout)
 
     }
-
 
     class Builder<K>(private val context: Context) {
 

@@ -10,6 +10,7 @@ import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
+import com.example.common.ext.dp
 import com.example.common.ext.dpValue
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.CustomInterpolator
@@ -54,7 +55,7 @@ class BallsLoading
     init {
 
         val array = context.obtainStyledAttributes(attrs, R.styleable.BallsLoading, defStyleAttr, 0)
-        ballRadius = array.getInteger(R.styleable.BallsLoading_ball_radius, 4).toFloat().dpValue()
+        ballRadius = array.getInteger(R.styleable.BallsLoading_ball_radius, 4).toFloat().dp
         ballColor = array.getColor(R.styleable.BallsLoading_ball_color, Color.BLUE)
         ballNum = array.getInteger(R.styleable.BallsLoading_ball_num, 11)
         array.recycle()

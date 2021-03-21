@@ -13,6 +13,7 @@ import com.example.rocketcat.BR
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
 import com.example.common.data.network.response.ArticleResponse
+import com.example.common.ext.dp
 import com.example.rocketcat.databinding.ItemRvArticleBinding
 
 private const val AD_TYPE = 816
@@ -43,7 +44,7 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 AdImageView(parent.context).apply {
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     layoutParams = RecyclerView.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, 260f.dpValue()
+                        ViewGroup.LayoutParams.MATCH_PARENT, 260f.dp
                     )
                 }.let {
                     AdViewHolder(it)

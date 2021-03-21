@@ -6,9 +6,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RestrictTo
+import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xres.address_selector.ext.color
 import com.xres.address_selector.ext.dp
@@ -139,13 +141,17 @@ class SideBar @JvmOverloads constructor(
             clear()
             addAll(map.keys)
         }
-        capIndexMap.putAll(map)
+        capIndexMap.apply {
+            clear()
+            putAll(map)
+        }
 //        rawDataList.apply {
 //            clear()
 //            addAll(list.map { it.getPinYinFirstCap() })
 //        }
 //        computeCapIndex()
         requestLayout()
+
     }
 
 

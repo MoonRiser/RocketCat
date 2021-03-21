@@ -2,23 +2,26 @@ package com.example.rocketcat.ui.activity
 
 import android.animation.ArgbEvaluator
 import android.content.Intent
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.example.common.ext.dpValue
-import com.example.rocketcat.R
-import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.common.base.BaseActivity
 import com.example.common.base.BaseViewModel
+import com.example.common.ext.dp
+import com.example.rocketcat.R
+import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.ActivitySplashBinding
-import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
 
@@ -36,15 +39,23 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
 
+
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        val colors = imgs.map { createPaletteSync(it).dominantSwatch?.rgb }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+            window.insetsController?.apply {
+                hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+        val colors = imgs.map { createPaletteSync(it)?.dominantSwatch?.rgb }
 
 
-        vp2_welcome.apply {
+        binding.vp2Welcome.apply {
             adapter = adapter1
             offscreenPageLimit = 1
             setPageTransformer(
-                MarginPageTransformer(32f.dpValue())
+                MarginPageTransformer(32f.dp)
             )
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
@@ -59,21 +70,24 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                                 colors[position],
                                 colors[position + 1]
                             ) as Int
-                        img_bg.setBackgroundColor(color)
-                        bt_skip.visibility = View.GONE
+                        binding.imgBg.setBackgroundColor(color)
+                        binding.btSkip.visibility = View.GONE
                     } else {
-                        bt_skip.visibility = View.VISIBLE
+                        binding.btSkip.visibility = View.VISIBLE
                     }
 
                 }
             })
         }
 
-        bt_skip.setOnClickListener {
+        binding.btSkip.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
-    private fun createPaletteSync(@DrawableRes resourceId: Int): Palette =
-        Palette.from(ContextCompat.getDrawable(this, resourceId)!!.toBitmap()).generate()
+    private fun createPaletteSync(@DrawableRes resourceId: Int): Palette? =
+        ContextCompat.getDrawable(this, resourceId)?.let {
+            Palette.from(it.toBitmap()).generate()
+        }
+
 }

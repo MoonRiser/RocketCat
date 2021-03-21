@@ -2,17 +2,17 @@ package com.example.rocketcat.ui.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowInsetsController
 import androidx.fragment.app.Fragment
-import com.example.rocketcat.R
 import com.example.common.base.BaseActivity
 import com.example.common.base.BaseViewModel
-import com.example.rocketcat.databinding.ActivityMainBinding
 import com.example.common.ext.init
+import com.example.rocketcat.R
+import com.example.rocketcat.databinding.ActivityMainBinding
 import com.example.rocketcat.ui.fragment.BubbleFragment
 import com.example.rocketcat.ui.fragment.DashboardFragment
 import com.example.rocketcat.ui.fragment.HomeFragment
 import com.example.rocketcat.ui.fragment.SettingFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
 
@@ -39,25 +39,26 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
 
-        vp2_home.init(this, fragments, false)
 
-        bottomNavigationView.apply {
+        binding.vp2Home.init(this, fragments, false)
+
+        binding.bottomNavigationView.apply {
             setOnNavigationItemSelectedListener { item: MenuItem ->
                 when (item.itemId) {
                     R.id.navigation_home -> {
-                        vp2_home.setCurrentItem(0, false)
+                        binding.vp2Home.setCurrentItem(0, false)
                         true
                     }
                     R.id.navigation_dashboard -> {
-                        vp2_home.setCurrentItem(1, false)
+                        binding.vp2Home.setCurrentItem(1, false)
                         true
                     }
                     R.id.navigation_bubble -> {
-                        vp2_home.setCurrentItem(2, false)
+                        binding.vp2Home.setCurrentItem(2, false)
                         true
                     }
                     R.id.navigation_setting -> {
-                        vp2_home.setCurrentItem(3, false)
+                        binding.vp2Home.setCurrentItem(3, false)
                         true
                     }
                     else -> false

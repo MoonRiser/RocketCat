@@ -1,7 +1,5 @@
 package com.example.rocketcat
 
-import android.os.Handler
-import android.os.Message
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +27,7 @@ class ExampleUnitTest {
         runBlocking {
             println("00##${formatter.format(Date())}")
             launch {
-                val a  =
+                val a  =""
             }
             val aa = async {
                 println("11##${formatter.format(Date())}")
