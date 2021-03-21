@@ -11,25 +11,24 @@
 ## 数据源
 国内的地址数据来源于Github上开源项目[Administrative-divisions-of-China](https://github.com/modood/Administrative-divisions-of-China#administrative-divisions-of-china)，该项目所爬数据的最终来源是国家统计局等政府权威部门，目前最新的数据是2019年（2020年2月发布）
 ## 预览
-![QQ20201107-185553-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20201107190129.jpg)
+![QQ20210321-193124-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20210321202718.jpg)
 
 
 ## 使用
-Gradle依赖 （中间的版本号代表数据更新的年份），Jcenter仓库托管
-
-`implementation  'com.xres.selecor:address-selector:0.2019.14'`
+Gradle依赖 （中间的版本号代表数据更新的年份）
+`implementation  'com.xres.selecor:address-selector:0.2019.15'`
 
 ### 主要api
 * AddressSelector 已实现的带对话框样式，可以直接使用
     
 ```
-    AddressSelector(context) 
-      show()；
-      dismiss()；
-      setOnSelectCompletedListener((addressSelector, province, city, area, street) ->{
-        addressSelector.dismiss;
-        city.name;//名称
-        city.code;//对应的行政编码
+   初始化：new AddressSelector(context) 
+    显示：  show()；
+    隐藏：  dismiss()；
+    设置选中监听：setOnSelectCompletedListener((addressSelector, province, city, area, street) ->{
+    addressSelector.dismiss;
+    city.name;//名称
+    city.code;//对应的行政编码
     } )
 ```
 * AddressSelectorView 不包含对话框，可以自行定制
@@ -40,3 +39,21 @@ Gradle依赖 （中间的版本号代表数据更新的年份），Jcenter仓库
 
 ## 最后
 有什么bug问题可以提issue，我会抽空解决
+
+
+# 其他
+### 地址选择器模块以外的模块，一些demo
+* Google日历滑动错位效果模仿
+
+![QQ20210321-161609-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20210321202715.jpg)
+
+* 横向滑动联动效果
+
+
+![QQ20210321-164322-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20210321202712.jpg)
+
+* 维基百科卡片堆叠效果模仿
+
+
+![QQ20210321-163013-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20210321202709.jpg)
+
