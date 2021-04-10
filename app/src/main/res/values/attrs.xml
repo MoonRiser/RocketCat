@@ -15,6 +15,9 @@
     <declare-styleable name="AddressSelectorView">
         <attr name="tabIndicatorColor" format="color" />
         <attr name="select_color" format="color" />
+    </declare-styleable>
 
+    <declare-styleable name="MyFlowLayout">
+        <attr name="enableLastView" format="boolean" />
     </declare-styleable>
 </resources>

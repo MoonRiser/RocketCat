@@ -1,13 +1,13 @@
 package com.example.common.widget
 
 import android.content.Context
-import android.graphics.*
-import android.text.Editable
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.text.InputFilter
-import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.widget.addTextChangedListener
 import com.example.common.ext.dp
 import com.example.common.ext.primaryColor
 import com.example.common.utils.SoftKeyboardUtil
@@ -98,5 +98,7 @@ class PasswordInputView @JvmOverloads constructor(
 
         }
         invalidate()
+
+
     }
 }

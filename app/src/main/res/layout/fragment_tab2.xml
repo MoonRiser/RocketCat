@@ -31,6 +31,20 @@
             app:layout_constraintBottom_toBottomOf="@+id/imgGS"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <com.example.rocketcat.customview.MyFlowLayout
+            android:id="@+id/flowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgGS">
+
+
+
+
+        </com.example.rocketcat.customview.MyFlowLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
