@@ -2,6 +2,7 @@ package com.example.rocketcat.customview
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MarginLayoutParamsCompat
@@ -30,10 +31,6 @@ class MyFlowLayout @JvmOverloads constructor(
 
     fun setMaxRows(count: Int) {
         MAX_ROWS_COUNT = count
-        //之前被隐藏的需要设置全部显示
-        children.forEach { child ->
-            child.visibility = View.VISIBLE
-        }
         requestLayout()
     }
 
@@ -66,6 +63,7 @@ class MyFlowLayout @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
 
@@ -78,7 +76,7 @@ class MyFlowLayout @JvmOverloads constructor(
         var childLeft = paddingLeft
         var childTop = paddingTop
         var childBottom = childTop
-        var childRight = childLeft
+        var childRight: Int
         var maxChildRight = 0
         val maxRight = maxWidth - paddingRight
         for (i in 0 until childCount) {
@@ -91,9 +89,8 @@ class MyFlowLayout @JvmOverloads constructor(
             var leftMargin = 0
             var rightMargin = 0
             if (lp is MarginLayoutParams) {
-                val marginLp = lp
-                leftMargin += marginLp.leftMargin
-                rightMargin += marginLp.rightMargin
+                leftMargin += lp.leftMargin
+                rightMargin += lp.rightMargin
             }
             childRight = childLeft + leftMargin + child.measuredWidth
 
@@ -106,6 +103,7 @@ class MyFlowLayout @JvmOverloads constructor(
             }
             childRight = childLeft + leftMargin + child.measuredWidth
             childBottom = childTop + child.measuredHeight
+            Log.i("cxk", "childBottom: $childBottom #tag:${child.tag}")
 
             // Updates Flowlayout's max right bound if current child's right bound exceeds it.
             if (childRight > maxChildRight) {
@@ -119,6 +117,7 @@ class MyFlowLayout @JvmOverloads constructor(
             if (i == childCount - 1) {
                 maxChildRight += rightMargin
             }
+
         }
 
         maxChildRight += paddingRight
@@ -132,10 +131,12 @@ class MyFlowLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
+
         if (childCount == 0) {
             rowCount = 0
             return
         }
+
         val maxWidth = r - l
         rowCount = 1
         var alreadyAdd = false
@@ -148,9 +149,9 @@ class MyFlowLayout @JvmOverloads constructor(
         var childBottom = childTop
         var childEnd: Int
         val maxChildEnd = right - left - paddingEnd
+        var maxBottom = childBottom
 
-        children.forEachIndexed { i, child ->
-//            val child = getChildAt(i)
+        children.toList().forEachIndexed { i, child ->
             if (child.visibility == GONE) {
 //                child.setTag(R.id.row_index_key, -1)
                 return@forEachIndexed
@@ -158,7 +159,8 @@ class MyFlowLayout @JvmOverloads constructor(
             if (alreadyAdd) {
                 if (child != lastView) {
 //                    removeView(child)
-                    child.visibility = View.GONE
+//                    child.visibility = View.GONE
+                    removeViewInLayout(child)
                     return@forEachIndexed
                 }
             }
@@ -173,7 +175,12 @@ class MyFlowLayout @JvmOverloads constructor(
 //********************************
             if (rowCount == MAX_ROWS_COUNT && !singleLine) {
                 if (child == lastView) {
-                    child.layout(childStart + startMargin, childTop, childEnd, childBottom)
+                    child.layout(
+                        childStart + startMargin,
+                        maxBottom - lastView.measuredHeight,
+                        childEnd,
+                        maxBottom
+                    )
                     return
                 }
                 if (childStart + lastView.measuredWidth > maxChildEnd) {
@@ -199,6 +206,10 @@ class MyFlowLayout @JvmOverloads constructor(
 //            child.setTag(R.id.row_index_key, rowCount - 1)
             childEnd = childStart + startMargin + child.measuredWidth
             childBottom = childTop + child.measuredHeight
+            if (childBottom > maxBottom) {
+                maxBottom = childBottom
+            }
+            Log.i("xres", maxBottom.toString())
             if (isRtl) {
                 child.layout(
                     maxChildEnd - childEnd,
@@ -211,6 +222,7 @@ class MyFlowLayout @JvmOverloads constructor(
             }
             childStart += startMargin + endMargin + child.measuredWidth + itemSpacing
         }
+
 
     }
 

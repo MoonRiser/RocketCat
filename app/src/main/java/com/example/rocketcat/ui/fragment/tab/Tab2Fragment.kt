@@ -1,11 +1,12 @@
 package com.example.rocketcat.ui.fragment.tab
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.setPadding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.common.base.BaseFragment
@@ -15,6 +16,7 @@ import com.example.rocketcat.R
 import com.example.rocketcat.adapter.BlurTransformation
 import com.example.rocketcat.customview.MyFlowLayout
 import com.example.rocketcat.databinding.FragmentTab2Binding
+import com.google.android.material.chip.Chip
 
 
 class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
@@ -30,22 +32,31 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
             layoutParams = MyFlowLayout.MyLayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
-            )
+            ).apply {
+                setPadding(6f.dp)
+            }
         }
         binding.flowLayout.setLastView(lastView)
-        repeat(25) {
-            val child = Button(context).apply {
+        repeat(25) { time ->
+            val child = Chip(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 ).apply {
                     marginStart = 4f.dp
                 }
-                text = arrayOf("加油", "优惠券", "车灯", "保温杯", "德玛西亚")[(0..4).random()]
+                text = arrayOf("加油", "优惠券", "车灯", "保温杯", "德玛西亚")[(0..4).random()] + "$time"
+                tag = time
                 setTextColor(Color.BLUE)
-                setOnClickListener {
-                    binding.flowLayout.setMaxRows(4)
+                setOnLongClickListener {
+                    isCloseIconVisible = !isCloseIconVisible
+                    true
                 }
+                setOnCloseIconClickListener {
+                    (it.parent as ViewGroup).removeView(it)
+                }
+                setCloseIconResource(R.drawable.ic_baseline_cancel_24)
+                closeIconTint = ColorStateList.valueOf(Color.RED)
             }
             binding.flowLayout.addView(child)
         }
