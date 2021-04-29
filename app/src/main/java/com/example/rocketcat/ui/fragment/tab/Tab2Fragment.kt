@@ -36,7 +36,10 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
                 setPadding(6f.dp)
             }
         }
-        binding.flowLayout.setLastView(lastView)
+        binding.flowLayout.apply {
+            setLastView(lastView)
+//            enableLastView(false)
+        }
         repeat(25) { time ->
             val child = Chip(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(

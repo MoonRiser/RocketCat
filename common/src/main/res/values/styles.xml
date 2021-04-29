@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="MyMaterialTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVibrant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+    </style>
+
+    <!-- 圆形图片（来自Material组件）-->
+    <style name="CircleShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="RoundCornerShape8dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!-- 圆角矩形图片（来自Material组件）-->
+    <style name="RoundCornerShape16dp">
+        <item name="android:elevation">4dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+</resources>

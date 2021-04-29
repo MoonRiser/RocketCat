@@ -27,7 +27,7 @@ class ExampleUnitTest {
         runBlocking {
             println("00##${formatter.format(Date())}")
             launch {
-                val a  =""
+                val a = ""
             }
             val aa = async {
                 println("11##${formatter.format(Date())}")
@@ -39,10 +39,19 @@ class ExampleUnitTest {
             println("44##${formatter.format(Date())}")
 
 
-
         }
     }
 
+    @Test
+    fun testSome() {
+        val m = (2.01 * 100)
+        val n = (2.75 * 100)
+        val j = (201 / 100.0)
+        val k = (201 / 100f)
+        println("m: $m \nn: $n")
+        println("j: $j \nk: $k")
+
+    }
 
 }
 

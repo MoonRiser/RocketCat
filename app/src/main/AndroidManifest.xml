@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".ui.activity.MainActivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+            android:theme="@style/MyMaterialTheme" />
     </application>
 
 </manifest>

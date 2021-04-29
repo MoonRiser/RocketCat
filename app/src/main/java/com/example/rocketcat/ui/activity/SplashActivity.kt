@@ -1,17 +1,14 @@
 package com.example.rocketcat.ui.activity
 
 import android.animation.ArgbEvaluator
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.Insets
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -19,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseActivity
 import com.example.common.base.BaseViewModel
 import com.example.common.ext.dp
+import com.example.common.ext.jumpTo
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.ActivitySplashBinding
@@ -42,7 +40,6 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
             window.insetsController?.apply {
                 hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -81,7 +78,8 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         }
 
         binding.btSkip.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            jumpTo<MainActivity>()
+            finish()
         }
     }
 

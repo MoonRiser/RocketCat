@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.imageview.ShapeableImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/iv_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="16dp">
+    android:scaleType="centerCrop"
+    app:cardCornerRadius="16dp"
+    app:shapeAppearance="@style/RoundCornerShape16dp"
+    tools:src="@drawable/ads">
 
-    <ImageView
-        android:id="@+id/iv_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/ads" />
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.imageview.ShapeableImageView>

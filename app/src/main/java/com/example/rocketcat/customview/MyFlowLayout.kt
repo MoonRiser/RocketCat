@@ -57,7 +57,7 @@ class MyFlowLayout @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!::lastView.isInitialized) {
+        if (!::lastView.isInitialized && enableLastView) {
             throw RuntimeException("enableLastView默认为true，请先调用setLastView。或者enableLastView设置为false")
         }
     }
@@ -76,6 +76,7 @@ class MyFlowLayout @JvmOverloads constructor(
         var childLeft = paddingLeft
         var childTop = paddingTop
         var childBottom = childTop
+        var maxBottom = 0
         var childRight: Int
         var maxChildRight = 0
         val maxRight = maxWidth - paddingRight
@@ -103,7 +104,10 @@ class MyFlowLayout @JvmOverloads constructor(
             }
             childRight = childLeft + leftMargin + child.measuredWidth
             childBottom = childTop + child.measuredHeight
-            Log.i("cxk", "childBottom: $childBottom #tag:${child.tag}")
+            if (childBottom > maxBottom) {
+                maxBottom = childBottom
+            }
+            Log.i("cxk", "childBottom: $childBottom #tag:${child.tag}#maxBottom:$maxBottom")
 
             // Updates Flowlayout's max right bound if current child's right bound exceeds it.
             if (childRight > maxChildRight) {
@@ -121,10 +125,10 @@ class MyFlowLayout @JvmOverloads constructor(
         }
 
         maxChildRight += paddingRight
-        childBottom += paddingBottom
+        maxBottom += paddingBottom
 
         val finalWidth = getMeasuredDimension(width, widthMode, maxChildRight)
-        val finalHeight = getMeasuredDimension(height, heightMode, childBottom)
+        val finalHeight = getMeasuredDimension(height, heightMode, maxBottom)
         setMeasuredDimension(finalWidth, finalHeight)
 
     }
@@ -139,7 +143,7 @@ class MyFlowLayout @JvmOverloads constructor(
 
         val maxWidth = r - l
         rowCount = 1
-        var alreadyAdd = false
+        var alreadyFull = false
 
         val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
         val paddingStart = if (isRtl) paddingRight else paddingLeft
@@ -156,10 +160,12 @@ class MyFlowLayout @JvmOverloads constructor(
 //                child.setTag(R.id.row_index_key, -1)
                 return@forEachIndexed
             }
-            if (alreadyAdd) {
+            if (alreadyFull) {
+                if (!enableLastView) {
+                    removeViewInLayout(child)
+                    return@forEachIndexed
+                }
                 if (child != lastView) {
-//                    removeView(child)
-//                    child.visibility = View.GONE
                     removeViewInLayout(child)
                     return@forEachIndexed
                 }
@@ -173,7 +179,7 @@ class MyFlowLayout @JvmOverloads constructor(
             }
             childEnd = childStart + startMargin + child.measuredWidth
 //********************************
-            if (rowCount == MAX_ROWS_COUNT && !singleLine) {
+            if (rowCount == MAX_ROWS_COUNT && !singleLine && enableLastView) {
                 if (child == lastView) {
                     child.layout(
                         childStart + startMargin,
@@ -185,14 +191,13 @@ class MyFlowLayout @JvmOverloads constructor(
                 }
                 if (childStart + lastView.measuredWidth > maxChildEnd) {
                     val pre = getChildAt(i - 1)
-                    pre.visibility = View.GONE
-                    if (enableLastView)
-                        alreadyAdd = true
+                    removeViewInLayout(pre)
+                    alreadyFull = true
                     return@forEachIndexed
                 } else {
                     if (childEnd + lastView.measuredWidth > maxWidth) {
-                        if (enableLastView)
-                            alreadyAdd = true
+                        removeViewInLayout(child)
+                        alreadyFull = true
                         return@forEachIndexed
                     }
                 }
@@ -202,6 +207,11 @@ class MyFlowLayout @JvmOverloads constructor(
                 childStart = paddingStart
                 childTop = childBottom + lineSpacing
                 rowCount++
+                if (!enableLastView && rowCount > MAX_ROWS_COUNT) {
+                    alreadyFull = true
+                    removeViewInLayout(child)
+                    return@forEachIndexed
+                }
             }
 //            child.setTag(R.id.row_index_key, rowCount - 1)
             childEnd = childStart + startMargin + child.measuredWidth
