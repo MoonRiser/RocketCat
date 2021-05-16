@@ -3,6 +3,7 @@ package com.example.rocketcat.ui.activity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.example.common.base.BaseActivity
 import com.example.common.base.BaseViewModel
@@ -25,6 +26,7 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
 
 
     init {
+
         fragments.apply {
             add(homeFragment)
             add(dashboardFragment)
@@ -39,7 +41,7 @@ class MainActivity : BaseActivity<BaseViewModel, ActivityMainBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
 
-
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         binding.vp2Home.init(this, fragments, false)
 
         binding.bottomNavigationView.apply {

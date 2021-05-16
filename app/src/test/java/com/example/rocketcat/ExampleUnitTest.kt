@@ -2,6 +2,7 @@ package com.example.rocketcat
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -38,9 +39,20 @@ class ExampleUnitTest {
             aa.await()
             println("44##${formatter.format(Date())}")
 
-
         }
     }
+
+
+    @Test
+    fun flowTest() {
+
+        runBlocking {
+
+            val flow = flow<Int> {
+
+            }
+
+        }
 
     @Test
     fun testSome() {

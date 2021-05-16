@@ -16,11 +16,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import com.example.common.base.BaseApplication
 import kotlin.math.roundToInt
 
 
-fun showToast(context: Context, msg: String) =
-    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+fun showToast( msg: String) =
+    Toast.makeText(BaseApplication.INSTANCE, msg, Toast.LENGTH_SHORT).show()
 
 fun Bitmap.blurBitmap(
     context: Context,

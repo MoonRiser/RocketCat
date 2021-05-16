@@ -42,8 +42,8 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
 
 
     @Suppress("UNCHECKED_CAST")
-    private fun <VM> getVmClazz(obj: Any): VM {
-        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as VM
+    private fun <VM> getVmClazz(obj: Any): Class<VM> {
+        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
     }
 
 

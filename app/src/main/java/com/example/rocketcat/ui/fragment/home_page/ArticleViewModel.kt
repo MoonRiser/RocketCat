@@ -1,6 +1,5 @@
-package com.example.rocketcat.ui.fragment.tab
+package com.example.rocketcat.ui.fragment.home_page
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.common.base.BaseViewModel
@@ -13,19 +12,19 @@ import kotlinx.coroutines.withContext
 class ArticleViewModel : BaseViewModel() {
 
 
-    val articleList: LiveData<ArrayList<ArticleResponse>>
-        get() = _articleList
-
-    private val _articleList = MutableLiveData(arrayListOf<ArticleResponse>())
+    private var pageNo = 0
+    val articleList = MutableLiveData<List<ArticleResponse>>()
 
 
     fun getArticle() {
-        viewModelScope.launch {
-            val dataList = withContext(Dispatchers.IO) {
-                RequestManager.getHomeData(0)
-            }
-            _articleList.value = dataList.data.datas
 
+        viewModelScope.launch {
+            val result = RequestManager.getHomeData(pageNo)
+            if (result.data.hasMore()) {
+                pageNo++
+                val oldList = articleList.value ?: emptyList()
+                articleList.value = oldList + result.data.datas
+            }
         }
     }
 

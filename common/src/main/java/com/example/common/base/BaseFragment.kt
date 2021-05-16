@@ -11,7 +11,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.example.common.BR
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -37,12 +39,14 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
         binding.lifecycleOwner = this
+        viewModel = createViewModel()
+        binding.setVariable(BR.viewModel, viewModel)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = createViewModel()
+
         initView(savedInstanceState)
         onVisible()
         initData()
@@ -57,8 +61,11 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        return ViewModelProvider(getViewModelOwner()).get(getVmClazz(this))
+        val vmClazz =
+            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+        return ViewModelProvider(getViewModelOwner()).get(vmClazz)
     }
+
 
     /**
      * 初始化view
@@ -97,10 +104,5 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
 
     }
 
-
-    @Suppress("UNCHECKED_CAST")
-    fun <VM> getVmClazz(obj: Any): VM {
-        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as VM
-    }
 
 }

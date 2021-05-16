@@ -1,6 +1,7 @@
 package com.example.common.ext
 
 import android.view.View
+import androidx.databinding.ObservableField
 import com.example.common.dialog.CustomDialog
 
 /**
@@ -16,3 +17,5 @@ typealias DialogCallback = OnDialogClickListener
 interface OnDialogClickListener {
     fun onClick(dialog: CustomDialog)
 }
+
+typealias ObservableString = ObservableField<String>

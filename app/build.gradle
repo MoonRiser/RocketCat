@@ -6,14 +6,16 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
+    //旧版开关
+    // dataBinding {
+    //        enabled = true
+    //    }
     android.buildFeatures.dataBinding = true
 
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -49,6 +51,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":common")
     implementation project(":address-selector")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
 //    implementation project(":flutter")
 

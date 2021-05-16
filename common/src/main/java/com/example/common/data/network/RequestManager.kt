@@ -10,8 +10,8 @@ object RequestManager {
     /**
      * 获取首页文章数据
      */
-    suspend fun getHomeData(pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>> =
-        NetworkApi.service.getAritrilList(pageNo)
+    suspend fun getHomeData(pageNo: Int): ApiResponse<ApiPagerResponse<List<ArticleResponse>>> =
+        NetworkApi.service.getArticleList(pageNo)
 
 
 }

@@ -1,9 +1,11 @@
-package com.example.rocketcat.ui.fragment.tab
+package com.example.rocketcat.ui.fragment.home_page
 
 import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.os.Bundle
 import android.view.MotionEvent
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
@@ -11,6 +13,7 @@ import com.example.common.ext.dp
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.ArticleAdapter
 import com.example.rocketcat.databinding.FragmentArticleBinding
+import com.example.rocketcat.ui.fragment.HomeViewModel
 import kotlin.math.abs
 
 
@@ -18,7 +21,11 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
     private val originP = PointF()
 
-    private val mAdapter by lazy { ArticleAdapter() }
+    private val mAdapter = ArticleAdapter()
+
+    private val articleViewModel by viewModels<ArticleViewModel>()
+
+    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     override fun layoutId() = R.layout.fragment_article
 
@@ -76,9 +83,5 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
     }
 
-    override fun initObserver() {
-        viewModel.articleList.observe(this, {
-            mAdapter.dataList = it
-        })
-    }
+
 }

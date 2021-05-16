@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.tab
+package com.example.rocketcat.ui.fragment.home_page
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelStoreOwner
@@ -31,14 +31,6 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
     override fun initView(savedInstanceState: Bundle?) {
 
 
-        binding.btTest.setOnClickListener {
-            viewModel.mediator.apply {
-                detach()
-                viewModel.fragments.add(Tab2Fragment())
-                attach()
-            }
-
-        }
         selector = AddressSelector(requireActivity()).apply {
             setOnSelectCompletedListener(object : OnSelectedListener {
                 override fun onSelect(

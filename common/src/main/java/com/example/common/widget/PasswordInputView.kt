@@ -101,4 +101,9 @@ class PasswordInputView @JvmOverloads constructor(
 
 
     }
+
+    fun setClearContent(clear: Boolean?) {
+        if (clear == true)
+            text = null
+    }
 }

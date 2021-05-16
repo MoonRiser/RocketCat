@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.common.base.BaseViewModel" />
+            type="com.example.rocketcat.ui.fragment.HomeViewModel" />
 
     </data>
 
@@ -24,7 +24,8 @@
             android:id="@+id/vp2_tab"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            app:currentItem="@={viewModel.currentItem}" />
 
     </LinearLayout>
 

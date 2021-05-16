@@ -17,6 +17,6 @@ interface ApiService {
      * 获取首页文章数据
      */
     @GET("article/list/{page}/json")
-    suspend fun getAritrilList(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
+    suspend fun getArticleList(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<List<ArticleResponse>>>
 
 }

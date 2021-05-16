@@ -1,35 +1,24 @@
 package com.example.rocketcat.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.ItemCallback
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.common.ext.dpValue
+import com.example.common.data.network.response.ArticleResponse
+import com.example.common.ext.dp
 import com.example.rocketcat.BR
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
-import com.example.common.data.network.response.ArticleResponse
-import com.example.common.ext.dp
 import com.example.rocketcat.databinding.ItemRvArticleBinding
 
-private const val AD_TYPE = 816
-private const val NORMAL_TYPE = 34
 
-class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private lateinit var mContext: Context
-
-
-    var dataList = arrayListOf<ArticleResponse>()
-        set(value) {
-            field.clear()
-            field.addAll(value)
-            notifyDataSetChanged()
-        }
+class ArticleAdapter : ListAdapter<ArticleResponse, RecyclerView.ViewHolder>(diffCallback) {
 
 
     class MyViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
@@ -38,9 +27,8 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        mContext = parent.context
         return when (viewType) {
-            AD_TYPE -> {
+            TYPE_AD -> {
                 AdImageView(parent.context).apply {
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     layoutParams = RecyclerView.LayoutParams(
@@ -62,30 +50,37 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-
-    override fun getItemCount() = dataList.size
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MyViewHolder -> {
-                holder.binding.setVariable(BR.articleViewModel, dataList[position])
+                val data = getItem(position)
+                holder.binding.setVariable(BR.articleViewModel, data)
             }
             is AdViewHolder -> {
-                holder.imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        mContext,
-                        R.drawable.cp
-                    )
-                )
-
+                holder.imageView.setImageResource(R.drawable.cp)
             }
 
         }
     }
 
+    companion object {
+        private val diffCallback = object : ItemCallback<ArticleResponse>() {
+            override fun areItemsTheSame(
+                oldItem: ArticleResponse,
+                newItem: ArticleResponse
+            ) = oldItem.id == newItem.id
 
-    override fun getItemViewType(position: Int) = when (position) {
-        6 -> AD_TYPE
-        else -> NORMAL_TYPE
+
+            override fun areContentsTheSame(
+                oldItem: ArticleResponse,
+                newItem: ArticleResponse
+            ) = oldItem == newItem
+
+        }
+        private const val TYPE_AD = 816
+        private const val TYPE_NORMAL = 34
+
     }
+
+
 }
