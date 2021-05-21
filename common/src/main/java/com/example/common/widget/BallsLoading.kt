@@ -1,4 +1,4 @@
-package com.example.rocketcat.customview
+package com.example.common.widget
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -10,10 +10,9 @@ import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
+import com.example.common.R
 import com.example.common.ext.dp
-import com.example.common.ext.dpValue
-import com.example.rocketcat.R
-import com.example.rocketcat.adapter.CustomInterpolator
+
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -131,6 +130,13 @@ class BallsLoading
             animators.forEach { it.resume() }
         } else if (animators[0].isRunning) {
             animators.forEach { it.pause() }
+        }
+    }
+
+    fun start(){
+        if (!animators[0].isStarted) {
+            animators.forEach { it.start() }
+            return
         }
     }
 

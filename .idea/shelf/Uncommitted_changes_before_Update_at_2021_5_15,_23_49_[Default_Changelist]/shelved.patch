@@ -1,0 +1,243 @@
+Index: app/src/test/java/com/example/rocketcat/ExampleUnitTest.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocketcat\n\nimport kotlinx.coroutines.async\nimport kotlinx.coroutines.delay\nimport kotlinx.coroutines.launch\nimport kotlinx.coroutines.runBlocking\nimport org.junit.Assert.assertEquals\nimport org.junit.Test\nimport java.text.SimpleDateFormat\nimport java.util.*\n\n/**\n * Example local unit test, which will execute on the development machine (host).\n *\n * See [testing documentation](http://d.android.com/tools/testing).\n */\nclass ExampleUnitTest {\n    @Test\n    fun addition_isCorrect() {\n        assertEquals(4, 2 + 2)\n    }\n\n\n    @Test\n    fun test() {\n        val formatter = SimpleDateFormat(\"dd-MMM-yyyy HH:mm:ss:SSS\")\n        runBlocking {\n            println(\"00##${formatter.format(Date())}\")\n            launch {\n                val a  =\"\"\n            }\n            val aa = async {\n                println(\"11##${formatter.format(Date())}\")\n            }\n            println(\"22##${formatter.format(Date())}\")\n            delay(1000)\n            println(\"33##${formatter.format(Date())}\")\n            aa.await()\n            println(\"44##${formatter.format(Date())}\")\n\n\n\n        }\n    }\n\n\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/test/java/com/example/rocketcat/ExampleUnitTest.kt	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ app/src/test/java/com/example/rocketcat/ExampleUnitTest.kt	(date 1621092845274)
+@@ -2,6 +2,7 @@
+ 
+ import kotlinx.coroutines.async
+ import kotlinx.coroutines.delay
++import kotlinx.coroutines.flow.flow
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.runBlocking
+ import org.junit.Assert.assertEquals
+@@ -27,7 +28,7 @@
+         runBlocking {
+             println("00##${formatter.format(Date())}")
+             launch {
+-                val a  =""
++                val a = ""
+             }
+             val aa = async {
+                 println("11##${formatter.format(Date())}")
+@@ -39,10 +40,22 @@
+             println("44##${formatter.format(Date())}")
+ 
+ 
++        }
++    }
++
++
++    @Test
++    fun flowTest() {
++
++        runBlocking {
++
++            val flow = flow<Int> {
+ 
+-        }
+-    }
++            }
++
++        }
+ 
++    }
+ 
+ }
+ 
+Index: common/src/main/java/com/example/common/utils/BindAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.common.utils\n\nimport android.view.View\nimport android.widget.ImageView\nimport androidx.databinding.BindingAdapter\nimport com.bumptech.glide.Glide\nimport com.bumptech.glide.load.resource.bitmap.CircleCrop\nimport com.bumptech.glide.load.resource.bitmap.RoundedCorners\nimport com.bumptech.glide.request.RequestOptions\nimport com.jakewharton.rxbinding2.view.RxView\nimport java.util.concurrent.TimeUnit\n\n@BindingAdapter(value = [\"CornerRadius\"])\nfun ImageView.roundedCorners(roundingRadius: Int) {\n    Glide.with(this.context)\n        .load(this.drawable)\n        .apply(RequestOptions.bitmapTransform(RoundedCorners(\n            dp2px(\n                roundingRadius.toFloat()\n            )\n        )))\n        .into(this)\n}\n\n\n@BindingAdapter(value = [\"circleAvatar\"])\nfun circleImageUrl(view: ImageView, circle: Boolean) {\n    if (circle) {\n        Glide.with(view.context.applicationContext)\n            .load(view.drawable)\n            .apply(RequestOptions.bitmapTransform(CircleCrop()))\n            .into(view)\n    }\n\n}\n\ntypealias OnClickCallback = (view: View) -> Unit\n\nconst val FAST_CLICK_DELAY_TIME = 1000L\n\n@BindingAdapter(value = [\"android:onClick\"])\nfun View.click(onclick: OnClickCallback) {\n    this.setOnClickListener {\n        RxView.clicks(this)\n            .throttleFirst(FAST_CLICK_DELAY_TIME, TimeUnit.MILLISECONDS)\n            .subscribe { onclick(this) }\n\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- common/src/main/java/com/example/common/utils/BindAdapter.kt	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ common/src/main/java/com/example/common/utils/BindAdapter.kt	(date 1621089459743)
+@@ -14,11 +14,15 @@
+ fun ImageView.roundedCorners(roundingRadius: Int) {
+     Glide.with(this.context)
+         .load(this.drawable)
+-        .apply(RequestOptions.bitmapTransform(RoundedCorners(
+-            dp2px(
+-                roundingRadius.toFloat()
++        .apply(
++            RequestOptions.bitmapTransform(
++                RoundedCorners(
++                    dp2px(
++                        roundingRadius.toFloat()
++                    )
++                )
+             )
+-        )))
++        )
+         .into(this)
+ }
+ 
+@@ -38,12 +42,17 @@
+ 
+ const val FAST_CLICK_DELAY_TIME = 1000L
+ 
+-@BindingAdapter(value = ["android:onClick"])
+-fun View.click(onclick: OnClickCallback) {
++@BindingAdapter(value = ["android:onClick", "allowFastClick"], requireAll = false)
++fun View.click(onclick: OnClickCallback?, allowFastClick: Boolean? = false) {
++
+     this.setOnClickListener {
++        if (allowFastClick == true) {
++            onclick?.invoke(this)
++            return@setOnClickListener
++        }
+         RxView.clicks(this)
+             .throttleFirst(FAST_CLICK_DELAY_TIME, TimeUnit.MILLISECONDS)
+-            .subscribe { onclick(this) }
++            .subscribe { onclick?.invoke(this) }
+ 
+     }
+ 
+Index: common/src/main/java/com/example/common/base/BaseActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.common.base\n\nimport android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\nimport androidx.databinding.DataBindingUtil\nimport androidx.databinding.ViewDataBinding\nimport androidx.lifecycle.ViewModel\nimport androidx.lifecycle.ViewModelProvider\nimport com.example.common.BR\nimport java.lang.reflect.ParameterizedType\n\nabstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatActivity() {\n\n\n    lateinit var viewModel: VM\n    lateinit var binding: DB\n\n\n    abstract fun layoutId(): Int\n\n    abstract fun initView(savedInstanceState: Bundle?)\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        viewModel = createViewModel()\n        binding = DataBindingUtil.setContentView(this, layoutId())\n        binding.setVariable(getViewModelBR(), viewModel)\n        initView(savedInstanceState)\n    }\n\n\n    open fun getViewModelBR(): Int = BR.viewModel\n\n\n    /**\n     * 创建viewModel\n     */\n    private fun createViewModel(): VM {\n        return ViewModelProvider(this).get(getVmClazz(this))\n    }\n\n\n    @Suppress(\"UNCHECKED_CAST\")\n    private fun <VM> getVmClazz(obj: Any): VM {\n        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as VM\n    }\n\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- common/src/main/java/com/example/common/base/BaseActivity.kt	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ common/src/main/java/com/example/common/base/BaseActivity.kt	(date 1616428398379)
+@@ -42,8 +42,8 @@
+ 
+ 
+     @Suppress("UNCHECKED_CAST")
+-    private fun <VM> getVmClazz(obj: Any): VM {
+-        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as VM
++    private fun <VM> getVmClazz(obj: Any): Class<VM> {
++        return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+     }
+ 
+ 
+Index: address-selector/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\n    id 'com.android.library'\n    id 'kotlin-android'\n    id 'kotlin-parcelize'\n    id 'com.github.panpf.bintray-publish'\n    id 'kotlin-kapt'\n\n}\n\nandroid {\n    compileSdkVersion 30\n    buildToolsVersion \"30.0.2\"\n    android.buildFeatures.dataBinding = true\n\n\n    defaultConfig {\n        minSdkVersion 21\n        targetSdkVersion 30\n        versionCode 1\n        versionName \"1.0\"\n\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n        consumerProguardFiles \"consumer-rules.pro\"\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_1_8\n        targetCompatibility JavaVersion.VERSION_1_8\n    }\n    kotlinOptions {\n        jvmTarget = '1.8'\n    }\n}\n\ndependencies {\n\n    implementation \"org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version\"\n    implementation 'androidx.core:core-ktx:1.3.2'\n    implementation 'androidx.appcompat:appcompat:1.2.0'\n    implementation 'com.google.android.material:material:1.2.1'\n    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'\n\n    testImplementation 'junit:junit:4.13.1'\n    androidTestImplementation 'androidx.test.ext:junit:1.1.2'\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'\n\n    //汉字转拼音\n    implementation 'com.github.promeg:tinypinyin:2.0.3'\n    //jetpack Room\n    implementation \"androidx.room:room-runtime:$room_version\"\n    kapt \"androidx.room:room-compiler:$room_version\"\n}\n\n\npublish {\n    userOrg = 'xres'             // Binary用户名\n    repoName = 'AddressSelector'          // Binary上的刚才新建的仓库名（Repository）\n    groupId = 'com.xres.selecor'        // 依赖名compile 'x:y:z'中的包名x\n    artifactId = 'address-selector'        // 依赖名compile 'x:y:z'中的项目名y\n    publishVersion = '0.2019.14'          // 依赖名compile 'x:y:z'中的版本号z\n    desc = 'an android address selector '            // 对该开源组件的说明\n    website = 'https://github.com/MoonRiser/RocketCat.git'  // VCS地址，即填写项目上传的Github地址\n}\n\n// 特别注意：保持你的library module的名字同artifactId一样
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- address-selector/build.gradle	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ address-selector/build.gradle	(date 1616324057067)
+@@ -63,7 +63,7 @@
+     repoName = 'AddressSelector'          // Binary上的刚才新建的仓库名（Repository）
+     groupId = 'com.xres.selecor'        // 依赖名compile 'x:y:z'中的包名x
+     artifactId = 'address-selector'        // 依赖名compile 'x:y:z'中的项目名y
+-    publishVersion = '0.2019.14'          // 依赖名compile 'x:y:z'中的版本号z
++    publishVersion = '0.2019.15'          // 依赖名compile 'x:y:z'中的版本号z
+     desc = 'an android address selector '            // 对该开源组件的说明
+     website = 'https://github.com/MoonRiser/RocketCat.git'  // VCS地址，即填写项目上传的Github地址
+ }
+Index: .idea/codeStyles/Project.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"ProjectCodeStyleConfiguration\">\n  <code_scheme name=\"Project\" version=\"173\">\n    <DBN-PSQL>\n      <case-options enabled=\"true\">\n        <option name=\"KEYWORD_CASE\" value=\"lower\" />\n        <option name=\"FUNCTION_CASE\" value=\"lower\" />\n        <option name=\"PARAMETER_CASE\" value=\"lower\" />\n        <option name=\"DATATYPE_CASE\" value=\"lower\" />\n        <option name=\"OBJECT_CASE\" value=\"preserve\" />\n      </case-options>\n      <formatting-settings enabled=\"false\" />\n    </DBN-PSQL>\n    <DBN-SQL>\n      <case-options enabled=\"true\">\n        <option name=\"KEYWORD_CASE\" value=\"lower\" />\n        <option name=\"FUNCTION_CASE\" value=\"lower\" />\n        <option name=\"PARAMETER_CASE\" value=\"lower\" />\n        <option name=\"DATATYPE_CASE\" value=\"lower\" />\n        <option name=\"OBJECT_CASE\" value=\"preserve\" />\n      </case-options>\n      <formatting-settings enabled=\"false\">\n        <option name=\"STATEMENT_SPACING\" value=\"one_line\" />\n        <option name=\"CLAUSE_CHOP_DOWN\" value=\"chop_down_if_statement_long\" />\n        <option name=\"ITERATION_ELEMENTS_WRAPPING\" value=\"chop_down_if_not_single\" />\n      </formatting-settings>\n    </DBN-SQL>\n    <JetCodeStyleSettings>\n      <option name=\"PACKAGES_TO_USE_STAR_IMPORTS\">\n        <value>\n          <package name=\"java.util\" alias=\"false\" withSubpackages=\"false\" />\n          <package name=\"kotlinx.android.synthetic\" alias=\"false\" withSubpackages=\"true\" />\n          <package name=\"io.ktor\" alias=\"false\" withSubpackages=\"true\" />\n        </value>\n      </option>\n      <option name=\"PACKAGES_IMPORT_LAYOUT\">\n        <value>\n          <package name=\"\" alias=\"false\" withSubpackages=\"true\" />\n          <package name=\"java\" alias=\"false\" withSubpackages=\"true\" />\n          <package name=\"javax\" alias=\"false\" withSubpackages=\"true\" />\n          <package name=\"kotlin\" alias=\"false\" withSubpackages=\"true\" />\n          <package name=\"\" alias=\"true\" withSubpackages=\"true\" />\n        </value>\n      </option>\n      <option name=\"CODE_STYLE_DEFAULTS\" value=\"KOTLIN_OFFICIAL\" />\n    </JetCodeStyleSettings>\n    <codeStyleSettings language=\"XML\">\n      <indentOptions>\n        <option name=\"CONTINUATION_INDENT_SIZE\" value=\"4\" />\n      </indentOptions>\n      <arrangement>\n        <rules>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>xmlns:android</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>^$</XML_NAMESPACE>\n                </AND>\n              </match>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>xmlns:.*</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>^$</XML_NAMESPACE>\n                </AND>\n              </match>\n              <order>BY_NAME</order>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>.*:id</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>\n                </AND>\n              </match>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>.*:name</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>\n                </AND>\n              </match>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>name</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>^$</XML_NAMESPACE>\n                </AND>\n              </match>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>style</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>^$</XML_NAMESPACE>\n                </AND>\n              </match>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>.*</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>^$</XML_NAMESPACE>\n                </AND>\n              </match>\n              <order>BY_NAME</order>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>.*</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>\n                </AND>\n              </match>\n              <order>ANDROID_ATTRIBUTE_ORDER</order>\n            </rule>\n          </section>\n          <section>\n            <rule>\n              <match>\n                <AND>\n                  <NAME>.*</NAME>\n                  <XML_ATTRIBUTE />\n                  <XML_NAMESPACE>.*</XML_NAMESPACE>\n                </AND>\n              </match>\n              <order>BY_NAME</order>\n            </rule>\n          </section>\n        </rules>\n      </arrangement>\n    </codeStyleSettings>\n    <codeStyleSettings language=\"kotlin\">\n      <option name=\"CODE_STYLE_DEFAULTS\" value=\"KOTLIN_OFFICIAL\" />\n    </codeStyleSettings>\n  </code_scheme>\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/Project.xml	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ .idea/codeStyles/Project.xml	(date 1621089460210)
+@@ -25,22 +25,6 @@
+       </formatting-settings>
+     </DBN-SQL>
+     <JetCodeStyleSettings>
+-      <option name="PACKAGES_TO_USE_STAR_IMPORTS">
+-        <value>
+-          <package name="java.util" alias="false" withSubpackages="false" />
+-          <package name="kotlinx.android.synthetic" alias="false" withSubpackages="true" />
+-          <package name="io.ktor" alias="false" withSubpackages="true" />
+-        </value>
+-      </option>
+-      <option name="PACKAGES_IMPORT_LAYOUT">
+-        <value>
+-          <package name="" alias="false" withSubpackages="true" />
+-          <package name="java" alias="false" withSubpackages="true" />
+-          <package name="javax" alias="false" withSubpackages="true" />
+-          <package name="kotlin" alias="false" withSubpackages="true" />
+-          <package name="" alias="true" withSubpackages="true" />
+-        </value>
+-      </option>
+       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
+     </JetCodeStyleSettings>
+     <codeStyleSettings language="XML">
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <bytecodeTargetLevel target=\"1.8\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ .idea/compiler.xml	(date 1620186817035)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="1.8" />
++    <bytecodeTargetLevel target="11" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(date 1620186760741)
++++ .idea/runConfigurations.xml	(date 1620186760741)
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_8\" default=\"true\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n  <component name=\"masterDetails\">\n    <states>\n      <state key=\"ProjectJDKs.UI\">\n        <settings>\n          <last-edited>1.8</last-edited>\n          <splitter-proportions>\n            <option name=\"proportions\">\n              <list>\n                <option value=\"0.2\" />\n              </list>\n            </option>\n          </splitter-proportions>\n        </settings>\n      </state>\n    </states>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ .idea/misc.xml	(date 1620186817029)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\n\nbuildscript {\n\n    ext {\n        kotlin_version = '1.4.21'\n        room_version = \"2.3.0-alpha03\"\n        dynamicanimation_version = \"1.0.0\"\n\n    }\n\n    repositories {\n        google()\n        jcenter()\n\n    }\n    dependencies {\n        classpath 'com.android.tools.build:gradle:4.1.2'\n        classpath \"org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version\"\n//        classpath 'com.novoda:bintray-release:0.9.2'\n\n        classpath 'com.github.panpf.bintray-publish:bintray-publish:1.0.0'\n        // NOTE: Do not place your application dependencies here; they belong\n        // in the individual module build.gradle files\n    }\n}\n\nallprojects {\n    repositories {\n        google()\n        jcenter()\n\n    }\n}\n\ntask clean(type: Delete) {\n    delete rootProject.buildDir\n}\n\n\nallprojects {\n    tasks.withType(Javadoc) {\n        options.addStringOption('Xdoclint:none', '-quiet')\n        options.addStringOption('encoding', 'UTF-8')\n    }\n}\nallprojects {\n    tasks.withType(Javadoc) {\n        options {\n            encoding \"UTF-8\"\n            charSet 'UTF-8'\n            links \"http://docs.oracle.com/javase/7/docs/api\"\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision 0a45a350507f4fbbc068238eccdb770049cb4cfe)
++++ build.gradle	(date 1616324080463)
+@@ -15,7 +15,7 @@
+ 
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:4.1.2'
++        classpath 'com.android.tools.build:gradle:4.1.3'
+         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+ //        classpath 'com.novoda:bintray-release:0.9.2'
+ 

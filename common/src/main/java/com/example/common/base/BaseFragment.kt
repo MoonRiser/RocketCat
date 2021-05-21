@@ -15,7 +15,7 @@ import com.example.common.BR
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
 
     //是否第一次加载
@@ -37,16 +37,18 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
-        binding.lifecycleOwner = this
-        viewModel = createViewModel()
-        binding.setVariable(BR.viewModel, viewModel)
-        return binding.root
+        return DataBindingUtil.inflate<DB>(inflater, layoutId(), container, false).let {
+            binding = it
+            it.lifecycleOwner = this
+            viewModel = createViewModel()
+            it.setVariable(BR.viewModel, viewModel)
+            it.root
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initView(savedInstanceState)
         onVisible()
         initData()
@@ -90,6 +92,11 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
         onVisible()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.unbind()
+    }
+
     /**
      * 是否需要懒加载
      */
@@ -97,6 +104,11 @@ abstract class BaseFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
         if (lifecycle.currentState == Lifecycle.State.STARTED && isFirst) {
             lazyLoadData()
             isFirst = false
+            viewModel.loading.observe(viewLifecycleOwner) { show ->
+                (requireActivity() as? BaseActivity<*, *>)?.let {
+                    it.viewModel.loading.value = show == true
+                }
+            }
             initObserver()
 
         }

@@ -86,7 +86,6 @@ fun <T> RecyclerView.submit(dataList: List<T>?) {
 
         }
     }
-
 }
 
 

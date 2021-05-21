@@ -5,4 +5,10 @@
         <attr name="tabIndicatorColor" format="color" />
         <attr name="select_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="BallsLoading">
+        <attr name="ball_radius" format="integer" />
+        <attr name="ball_color" format="color" />
+        <attr name="ball_num" format="integer" />
+    </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.common.data.network
 
 import com.example.common.base.BaseNetworkApi
+import com.example.common.data.network.adapter.FlowCallAdapterFactory
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -9,11 +10,12 @@ import java.util.concurrent.TimeUnit
 
 object NetworkApi : BaseNetworkApi() {
 
+    const val SERVER_URL = "https://wanandroid.com/"
 
-    //封装NetApiService变量 方便直接快速调用
-    val service: ApiService by lazy {
-        getApi(ApiService::class.java, ApiService.SERVER_URL)
+    inline fun <reified T> service(): T {
+        return getApi(T::class.java, SERVER_URL)
     }
+
 
     /**
      * 实现重写父类的setHttpClientBuilder方法，
@@ -46,6 +48,7 @@ object NetworkApi : BaseNetworkApi() {
     override fun setRetrofitBuilder(builder: Retrofit.Builder): Retrofit.Builder {
         return builder.apply {
             addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            addCallAdapterFactory(FlowCallAdapterFactory.create())
         }
     }
 

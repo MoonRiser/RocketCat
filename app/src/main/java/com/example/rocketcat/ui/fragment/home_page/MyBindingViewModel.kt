@@ -29,14 +29,15 @@ class MyBindingViewModel : BaseViewModel() {
     val pwdVisible = ObservableBoolean(false)
     val enableNext = ObservableBoolean(false)
 
+    //绑定函数
     val age = MutableLiveData(0)
     fun handleAge(age: Int?): String = age?.let { "年龄：$it" } ?: "--"
 
     val clear = ObservableBoolean(false)
 
-
+    //点击事件绑定
     val onTestClick = ClickCallback {
-
+        showToast("I am OK")
     }
 
     init {

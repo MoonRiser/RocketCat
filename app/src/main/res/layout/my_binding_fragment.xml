@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:hint="password here"
+            android:inputType="textPassword"
             android:text="@={viewModel.pwd}"
             app:layout_constraintEnd_toStartOf="@+id/checkBox"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +47,6 @@
             android:layout_height="wrap_content"
             android:button="@drawable/selector_password_visibility"
             android:checked="@={viewModel.pwdVisible}"
-            android:inputType="textPassword"
             app:layout_constraintBottom_toBottomOf="@+id/et2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/et2" />

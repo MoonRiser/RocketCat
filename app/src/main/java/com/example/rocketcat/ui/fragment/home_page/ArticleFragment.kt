@@ -21,11 +21,10 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
     private val originP = PointF()
 
-    private val mAdapter = ArticleAdapter()
+    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     private val articleViewModel by viewModels<ArticleViewModel>()
 
-    private val homeViewModel by activityViewModels<HomeViewModel>()
 
     override fun layoutId() = R.layout.fragment_article
 
@@ -34,7 +33,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
         binding.rvArticle.apply {
             val linearLayoutManager: LinearLayoutManager
-            adapter = mAdapter
+            adapter = ArticleAdapter()
             layoutManager =
                 LinearLayoutManager(
                     requireActivity(),

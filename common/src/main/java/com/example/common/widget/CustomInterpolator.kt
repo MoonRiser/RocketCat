@@ -1,4 +1,4 @@
-package com.example.rocketcat.adapter
+package com.example.common.widget
 
 import android.view.animation.AccelerateDecelerateInterpolator
 import kotlin.math.PI

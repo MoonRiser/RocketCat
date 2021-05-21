@@ -1,19 +1,27 @@
 package com.example.common.base
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.postDelayed
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.common.BR
+import com.example.common.R
+import com.example.common.widget.BallsLoading
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompatActivity() {
 
 
     lateinit var viewModel: VM
     lateinit var binding: DB
+
+    private lateinit var loadingPage: ViewGroup
 
 
     abstract fun layoutId(): Int
@@ -25,12 +33,16 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
 
         viewModel = createViewModel()
         binding = DataBindingUtil.setContentView(this, layoutId())
-        binding.setVariable(getViewModelBR(), viewModel)
+        binding.setVariable(BR.viewModel, viewModel)
         initView(savedInstanceState)
+        //初始化loading view
+        loadingPage =
+            LayoutInflater.from(this).inflate(R.layout.common_loading_view, null) as ViewGroup
+        viewModel.loading.observe(this) {
+            showLoading(it)
+        }
+
     }
-
-
-    open fun getViewModelBR(): Int = BR.viewModel
 
 
     /**
@@ -44,6 +56,20 @@ abstract class BaseActivity<VM : ViewModel, DB : ViewDataBinding> : AppCompatAct
     @Suppress("UNCHECKED_CAST")
     private fun <VM> getVmClazz(obj: Any): Class<VM> {
         return (obj.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+    }
+
+    private fun showLoading(show: Boolean) {
+        val decView = window.decorView as FrameLayout
+        if (show) {
+            decView.addView(loadingPage)
+            val loading = loadingPage.findViewById<BallsLoading>(R.id.ballLoading)
+            loading.post {
+                loading.start()
+            }
+
+        } else {
+            decView.removeView(loadingPage)
+        }
     }
 
 

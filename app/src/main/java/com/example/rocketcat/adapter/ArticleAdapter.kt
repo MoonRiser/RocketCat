@@ -3,25 +3,31 @@ package com.example.rocketcat.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.common.data.network.response.ArticleResponse
 import com.example.common.ext.dp
-import com.example.rocketcat.BR
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.ItemRvArticleBinding
+import com.example.rocketcat.ui.fragment.response.ArticleBean
 
 
-class ArticleAdapter : ListAdapter<ArticleResponse, RecyclerView.ViewHolder>(diffCallback) {
+class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCallback) {
 
 
-    class MyViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+    class MyViewHolder(private val binding: ItemRvArticleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(bean: ArticleBean) {
+            binding.apply {
+                articleBean = bean
+                executePendingBindings()
+            }
+
+
+        }
+    }
 
     class AdViewHolder(val imageView: AdImageView) : RecyclerView.ViewHolder(imageView)
 
@@ -54,7 +60,7 @@ class ArticleAdapter : ListAdapter<ArticleResponse, RecyclerView.ViewHolder>(dif
         when (holder) {
             is MyViewHolder -> {
                 val data = getItem(position)
-                holder.binding.setVariable(BR.articleViewModel, data)
+                holder.bind(data)
             }
             is AdViewHolder -> {
                 holder.imageView.setImageResource(R.drawable.cp)
@@ -64,16 +70,16 @@ class ArticleAdapter : ListAdapter<ArticleResponse, RecyclerView.ViewHolder>(dif
     }
 
     companion object {
-        private val diffCallback = object : ItemCallback<ArticleResponse>() {
+        private val diffCallback = object : ItemCallback<ArticleBean>() {
             override fun areItemsTheSame(
-                oldItem: ArticleResponse,
-                newItem: ArticleResponse
+                oldItem: ArticleBean,
+                newItem: ArticleBean
             ) = oldItem.id == newItem.id
 
 
             override fun areContentsTheSame(
-                oldItem: ArticleResponse,
-                newItem: ArticleResponse
+                oldItem: ArticleBean,
+                newItem: ArticleBean
             ) = oldItem == newItem
 
         }
