@@ -52,16 +52,16 @@ dependencies {
     api 'androidx.preference:preference-ktx:1.1.1'
     api "androidx.dynamicanimation:dynamicanimation:$dynamicanimation_version"
     //lifecycle
-    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     api 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     // viewModel
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     // liveData
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
     //navigation
-    api "androidx.navigation:navigation-fragment-ktx:2.3.2"
-    api "androidx.navigation:navigation-ui-ktx:2.3.2"
+    api "androidx.navigation:navigation-fragment-ktx:2.3.3"
+    api "androidx.navigation:navigation-ui-ktx:2.3.3"
     //retrofit
     api 'com.squareup.okhttp3:okhttp:4.9.0'
     api 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -77,7 +77,7 @@ dependencies {
     //调色盘
     api 'androidx.palette:palette-ktx:1.0.0'
     //协程
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
     //glide
     api 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     api("com.github.bumptech.glide:glide:4.11.0") {
