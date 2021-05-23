@@ -219,7 +219,6 @@ class MyFlowLayout @JvmOverloads constructor(
             if (childBottom > maxBottom) {
                 maxBottom = childBottom
             }
-            Log.i("xres", maxBottom.toString())
             if (isRtl) {
                 child.layout(
                     maxChildEnd - childEnd,

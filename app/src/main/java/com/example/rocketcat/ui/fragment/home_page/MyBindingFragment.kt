@@ -25,7 +25,7 @@ class MyBindingFragment : BaseFragment<MyBindingViewModel, MyBindingFragmentBind
             Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
 
-                Log.i("xres", "id:$propertyId")
+//                Log.i("xres", "id:$propertyId")
             }
         })
 

@@ -3,7 +3,10 @@ package com.example.common.base
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.common.data.network.Error
+import com.example.common.data.network.NetState
 import com.example.common.data.network.Response
+import com.example.common.ext.showToast
 import kotlinx.coroutines.flow.*
 
 open class BaseViewModel : ViewModel() {
@@ -12,6 +15,7 @@ open class BaseViewModel : ViewModel() {
 
     private fun onNetworkFailed(throwable: Throwable) {
         Log.i("xres", "some error may occurred in network retrofit,${throwable.message}")
+        throwable.message?.let { showToast(it) }
     }
 
     fun <T> request(apiFlow: Flow<T>): Flow<T> {
@@ -31,31 +35,32 @@ open class BaseViewModel : ViewModel() {
 
     suspend fun <T> request2(
         apiFlow: Flow<Response<T>>,
-    ): Response<T>? {
-        return apiFlow
-            .onStart {
-                loading.value = true
-            }
-            .catch {
-                onNetworkFailed(it)
-            }
-            .onCompletion {
-                loading.value = false
-            }.singleOrNull()
+    ): NetState<T> {
+        return try {
+            apiFlow
+                .onStart {
+                    loading.value = true
+                }
+                .onCompletion {
+                    loading.value = false
+                }.single()
+        } catch (e: Throwable) {
+            onNetworkFailed(e)
+            Error(e)
+        }
 
     }
 
-    suspend fun <T> request2(action: suspend () -> Response<T>): Response<T>? {
+    suspend fun <T> request2(action: suspend () -> Response<T>): NetState<T> {
         loading.value = true
-        var result: Response<T>? = null
-        try {
-            result = action()
+        return try {
+            action()
         } catch (e: Throwable) {
             onNetworkFailed(e)
+            Error(e)
         } finally {
             loading.value = false
         }
-        return result
 
 
     }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false">
@@ -40,10 +41,32 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="64dp"
             android:src="@drawable/ic_add_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgMH"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgMH"
+            app:layout_constraintTop_toTopOf="@+id/imgMH" />
+
+        <ImageView
+            android:id="@+id/imgMH"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/img_meihua"
+            app:layout_constraintBottom_toBottomOf="@+id/imgArrow"
+            app:layout_constraintEnd_toStartOf="@id/fab"
+            app:layout_constraintStart_toEndOf="@id/imgArrow"
+            app:layout_constraintTop_toTopOf="@+id/imgArrow" />
+
+        <ImageView
+            android:id="@+id/imgArrow"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/ic_baseline_arrow_upward_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/imgMH"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/colorPrimaryVibrant" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

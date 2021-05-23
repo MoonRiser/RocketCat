@@ -1,7 +1,6 @@
 package com.example.rocketcat.adapter;
 
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,7 @@ import java.util.List;
 
 public class MyGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Integer> imgs;
-    private Context context;
+    private final List<Integer> imgs;
 
 
     public MyGalleryAdapter(List<Integer> imgs) {
@@ -40,7 +38,6 @@ public class MyGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_gallery, parent, false);
-        context = parent.getContext();
         return new MyViewHolder(view);
 
     }
@@ -48,7 +45,7 @@ public class MyGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        Glide.with(context)
+        Glide.with(holder.itemView.getContext())
                 .asBitmap()
                 .load(imgs.get(position))
                 .into(((MyViewHolder) holder).imageView);

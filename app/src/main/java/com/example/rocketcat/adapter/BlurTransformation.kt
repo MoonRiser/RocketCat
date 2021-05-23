@@ -50,7 +50,6 @@ class BlurTransformation(
         //底部bitmap参数
         val offsetX = 0
         val offsetY = ((1 - ratio) * outHeight).toInt()
-        Log.i("xres", "offsetY:$offsetY")
         val bWidth = outWidth
         val bHeight = (ratio * outHeight).toInt()
         val blurredBitmap = Bitmap.createBitmap(originBitmap, offsetX, offsetY, bWidth, bHeight)

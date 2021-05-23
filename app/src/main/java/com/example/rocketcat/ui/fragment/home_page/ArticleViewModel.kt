@@ -32,18 +32,27 @@ class ArticleViewModel : BaseViewModel() {
 //                }
 //            }
 
-            request2 { apiService.getArticleList(pageNo) }
-                ?.onSuccess { result ->
-                    if (result.hasMore) {
-                        pageNo++
-                        val oldList = articleList.value ?: emptyList()
-                        articleList.value = oldList + result.datas
-
-                    }
-                }?.onFailure { _, errorMsg ->
-                    showToast(errorMsg)
+            request2(apiService.getArticleList(pageNo)).onSuccess { result ->
+                if (result.hasMore) {
+                    pageNo++
+                    val oldList = articleList.value ?: emptyList()
+                    articleList.value = oldList + result.datas
 
                 }
+
+            }.onFailure { errorCode, errorMsg -> }
+
+//            request2 { apiService.getArticleList(pageNo) }
+//                .onSuccess { result ->
+//                    if (result.hasMore) {
+//                        pageNo++
+//                        val oldList = articleList.value ?: emptyList()
+//                        articleList.value = oldList + result.datas
+//
+//                    }
+//                }.onFailure { _, errorMsg ->
+//                    showToast(errorMsg)
+//                }
 
         }
     }

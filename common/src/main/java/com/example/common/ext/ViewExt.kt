@@ -15,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.NestedScrollView
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -105,6 +108,22 @@ fun TextView.setClickableSpan(
         text = string2SpannableStringBuilder(rawString, color, showSymbol, listener)
         highlightColor = ContextCompat.getColor(this.context, android.R.color.transparent)
         movementMethod = LinkMovementMethod.getInstance()
+    }
+}
+
+fun View.createSpringAnimation(
+    property: DynamicAnimation.ViewProperty,
+    finalPosition: Float = 0f,
+    stiffness: Float = SpringForce.STIFFNESS_LOW,
+    dampingRatio: Float = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
+): SpringAnimation {
+    return SpringForce(finalPosition).also {
+        it.stiffness = stiffness
+        it.dampingRatio = dampingRatio
+    }.let { force ->
+        SpringAnimation(this, property).also {
+            it.spring = force
+        }
     }
 }
 
