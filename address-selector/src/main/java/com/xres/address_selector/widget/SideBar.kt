@@ -6,11 +6,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.RestrictTo
-import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xres.address_selector.ext.color
 import com.xres.address_selector.ext.dp
@@ -145,31 +143,10 @@ class SideBar @JvmOverloads constructor(
             clear()
             putAll(map)
         }
-//        rawDataList.apply {
-//            clear()
-//            addAll(list.map { it.getPinYinFirstCap() })
-//        }
-//        computeCapIndex()
         requestLayout()
 
     }
 
-
-//    /**
-//     * 计算需要显示的首字母索引
-//     */
-//    private fun computeCapIndex() {
-//        characters.clear()
-//        var current = ""
-//        rawDataList.forEachIndexed { index, s ->
-//            if (s != current) {
-//                characters.add(s)
-//                capIndexMap[s] = index
-//                current = s
-//            }
-//        }
-//
-//    }
 }
 
 fun interface OnSlideListener {

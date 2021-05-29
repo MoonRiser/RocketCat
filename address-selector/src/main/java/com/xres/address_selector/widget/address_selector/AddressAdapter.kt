@@ -1,19 +1,17 @@
 package com.xres.address_selector.widget.address_selector
 
-import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.RecyclerView
-import com.xres.address_selector.ext.ClickCallback
 import com.github.promeg.pinyinhelper.Pinyin
 import com.xres.address_selector.R
 import com.xres.address_selector.db.entity.Division
 import com.xres.address_selector.db.entity.Street
+import com.xres.address_selector.ext.ClickCallback
 
 
 /**
@@ -24,7 +22,7 @@ import com.xres.address_selector.db.entity.Street
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
-    private lateinit var context: Context
+
     var clickListener: ClickCallback? = null
     var preparedListener: DataPreparedListener? = null
     var visibleListener: HostVisibleListener? = null
@@ -66,7 +64,6 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         LayoutInflater.from(parent.context).inflate(R.layout.item_address_pinyin, parent, false)
             .let {
-                context = parent.context
                 MyViewHolder(it)
             }.apply {
                 nameView.setOnClickListener {
