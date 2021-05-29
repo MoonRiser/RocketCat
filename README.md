@@ -15,8 +15,30 @@
 
 
 ## 使用
-Gradle依赖 （中间的版本号代表数据更新的年份）
-`implementation  'com.xres.selecor:address-selector:0.2019.15'`
+~~Gradle依赖 （中间的版本号代表数据更新的年份）~~
+~~`implementation  'com.xres.selecor:address-selector:0.2019.15'`~~
+(已从jcenter迁移Jitpack)
+在项目根目录的build.gradle文件下加入
+
+```
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+在项目 app 模块下的 build.gradle 文件中加入
+
+```
+dependencies {
+ implementation  'com.github.MoonRiser.RocketCat:address-selector:v1.0'
+}
+```
 
 ### 主要api
 * AddressSelector 已实现的带对话框样式，可以直接使用
