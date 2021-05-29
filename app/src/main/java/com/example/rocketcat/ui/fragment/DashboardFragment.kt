@@ -144,7 +144,7 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
                     createSpringAnimation(SpringAnimation.SCALE_Y, INITIAL_SCALE)
         }
         var scaleFactor = 1f
-        binding.imgMH.setOnTouchListener { v, event ->
+        binding.imgMH.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 animX.start()
                 animY.start()
