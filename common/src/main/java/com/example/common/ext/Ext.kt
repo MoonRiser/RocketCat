@@ -2,20 +2,22 @@ package com.example.common.ext
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.util.Base64
+import android.util.Log
 import android.view.View
+import androidx.annotation.ColorInt
+import androidx.core.animation.addPauseListener
 import androidx.fragment.app.FragmentActivity
 import com.example.common.R
 import com.example.common.utils.dp2px
@@ -29,6 +31,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.lang.RuntimeException
 import kotlin.coroutines.resume
 
 /**
@@ -49,6 +52,7 @@ val Float.dp
 fun Int.pxValue(): Float = px2dp(this)
 
 val String.color
+    @ColorInt
     get() = Color.parseColor(this)
 
 /**
@@ -138,6 +142,25 @@ val File.size: Long
         return walkBottomUp().fold(length(), { res, it -> it.length() + res })
     }
 
+/**
+ * 相同圆心,等比例缩放
+ */
+fun RectF.scale(factor: Float): RectF = RectF(
+    centerX() * (1 - factor),
+    centerY() * (1 - factor),
+    centerX() * (1 + factor),
+    centerY() * (1 + factor),
+)
+
+fun Canvas.drawRing(cx: Float, cy: Float, radius: Float, ringWidth: Float, paint: Paint) {
+    if (ringWidth > radius) throw RuntimeException("环的宽度不能比环的半径大！")
+    if (ringWidth == 0f) return
+    drawCircle(cx, cy, radius, paint)
+    paint.alpha = 0
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    drawCircle(cx, cy, radius - ringWidth, paint)
+}
+
 
 //作者：谷歌开发者
 //链接：https://zhuanlan.zhihu.com/p/270002338
@@ -176,3 +199,43 @@ suspend fun Animator.awaitEnd() = suspendCancellableCoroutine<Unit> { cont ->
         }
     })
 }
+
+
+suspend fun ValueAnimator.await(progress: Float = 1.0f) =
+    suspendCancellableCoroutine<Unit> { cont ->
+        var firstTime = true
+        // 增加一个处理协程取消的监听器，如果协程被取消，
+        // 同时执行动画监听器的 onAnimationCancel() 方法，取消动画
+        cont.invokeOnCancellation { cancel() }
+        addUpdateListener {
+            val value = it.animatedValue as Float
+            if (firstTime && value > progress) {
+                firstTime = false
+                cont.resume(Unit)
+            }
+
+        }
+        addListener(object : AnimatorListenerAdapter() {
+            private var endedSuccessfully = true
+
+            override fun onAnimationCancel(animation: Animator) {
+                // 动画已经被取消，修改是否成功结束的标志
+                endedSuccessfully = false
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+
+                // 为了在协程恢复后的不发生泄漏，需要确保移除监听
+                animation.removeListener(this)
+                if (cont.isActive) {
+
+                    // 如果协程仍处于活跃状态
+                    if (!endedSuccessfully) {
+                        // 否则动画被取消，同时取消协程
+                        cont.cancel()
+                    }
+                }
+            }
+        })
+    }
+

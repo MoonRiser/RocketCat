@@ -68,6 +68,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/colorPrimaryVibrant" />
 
+        <com.example.common.widget.LikeButton
+            android:id="@+id/likeButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@+id/imgArrow"
+            app:layout_constraintEnd_toEndOf="@+id/imgArrow"
+            app:layout_constraintStart_toStartOf="@+id/imgArrow" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

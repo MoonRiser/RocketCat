@@ -1,5 +1,6 @@
 package com.example.common.ext
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -13,14 +14,18 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import com.example.common.base.BaseApplication
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 
-fun showToast( msg: String) =
+fun showToast(msg: String) =
     Toast.makeText(BaseApplication.INSTANCE, msg, Toast.LENGTH_SHORT).show()
 
 fun Bitmap.blurBitmap(
@@ -164,3 +169,52 @@ fun String.searchAllIndex(key: String): List<Int> {
 fun interface SpanClickListener {
     fun onSpanClick(index: Int)
 }
+
+const val FLOAT_PRECISE = 0.001
+
+class ValueProducer(
+    private val animDuration: Long,
+    private val updateCallback: (Float) -> Unit = { }
+) {
+
+    private val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+        this.duration = animDuration
+        interpolator = LinearInterpolator()
+        addUpdateListener {
+            val value = it.animatedValue as Float
+            rangeList.asSequence().filter { (from, to, callback) ->
+                value in from..to
+            }.forEach { (from, to, callback) ->
+                val t = (value - from) / (to - from)
+                val isEnd = (value - to).absoluteValue < FLOAT_PRECISE
+                callback.invoke(if (isEnd) 1f else t, isEnd)
+            }
+            updateCallback.invoke(value)
+
+        }
+    }
+    private val rangeList = mutableListOf<Triple<Float, Float, (Float, Boolean) -> Unit>>()
+
+    fun valueConsume(from: Float, to: Float, callback: (Float, Boolean) -> Unit) = apply {
+        if (from < 0f || to > 1f) throw Exception("区间范围应处于0..1")
+        rangeList.add(Triple(from, to, callback))
+    }
+
+    fun start() {
+        when {
+            animator.isRunning -> return
+            animator.isPaused -> {
+                animator.resume()
+                return
+            }
+        }
+        animator.start()
+    }
+
+    fun cancel() {
+        animator.cancel()
+    }
+
+}
+
+

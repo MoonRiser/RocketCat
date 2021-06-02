@@ -2,8 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
-//apply plugin: 'com.github.panpf.bintray-publish'
-//apply plugin: 'com.novoda.bintray-release' // 添加bintray插件
+
 
 android {
     compileSdkVersion 30
@@ -71,7 +70,6 @@ dependencies {
     api 'com.github.promeg:tinypinyin:2.0.3'
     //jetpack Room
     api "androidx.room:room-runtime:$room_version"
-    implementation files('src/main/java/jbox2d-2.3.0-BETA.jar')
     kapt "androidx.room:room-compiler:$room_version"
     //旧版兼容
     api 'androidx.legacy:legacy-support-v4:1.0.0'
