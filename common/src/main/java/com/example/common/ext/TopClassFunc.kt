@@ -14,6 +14,7 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -182,22 +183,28 @@ class ValueProducer(
         interpolator = LinearInterpolator()
         addUpdateListener {
             val value = it.animatedValue as Float
-            rangeList.asSequence().filter { (from, to, callback) ->
+            rangeList.asSequence().filter { (from, to, _, _) ->
                 value in from..to
-            }.forEach { (from, to, callback) ->
-                val t = (value - from) / (to - from)
+            }.forEach { (from, to, callback, interpolator) ->
+                var t: Float = (value - from) / (to - from)
                 val isEnd = (value - to).absoluteValue < FLOAT_PRECISE
+                t = interpolator?.getInterpolation(t) ?: t
                 callback.invoke(if (isEnd) 1f else t, isEnd)
             }
             updateCallback.invoke(value)
 
         }
     }
-    private val rangeList = mutableListOf<Triple<Float, Float, (Float, Boolean) -> Unit>>()
+    private val rangeList = mutableListOf<Consumer>()
 
-    fun valueConsume(from: Float, to: Float, callback: (Float, Boolean) -> Unit) = apply {
+    fun valueConsume(
+        from: Float,
+        to: Float,
+        interpolator: Interpolator? = null,
+        callback: (Float, Boolean) -> Unit,
+    ) = apply {
         if (from < 0f || to > 1f) throw Exception("区间范围应处于0..1")
-        rangeList.add(Triple(from, to, callback))
+        rangeList.add(Consumer(from, to, callback, interpolator))
     }
 
     fun start() {
@@ -215,6 +222,13 @@ class ValueProducer(
         animator.cancel()
     }
 
+    private data class Consumer(
+        val from: Float,
+        val to: Float,
+        val listener: (Float, Boolean) -> Unit,
+        val interpolator: Interpolator?
+    )
 }
+
 
 

@@ -12,11 +12,16 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.drawable.toBitmap
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.common.R
 import com.example.common.ext.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sinh
 
 
 class LikeButton @JvmOverloads constructor(
@@ -31,16 +36,17 @@ class LikeButton @JvmOverloads constructor(
         val COLOR_RED by lazy { "#ee0290".color }
         val COLOR_PURPLE by lazy { "#cd00ea".color }
         val COLOR_GREY by lazy { "#BDBDBD".color }
+        val BUBBLE_RADIUS = 4f.dp.toFloat()
     }
 
-    private var centerX = 0
-    private var centerY = 0
+    private var centerX = 0f
+    private var centerY = 0f
     private var radius = 0f
 
     private val heart: Bitmap? =
         AppCompatResources.getDrawable(context, R.drawable.ic_heart)?.toBitmap()
 
-    private val valueProducer = ValueProducer(2000) {
+    private val valueProducer = ValueProducer(1500) {
         invalidate()
     }
 
@@ -56,6 +62,7 @@ class LikeButton @JvmOverloads constructor(
     //圆的画笔
     private val rPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = COLOR_RED
     }
     private val rgbEvaluator = ArgbEvaluator()
     private var rScale = 0f
@@ -66,31 +73,45 @@ class LikeButton @JvmOverloads constructor(
     private val bPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
-    private val sBubbles = mutableListOf<Bubble>()
-    private val lBubbles = mutableListOf<Bubble>()
+    private val sBubbles = MutableList(7) { Bubble(0f, 0f, BUBBLE_RADIUS) }
+    private val lBubbles = MutableList(7) { Bubble(0f, 0f, BUBBLE_RADIUS) }
+    private var enableBubblesS = false
+    private var enableBubblesL = false
 
 
     init {
-        valueProducer.valueConsume(0f, 0.3f) { t, isEnd ->
-            val rt = DecelerateInterpolator().getInterpolation(t)
-            hScale = 1f - rt
+        valueProducer.valueConsume(0f, 0.3f, DecelerateInterpolator()) { t, isEnd ->
+            hScale = 1f - t
         }.valueConsume(0.3f, 0.7f) { t, isEnd ->
             rScale = t
             rColor = rgbEvaluator.evaluate(t, COLOR_RED, COLOR_PURPLE) as Int
-        }.valueConsume(0.5f, 0.9f) { t, isEnd ->
-            hScale = BounceInterpolator().getInterpolation(t)
+        }.valueConsume(0.5f, 0.9f, BounceInterpolator()) { t, isEnd ->
+            hScale = t
+        }.valueConsume(0.4f, 0.9f, FastOutSlowInInterpolator()) { t, isEnd ->
+
+            if (t in 0.6f..1f) {
+                enableBubblesS = !isEnd
+                calculateBubblesPosition(t, PI.toFloat() / 3f, sBubbles)
+
+            }
+
+        }.valueConsume(0.4f, 1.0f, FastOutSlowInInterpolator()) { t, isEnd ->
+
+            if (t in 0.6f..1f) {
+                enableBubblesL = !isEnd
+                calculateBubblesPosition(t, PI.toFloat() / 6f, lBubbles)
+            }
+
         }
     }
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        centerX = w / 2
-        centerY = h / 2
+        centerX = w / 2f
+        centerY = h / 2f
         radius = (if (w > h) h else w) / 2f
-        repeat(7) {
 
-        }
 
     }
 
@@ -103,6 +124,14 @@ class LikeButton @JvmOverloads constructor(
         } else {
             drawColorRound(canvas)
             drawScaleHeart(hScale, canvas)
+            if (enableBubblesS)
+                sBubbles.forEach {
+                    canvas.drawCircle(it.x, it.y, it.radius, bPaint)
+                }
+            if (enableBubblesL)
+                lBubbles.forEach {
+                    canvas.drawCircle(it.x, it.y, it.radius, bPaint)
+                }
         }
 
     }
@@ -135,7 +164,20 @@ class LikeButton @JvmOverloads constructor(
 
     }
 
-    private fun drawBubbles() {
+
+    private fun calculateBubblesPosition(t: Float, bias: Float, target: List<Bubble>) {
+        val radius = this.radius * t
+        val angleUnit = 2 * PI / 7
+        (1..7).map { it * angleUnit + bias }.map { sita ->
+            val x: Float = centerX + radius * sin(sita).toFloat()
+            val y: Float = centerY - radius * cos(sita).toFloat()
+            x to y
+        }.forEachIndexed { index, pair ->
+            target[index].apply {
+                x = pair.first
+                y = pair.second
+            }
+        }
 
     }
 

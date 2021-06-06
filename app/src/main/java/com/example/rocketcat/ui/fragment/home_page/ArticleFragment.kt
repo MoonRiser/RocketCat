@@ -19,12 +19,6 @@ import kotlin.math.abs
 
 class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>() {
 
-    private val originP = PointF()
-
-    private val homeViewModel by activityViewModels<HomeViewModel>()
-
-    private val articleViewModel by viewModels<ArticleViewModel>()
-
 
     override fun layoutId() = R.layout.fragment_article
 
@@ -56,28 +50,6 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                     }
                 }
             })
-        }
-        binding.rvArticle.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    originP.set(event.rawX, event.rawY)
-                    v.parent?.requestDisallowInterceptTouchEvent(true)
-                    false
-
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if (abs(event.rawX - originP.x) > 100f.dp)
-                        v.parent?.requestDisallowInterceptTouchEvent(false)
-                    false
-                }
-                MotionEvent.ACTION_UP -> {
-                    false
-                }
-                else -> false
-            }
-        }
-        binding.fab.setOnClickListener {
-            viewModel.getArticle()
         }
 
     }

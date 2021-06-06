@@ -13,6 +13,6 @@ interface ApiService {
      * 获取首页文章数据
      */
     @GET("article/list/{page}/json")
-    fun getArticleList(@Path("page") pageNo: Int): Flow<Response<ArticleData>>
+    suspend fun getArticleList(@Path("page") pageNo: Int): Response<ArticleData>
 
 }

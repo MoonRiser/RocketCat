@@ -18,6 +18,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.common.ext.ClickCallback
 import com.jakewharton.rxbinding2.view.RxView
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.concurrent.TimeUnit
 
 @BindingAdapter(value = ["CornerRadius"])
@@ -112,5 +114,23 @@ fun ViewPager2.setListeners(
         }
     })
 
+}
+
+/**
+ * 刷新布局的状态 true：启动刷新 false：完成刷新
+ */
+@BindingAdapter(value = ["refresh"])
+fun SmartRefreshLayout.performRefresh(refresh: Boolean?) {
+    refresh?.let {
+        if (it && !this.isRefreshing) autoRefresh()
+        if (!it) finishRefresh()
+    }
+
+}
+
+
+@BindingAdapter(value = ["onRefresh"])
+fun SmartRefreshLayout.performRefresh(refresh: OnRefreshListener) {
+    setOnRefreshListener(refresh)
 }
 

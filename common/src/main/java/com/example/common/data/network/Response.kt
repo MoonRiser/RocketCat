@@ -27,6 +27,15 @@ sealed class NetState<out T>() {
         return this
     }
 
+    /**
+     * 根据函数的调用顺序执行，可以配合上面三个函数插入匹配时机
+     * e.g. onSuccess{}.onError{}.onAction{}这里的onAction可以当成是onComplete
+     */
+    inline fun onAction(action: () -> Unit): NetState<T> {
+        action()
+        return this
+    }
+
 
 }
 
