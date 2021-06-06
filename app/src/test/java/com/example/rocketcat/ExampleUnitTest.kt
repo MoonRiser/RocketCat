@@ -1,6 +1,7 @@
 package com.example.rocketcat
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -51,19 +52,12 @@ class ExampleUnitTest {
             val flow = flow<Int> {
 
             }
+            val channel = Channel<Unit> { }
 
         }
 
-    @Test
-    fun testSome() {
-        val m = (2.01 * 100)
-        val n = (2.75 * 100)
-        val j = (201 / 100.0)
-        val k = (201 / 100f)
-        println("m: $m \nn: $n")
-        println("j: $j \nk: $k")
-
     }
+
 
 }
 

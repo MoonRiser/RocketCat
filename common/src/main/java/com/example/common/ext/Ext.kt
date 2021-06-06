@@ -153,12 +153,15 @@ fun RectF.scale(factor: Float): RectF = RectF(
 )
 
 fun Canvas.drawRing(cx: Float, cy: Float, radius: Float, ringWidth: Float, paint: Paint) {
+
     if (ringWidth > radius) throw RuntimeException("环的宽度不能比环的半径大！")
-    if (ringWidth == 0f) return
-    drawCircle(cx, cy, radius, paint)
-    paint.alpha = 0
-    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-    drawCircle(cx, cy, radius - ringWidth, paint)
+    if (ringWidth < 1f) return
+    val mRadius = radius - ringWidth / 2
+    paint.apply {
+        style = Paint.Style.STROKE
+        strokeWidth = ringWidth
+    }
+    drawCircle(cx, cy, mRadius, paint)
 }
 
 

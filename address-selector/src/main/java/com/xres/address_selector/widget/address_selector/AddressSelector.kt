@@ -25,7 +25,7 @@ class AddressSelector(context: FragmentActivity) {
 
     init {
         dialogBuilder.title("请选择地址")
-            .customView { inflater, parent -> customView }
+            .customView { _, _ -> customView }
             .fullScreenWidth(true)
             .ratioScreenHeight(0.7f)
             .bottomWithRoundCorner(false)

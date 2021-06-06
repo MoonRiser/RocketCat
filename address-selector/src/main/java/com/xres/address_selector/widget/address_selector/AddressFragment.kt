@@ -45,6 +45,7 @@ class AddressFragment(val mAdapter: AddressAdapter) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.rvAddress.apply {
             adapter = mAdapter
+            addItemDecoration(MyDecoration(mAdapter.capIndexMap))
             layoutManager =
                 LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false).also {
                     myLayoutManager = it

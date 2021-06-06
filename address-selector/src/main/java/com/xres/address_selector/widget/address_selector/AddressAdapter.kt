@@ -1,17 +1,23 @@
 package com.xres.address_selector.widget.address_selector
 
-import android.graphics.Color
+import android.graphics.*
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RestrictTo
+import androidx.core.view.children
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.promeg.pinyinhelper.Pinyin
 import com.xres.address_selector.R
 import com.xres.address_selector.db.entity.Division
 import com.xres.address_selector.db.entity.Street
 import com.xres.address_selector.ext.ClickCallback
+import com.xres.address_selector.ext.color
+import com.xres.address_selector.ext.dp
+import kotlin.math.min
 
 
 /**
@@ -29,7 +35,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
     private var currentClickPosition: Int = -1
     var selectedColor: Int = Color.BLUE
 
-    private val capIndexMap = mutableMapOf<String, Int>()
+    val capIndexMap = mutableMapOf<String, Int>()
 
     private var dataList = mutableListOf<Division>()
     fun getDataList(): List<Division> = dataList
@@ -47,6 +53,7 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
         if (capIndexMap.isNotEmpty()) {
             preparedListener?.onPrepared(capIndexMap)
         }
+
         notifyDataSetChanged()
     }
 
@@ -56,13 +63,13 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
 
     class MyViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
-        val capView: TextView = root.findViewById(R.id.tvCap)
-        val divider: View = root.findViewById(R.id.divider)
+
         val nameView: TextView = root.findViewById(R.id.tvAddressName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        LayoutInflater.from(parent.context).inflate(R.layout.item_address_pinyin, parent, false)
+        LayoutInflater.from(parent.context)
+            .inflate(R.layout.division_name_item_layout, parent, false)
             .let {
                 MyViewHolder(it)
             }.apply {
@@ -76,28 +83,14 @@ class AddressAdapter : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val firstCap: String = dataList[position].name.getPinYinFirstCap()
-        holder.apply {
-            if (capIndexMap[firstCap] == position) {
-                capView.visibility = View.VISIBLE
-                divider.visibility = View.VISIBLE
-                capView.text = firstCap
-            } else {
-                capView.visibility = View.GONE
-                divider.visibility = View.GONE
-            }
-            nameView.apply {
-                val color = if (currentClickPosition == position) {
-                    selectedColor
-                } else {
-                    Color.BLACK
-                }
-                setTextColor(color)
-                text = dataList[position].name
-                tag = position//给view加上标签，方便监听
-            }
 
+        holder.nameView.apply {
+            val color = if (currentClickPosition == position) selectedColor else Color.BLACK
+            setTextColor(color)
+            text = dataList[position].name
+            tag = position//给view加上标签，方便监听
         }
+
 
     }
 
@@ -141,3 +134,110 @@ interface DataPreparedListener {
  * 获取汉字对应拼音的首字母
  */
 fun String.getPinYinFirstCap() = Pinyin.toPinyin(this, "/").first().toString()
+
+class MyDecoration(private val capMap: Map<String, Int>) : RecyclerView.ItemDecoration() {
+
+    //    val firstCap: String = dataList[position].name.getPinYinFirstCap()
+    private val mBounds = Rect()
+    private var floatText = ""
+
+    companion object {
+        private val PADDING = 32f.dp
+        private val CAP_HEIGHT = 36f.dp
+        private val BOTTOM_LINE_HEIGHT = 1f.dp
+        private val CAP_TEXT_POSITION = 24f.dp
+        private const val CAP_BG_COLOR = "#F4F4F4"
+        private const val TEXT_COLOR = "#607D8B"
+
+    }
+
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = CAP_BG_COLOR.color
+    }
+
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = TEXT_COLOR.color
+        textSize = 18f.dp.toFloat()
+    }
+
+    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+
+        c.save()
+        parent.children.forEach { item ->
+            parent.getDecoratedBoundsWithMargins(item, mBounds)
+            val rect = mBounds.run {
+                Rect(left + PADDING, bottom, right - PADDING, bottom + BOTTOM_LINE_HEIGHT)
+            }
+            //画分割线
+            c.drawRect(rect, paint)
+            //画文字
+            val position = parent.getChildLayoutPosition(item)
+            val text = getCapByPosition(position)
+            if (text != null) {
+                val rect1 = mBounds.run {
+                    Rect(left, top, right, top + CAP_HEIGHT)
+                }
+                c.drawRect(rect1, paint)
+                c.drawText(
+                    text,
+                    (mBounds.left + PADDING).toFloat(),
+                    mBounds.top.toFloat() + CAP_TEXT_POSITION,
+                    textPaint
+                )
+            }
+        }
+        c.restore()
+    }
+
+    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+
+        c.save()
+        val firstVisible =
+            (parent.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        val firstCompleteVisible =
+            (parent.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        floatText = getCapByPosition(firstVisible) ?: floatText
+
+        parent.findViewHolderForAdapterPosition(firstCompleteVisible)?.itemView?.let {
+            val top = Rect().apply { parent.getDecoratedBoundsWithMargins(it, this) }.top
+            val bott =
+                if (!capMap.containsValue(firstCompleteVisible)) CAP_HEIGHT else min(
+                    top,
+                    CAP_HEIGHT
+                )
+            val rect = Rect(0, bott - CAP_HEIGHT, parent.width, bott)
+            //画首字母背景
+            c.drawRect(rect, paint)
+            //画首字母
+            c.drawText(
+                floatText,
+                PADDING.toFloat(),
+                bott - CAP_HEIGHT + CAP_TEXT_POSITION.toFloat(),
+                textPaint
+            )
+        }
+        c.restore()
+    }
+
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        val position = parent.getChildLayoutPosition(view)
+        //预留首字母空间
+        if (capMap.containsValue(position)) {
+            outRect.top = CAP_HEIGHT
+        }
+        //预留下划线
+        outRect.bottom = BOTTOM_LINE_HEIGHT
+    }
+
+    private fun getCapByPosition(firstVisible: Int): String? =
+        capMap.filter { map -> map.value == firstVisible }.keys.firstOrNull()
+
+
+}

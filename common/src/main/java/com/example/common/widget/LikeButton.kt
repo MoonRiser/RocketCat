@@ -66,6 +66,9 @@ class LikeButton @JvmOverloads constructor(
     private val bPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
+    private val sBubbles = mutableListOf<Bubble>()
+    private val lBubbles = mutableListOf<Bubble>()
+
 
     init {
         valueProducer.valueConsume(0f, 0.3f) { t, isEnd ->
@@ -85,6 +88,10 @@ class LikeButton @JvmOverloads constructor(
         centerX = w / 2
         centerY = h / 2
         radius = (if (w > h) h else w) / 2f
+        repeat(7) {
+
+        }
+
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -114,7 +121,6 @@ class LikeButton @JvmOverloads constructor(
 
     private fun drawScaleHeart(scale: Float, canvas: Canvas, color: Int = COLOR_RED) {
         heart?.let {
-            Log.i("xres1", scale.toString())
             val old = RectF(0f, 0f, it.width.toFloat(), heart.height.toFloat())
             hPaint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
             canvas.drawBitmap(heart, null, old.scale(scale), hPaint)
@@ -128,6 +134,17 @@ class LikeButton @JvmOverloads constructor(
         canvas.drawRing(centerX.toFloat(), centerY.toFloat(), mRadius, mRadius * t, rPaint)
 
     }
+
+    private fun drawBubbles() {
+
+    }
+
+    private data class Bubble(
+        var x: Float,
+        var y: Float,
+        val radius: Float,
+        var color: Int = Color.BLUE
+    )
 
 
 }
