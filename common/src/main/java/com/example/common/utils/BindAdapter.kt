@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
-import androidx.databinding.InverseBindingListener
+import androidx.databinding.*
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -19,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.common.ext.ClickCallback
 import com.jakewharton.rxbinding2.view.RxView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.concurrent.TimeUnit
 
@@ -75,8 +74,8 @@ fun EditText.setPasswordVisibility(visible: Boolean) {
 }
 
 
-@BindingAdapter(value = ["dataList"])
-fun <T> RecyclerView.submit(dataList: List<T>?) {
+@BindingAdapter(value = ["dataList", "toEnd"])
+fun <T> RecyclerView.submit(dataList: List<T>?, toEnd: Boolean?) {
     (adapter as? ListAdapter<*, *>)?.let {
         val needCopy = it.currentList === dataList
         val list = if (needCopy) ArrayList<T>(dataList) else dataList
@@ -84,7 +83,10 @@ fun <T> RecyclerView.submit(dataList: List<T>?) {
             //滑动到底部，其实可以加个属性控制滑到顶部还是底部
             it.itemCount.takeIf { count ->
                 count > 0
-            }?.let { count -> smoothScrollToPosition(count - 1) }
+            }?.let { count ->
+                val position = if (toEnd != false) count - 1 else 0
+                smoothScrollToPosition(position)
+            }
 
         }
     }
@@ -122,7 +124,7 @@ fun ViewPager2.setListeners(
 @BindingAdapter(value = ["refresh"])
 fun SmartRefreshLayout.performRefresh(refresh: Boolean?) {
     refresh?.let {
-        if (it && !this.isRefreshing) autoRefresh()
+        if (it && !isRefreshing) autoRefresh()
         if (!it) finishRefresh()
     }
 
@@ -130,7 +132,17 @@ fun SmartRefreshLayout.performRefresh(refresh: Boolean?) {
 
 
 @BindingAdapter(value = ["onRefresh"])
-fun SmartRefreshLayout.performRefresh(refresh: OnRefreshListener) {
+fun SmartRefreshLayout._setRefreshListener(refresh: OnRefreshListener) {
     setOnRefreshListener(refresh)
 }
 
+@BindingAdapter(value = ["onLoadMore"])
+fun SmartRefreshLayout._setLoadMoreListener(listener: OnLoadMoreListener) {
+    setOnLoadMoreListener(listener)
+}
+
+@BindingAdapter(value = ["noMoreData"])
+fun SmartRefreshLayout.performLoadMore(noMoreData: Boolean?) {
+    if (noMoreData == true) finishLoadMoreWithNoMoreData() else finishLoadMore()
+
+}

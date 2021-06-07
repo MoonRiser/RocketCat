@@ -12,6 +12,8 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:noMoreData="@{viewModel.noMoreData}"
+        app:onLoadMore="@{viewModel.loadMoreAction}"
         app:onRefresh="@{viewModel.refreshAction}"
         app:refresh="@{viewModel.performRefresh}">
 
@@ -27,7 +29,8 @@
                 android:id="@+id/rvArticle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:dataList="@{viewModel.articleList}" />
+                app:dataList="@{viewModel.articleList}"
+                app:toEnd="@{viewModel.toEnd}" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
