@@ -23,11 +23,9 @@ import com.example.rocketcat.databinding.ActivitySplashBinding
 
 class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
 
-    private val imgs = arrayListOf(
-        R.drawable.jump, R.drawable.paint, R.drawable.sit
-    )
+    private val imgs = arrayListOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
     private val adapter1 = MyGalleryAdapter(imgs)
-//    private val values = listOf("#3E44D9", "#3D2161", "#EB8127")
+
 
     val evaluator = ArgbEvaluator()
 
@@ -41,8 +39,9 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.apply {
-                hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                hide(WindowInsets.Type.systemBars())
+
             }
         }
         val colors = imgs.map { createPaletteSync(it)?.dominantSwatch?.rgb }
@@ -60,7 +59,7 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
-                    if (position < colors.size - 1) {
+                    binding.btSkip.visibility = if (position < colors.size - 1) {
                         val color =
                             evaluator.evaluate(
                                 positionOffset,
@@ -68,9 +67,9 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                                 colors[position + 1]
                             ) as Int
                         binding.imgBg.setBackgroundColor(color)
-                        binding.btSkip.visibility = View.GONE
+                        View.GONE
                     } else {
-                        binding.btSkip.visibility = View.VISIBLE
+                        View.VISIBLE
                     }
 
                 }

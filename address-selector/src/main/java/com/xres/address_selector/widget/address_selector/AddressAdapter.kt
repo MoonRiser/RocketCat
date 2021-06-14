@@ -198,7 +198,7 @@ class MyDecoration(private val capMap: Map<String, Int>) : RecyclerView.ItemDeco
             (parent.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
         val firstCompleteVisible =
             (parent.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-        floatText = getCapByPosition(firstVisible) ?: floatText
+        floatText = getCapByPositionNotNull(firstVisible)
 
         parent.findViewHolderForAdapterPosition(firstCompleteVisible)?.itemView?.let {
             val top = Rect().apply { parent.getDecoratedBoundsWithMargins(it, this) }.top
@@ -239,5 +239,8 @@ class MyDecoration(private val capMap: Map<String, Int>) : RecyclerView.ItemDeco
     private fun getCapByPosition(firstVisible: Int): String? =
         capMap.filter { map -> map.value == firstVisible }.keys.firstOrNull()
 
+
+    private fun getCapByPositionNotNull(firstVisible: Int): String =
+        capMap.filter { map -> map.value <= firstVisible }.keys.last()
 
 }
