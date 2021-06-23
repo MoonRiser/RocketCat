@@ -52,10 +52,13 @@ data class ArticleBean(
     val userId: Int = 0,
     val visible: Int = 0,
     val zan: Int = 0
-) : Parcelable
+) : Parcelable, ContentBean()
 
 @Parcelize
 data class Tag(
     val name: String = "",
     val url: String = ""
 ) : Parcelable
+
+sealed class ContentBean
+object AdBean : ContentBean()

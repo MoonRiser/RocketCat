@@ -11,10 +11,12 @@ import com.example.common.ext.dp
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.ItemRvArticleBinding
+import com.example.rocketcat.ui.fragment.response.AdBean
 import com.example.rocketcat.ui.fragment.response.ArticleBean
+import com.example.rocketcat.ui.fragment.response.ContentBean
 
 
-class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCallback) {
+class ArticleAdapter : ListAdapter<ContentBean, RecyclerView.ViewHolder>(diffCallback) {
 
 
     class MyViewHolder(private val binding: ItemRvArticleBinding) :
@@ -31,6 +33,13 @@ class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCal
 
     class AdViewHolder(val imageView: AdImageView) : RecyclerView.ViewHolder(imageView)
 
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is AdBean -> TYPE_AD
+            else -> TYPE_NORMAL
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -60,7 +69,7 @@ class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCal
         when (holder) {
             is MyViewHolder -> {
                 val data = getItem(position)
-                holder.bind(data)
+                holder.bind(data as ArticleBean)
             }
             is AdViewHolder -> {
                 holder.imageView.setImageResource(R.drawable.cp)
@@ -70,17 +79,14 @@ class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCal
     }
 
     companion object {
-        private val diffCallback = object : ItemCallback<ArticleBean>() {
-            override fun areItemsTheSame(
-                oldItem: ArticleBean,
-                newItem: ArticleBean
-            ) = oldItem.id == newItem.id
+        private val diffCallback = object : ItemCallback<ContentBean>() {
+            override fun areItemsTheSame(oldItem: ContentBean, newItem: ContentBean): Boolean =
+                if (oldItem is ArticleBean && newItem is ArticleBean) oldItem.id == newItem.id else false
 
 
-            override fun areContentsTheSame(
-                oldItem: ArticleBean,
-                newItem: ArticleBean
-            ) = oldItem == newItem
+            override fun areContentsTheSame(oldItem: ContentBean, newItem: ContentBean): Boolean =
+                if (oldItem is ArticleBean && newItem is ArticleBean) oldItem == newItem else false
+
 
         }
         private const val TYPE_AD = 816
@@ -90,3 +96,4 @@ class ArticleAdapter : ListAdapter<ArticleBean, RecyclerView.ViewHolder>(diffCal
 
 
 }
+

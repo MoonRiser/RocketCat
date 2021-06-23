@@ -56,8 +56,6 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
         }
         val colors = imgs.map { createPaletteSync(it)?.dominantSwatch?.rgb }
-
-
         binding.vp2Welcome.apply {
             adapter = adapter1
             offscreenPageLimit = 1
@@ -86,7 +84,6 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                 }
             })
         }
-
         binding.btSkip.setOnClickListener {
             jumpTo<MainActivity>()
             finish()
