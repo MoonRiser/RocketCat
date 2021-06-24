@@ -171,7 +171,7 @@ fun interface SpanClickListener {
     fun onSpanClick(index: Int)
 }
 
-const val FLOAT_PRECISE = 0.001
+const val FLOAT_PRECISE = 0.05
 
 class ValueProducer(
     private val animDuration: Long,

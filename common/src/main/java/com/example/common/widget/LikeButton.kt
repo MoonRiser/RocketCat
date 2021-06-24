@@ -72,6 +72,7 @@ class LikeButton @JvmOverloads constructor(
     //气泡的画笔
     private val bPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = Color.MAGENTA
     }
     private val sBubbles = MutableList(7) { Bubble(0f, 0f, BUBBLE_RADIUS) }
     private val lBubbles = MutableList(7) { Bubble(0f, 0f, BUBBLE_RADIUS) }

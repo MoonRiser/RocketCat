@@ -1,7 +1,6 @@
 package com.xres.address_selector.widget.address_selector
 
 import android.graphics.*
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -198,7 +197,7 @@ class MyDecoration(private val capMap: Map<String, Int>) : RecyclerView.ItemDeco
             (parent.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
         val firstCompleteVisible =
             (parent.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-        floatText = getCapByPositionNotNull(firstVisible)
+        floatText = getCapByPositionLast(firstVisible)
 
         parent.findViewHolderForAdapterPosition(firstCompleteVisible)?.itemView?.let {
             val top = Rect().apply { parent.getDecoratedBoundsWithMargins(it, this) }.top
@@ -240,7 +239,7 @@ class MyDecoration(private val capMap: Map<String, Int>) : RecyclerView.ItemDeco
         capMap.filter { map -> map.value == firstVisible }.keys.firstOrNull()
 
 
-    private fun getCapByPositionNotNull(firstVisible: Int): String =
-        capMap.filter { map -> map.value <= firstVisible }.keys.last()
+    private fun getCapByPositionLast(firstVisible: Int): String =
+        capMap.filter { map -> map.value <= firstVisible }.keys.lastOrNull() ?: ""
 
 }
