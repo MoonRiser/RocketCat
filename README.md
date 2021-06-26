@@ -11,6 +11,7 @@
 ## 数据源
 国内的地址数据来源于Github上开源项目[Administrative-divisions-of-China](https://github.com/modood/Administrative-divisions-of-China#administrative-divisions-of-china)，该项目所爬数据的最终来源是国家统计局等政府权威部门，目前最新的数据是2019年（2020年2月发布）
 ## 预览
+![v1.1开始首字母改为吸顶效果](https://raw.githubusercontent.com/MoonRiser/images/master/%E5%90%B8%E9%A1%B6%E6%95%88%E6%9E%9C%E9%A2%84%E8%A7%88.gif)
 ![QQ20210321-193124-HD](https://raw.githubusercontent.com/MoonRiser/images/master/20210321202718.jpg)
 
 
