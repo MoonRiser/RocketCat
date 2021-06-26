@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseFragment
+import com.example.common.ext.enableNestedScroll
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.FragmentTab3Binding
@@ -29,13 +30,14 @@ class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
         binding.vp2below.apply {
             adapter = MyGalleryAdapter(imgs)
             offscreenPageLimit = 2
+            enableNestedScroll()
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
-                   binding.ivAbove.setPageOffset(position,positionOffset)
+                    binding.ivAbove.setPageOffset(position, positionOffset)
                 }
             })
 

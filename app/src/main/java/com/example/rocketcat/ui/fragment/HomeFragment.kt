@@ -28,7 +28,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             fragments.addAll(it)
         }
 
-        binding.vp2Tab.init(this, fragments, false)
+        binding.vp2Tab.init(this, fragments)
         TabLayoutMediator(binding.tabHome, binding.vp2Tab) { tab, position ->
             tab.text = "Title" + (position + 1)
         }.also { it.attach() }

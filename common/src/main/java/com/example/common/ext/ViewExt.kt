@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.method.LinkMovementMethod
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.common.widget.ViewPager2Container
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -63,6 +65,24 @@ fun ViewPager2.init(
             fragments.map { it.hashCode().toLong() }.contains(itemId)
     }
     return this
+}
+
+fun ViewPager2.enableNestedScroll() {
+    val vp2 = this
+    val p = parent as ViewGroup
+    val index = p.indexOfChild(this)
+    p.removeViewAt(index)
+    val container = ViewPager2Container(context).apply {
+        layoutParams = vp2.layoutParams
+        addView(vp2.apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        })
+    }
+    p.addView(container, index)
+
 }
 
 

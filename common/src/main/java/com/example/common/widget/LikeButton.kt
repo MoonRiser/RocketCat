@@ -86,7 +86,7 @@ class LikeButton @JvmOverloads constructor(
         }.valueConsume(0.3f, 0.7f) { t, isEnd ->
             rScale = t
             rColor = rgbEvaluator.evaluate(t, COLOR_RED, COLOR_PURPLE) as Int
-        }.valueConsume(0.5f, 0.9f, BounceInterpolator()) { t, isEnd ->
+        }.valueConsume(0.6f, 1.0f, BounceInterpolator()) { t, isEnd ->
             hScale = t
         }.valueConsume(0.4f, 0.9f, FastOutSlowInInterpolator()) { t, isEnd ->
 
