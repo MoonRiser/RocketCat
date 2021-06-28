@@ -67,6 +67,9 @@ fun ViewPager2.init(
     return this
 }
 
+/**
+ * 处理viewpager2的滑动冲突
+ */
 fun ViewPager2.enableNestedScroll() {
     val vp2 = this
     val p = parent as ViewGroup
@@ -84,7 +87,6 @@ fun ViewPager2.enableNestedScroll() {
     p.addView(container, index)
 
 }
-
 
 fun AppCompatActivity.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

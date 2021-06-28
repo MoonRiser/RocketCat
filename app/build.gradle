@@ -50,7 +50,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":common")
-    implementation project(":address-selector")
+//    implementation project(":address-selector")
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 

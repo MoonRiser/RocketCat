@@ -91,6 +91,9 @@ dependencies {
     api 'com.github.scwang90.SmartRefreshLayout:refresh-header-classics:V2.0.0'
     api 'com.github.scwang90.SmartRefreshLayout:refresh-footer-classics:V2.0.0'
 
+    //地址选择器
+    api 'com.github.MoonRiser:RocketCat:v1.1'
+
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -3,7 +3,9 @@ package com.example.rocketcat.ui.fragment.home_page
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.setPadding
@@ -16,11 +18,14 @@ import com.example.rocketcat.R
 import com.example.rocketcat.adapter.BlurTransformation
 import com.example.rocketcat.customview.MyFlowLayout
 import com.example.rocketcat.databinding.FragmentTab2Binding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 
 
 class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
+    private lateinit var dialog: BottomSheetDialog
 
     override fun layoutId() = R.layout.fragment_tab2
 
@@ -51,6 +56,9 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
                 text = arrayOf("加油", "优惠券", "车灯", "保温杯", "德玛西亚")[(0..4).random()] + "$time"
                 tag = time
                 setTextColor(Color.BLUE)
+                setOnClickListener {
+                    dialog.show()
+                }
                 setOnLongClickListener {
                     isCloseIconVisible = !isCloseIconVisible
                     true
@@ -65,6 +73,21 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
         }
 
 
+        dialog = BottomSheetDialog(requireContext()).apply {
+            setContentView(R.layout.bottom_sheet_content)
+        }
+        dialog.setOnShowListener { dialog1 ->
+
+            val bottomSheetDialog = dialog1 as BottomSheetDialog
+            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                ?.let {
+                    val behaviour = BottomSheetBehavior.from(it)
+                    behaviour.peekHeight = 48f.dp
+                    behaviour.state = BottomSheetBehavior.STATE_COLLAPSED
+                    setupFullHeight(it)
+                }
+        }
+
         Glide.with(requireActivity())
             .load(R.drawable.cp)
             .transform(CenterCrop(), BlurTransformation(requireContext(), 15f, 0.3f))
@@ -73,6 +96,12 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
     }
 
+
+    private fun setupFullHeight(bottomSheet: View) {
+        val layoutParams = bottomSheet.layoutParams
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+        bottomSheet.layoutParams = layoutParams
+    }
 
 }
 

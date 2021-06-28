@@ -26,4 +26,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <!--背景，顶部两个圆角-->
+        <item name="android:background">@drawable/round_bottom_sheet_shape</item>
+    </style>
 </resources>

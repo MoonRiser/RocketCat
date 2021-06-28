@@ -51,6 +51,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                 }
             })
         }
+        binding.fab.performClick()
 
     }
 

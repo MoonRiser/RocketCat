@@ -1,15 +1,15 @@
 package com.example.rocketcat.ui.fragment.home_page
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.viewpager2.widget.ViewPager2
-import com.example.rocketcat.R
 import com.example.common.base.BaseFragment
 import com.example.common.dialog.ListDialog
 import com.example.common.dialog.ListDialog.Builder.OnItemSelectListener
+import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.xres.address_selector.db.entity.Area
 import com.xres.address_selector.db.entity.City
 import com.xres.address_selector.db.entity.Province
@@ -19,11 +19,11 @@ import com.xres.address_selector.ext.showToast
 import com.xres.address_selector.widget.address_selector.AddressSelector
 import com.xres.address_selector.widget.address_selector.OnSelectedListener
 
+
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
 
-    private lateinit var tab: TabLayout
-    private lateinit var vp2: ViewPager2
+    private lateinit var behavior: BottomSheetBehavior<View>
     private lateinit var selector: AddressSelector
 
     override fun layoutId() = R.layout.fragment_tab1
@@ -62,6 +62,7 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
         binding.bt4.setOnClickListener {
             test()
         }
+
     }
 
     override fun getViewModelOwner(): ViewModelStoreOwner = requireParentFragment()
