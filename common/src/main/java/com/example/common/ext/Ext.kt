@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.lang.RuntimeException
 import kotlin.coroutines.resume
+import kotlin.math.hypot
 
 /**
  * @Author:         Xres
@@ -163,6 +164,9 @@ fun Canvas.drawRing(cx: Float, cy: Float, radius: Float, ringWidth: Float, paint
     }
     drawCircle(cx, cy, mRadius, paint)
 }
+
+infix fun PointF.distanceTo(destination: PointF): Float =
+    hypot(x - destination.x, y - destination.y)
 
 
 //作者：谷歌开发者

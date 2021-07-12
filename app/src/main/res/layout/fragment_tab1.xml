@@ -1,141 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello,I am a tab"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="16dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="8"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:passwordToggleEnabled="true">
 
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello,I am a tab"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
+            <EditText
+                android:id="@+id/ETpwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="16dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="8"
-                app:endIconMode="clear_text"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@+id/textView3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:passwordToggleEnabled="true">
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:maxLength="8" />
 
-                <EditText
-                    android:id="@+id/ETpwd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="请输入密码"
-                    android:inputType="textPassword"
-                    android:maxLength="8" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/btLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-            <Button
-                android:id="@+id/btLoading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="test"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        <Button
+            android:id="@+id/btTest2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地址选择器"
+            app:layout_constraintBottom_toBottomOf="@+id/btLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btLoading" />
 
-            <Button
-                android:id="@+id/btTest2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="地址选择器"
-                app:layout_constraintBottom_toBottomOf="@+id/btLoading"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btLoading" />
+        <com.example.common.widget.BallsLoading
+            android:id="@+id/loading"
+            android:layout_width="160dp"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.example.common.widget.BallsLoading
-                android:id="@+id/loading"
-                android:layout_width="160dp"
-                android:layout_height="200dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/btTest3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Test3"
+            app:layout_constraintEnd_toEndOf="@+id/btLoading"
+            app:layout_constraintStart_toStartOf="@+id/btLoading"
+            app:layout_constraintTop_toBottomOf="@+id/btLoading" />
 
-            <Button
-                android:id="@+id/btTest3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Test3"
-                app:layout_constraintEnd_toEndOf="@+id/btLoading"
-                app:layout_constraintStart_toStartOf="@+id/btLoading"
-                app:layout_constraintTop_toBottomOf="@+id/btLoading" />
-
-            <Button
-                android:id="@+id/bt4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="TEST4"
-                app:layout_constraintBottom_toBottomOf="@+id/btTest3"
-                app:layout_constraintStart_toEndOf="@+id/btTest3"
-                app:layout_constraintTop_toTopOf="@+id/btTest3" />
+        <Button
+            android:id="@+id/bt4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="TEST4"
+            app:layout_constraintBottom_toBottomOf="@+id/btTest3"
+            app:layout_constraintStart_toEndOf="@+id/btTest3"
+            app:layout_constraintTop_toTopOf="@+id/btTest3" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.core.widget.NestedScrollView
-            style="@style/BottomSheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="48dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="16dp"
-                    android:src="@drawable/the_red" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="16dp"
-                    android:src="@drawable/ads" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/cp" />
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

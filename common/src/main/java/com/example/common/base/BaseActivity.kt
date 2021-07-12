@@ -35,6 +35,7 @@ abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompa
         binding = DataBindingUtil.setContentView(this, layoutId())
         binding.setVariable(BR.viewModel, viewModel)
         initView(savedInstanceState)
+        initObserver()
         //初始化loading view
         loadingPage =
             LayoutInflater.from(this).inflate(R.layout.common_loading_view, null) as ViewGroup
@@ -44,6 +45,10 @@ abstract class BaseActivity<VM : BaseViewModel, DB : ViewDataBinding> : AppCompa
 
     }
 
+
+    open fun initObserver() {
+
+    }
 
     /**
      * 创建viewModel

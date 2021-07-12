@@ -2,7 +2,7 @@
 <resources>
 
 
-    <style name="MyMaterialTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="MyMaterialTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVibrant</item>

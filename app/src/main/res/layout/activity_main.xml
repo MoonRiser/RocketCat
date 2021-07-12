@@ -5,37 +5,115 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.example.rocketcat.ui.activity.MainViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.MainActivity">
+        app:layoutDescription="@xml/activity_main_scene">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp2_home"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp2_home"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar">
+
 
         </androidx.viewpager2.widget.ViewPager2>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
+
+        <FrameLayout
+            android:id="@+id/bigContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Design.NavigationView"
-            app:menu="@menu/bottom_nav"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="64dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/windowBackground"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/top_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="4dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/the_red"
+            app:layout_constraintBottom_toBottomOf="@id/bigContainer"
+            app:layout_constraintStart_toStartOf="@id/bigContainer"
+            app:layout_constraintTop_toTopOf="@id/bigContainer"
+            app:shapeAppearance="@style/RoundCornerShape8dp" />
+
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Dumb Dumb -Red Velvet"
+            app:layout_constraintBottom_toBottomOf="@id/top_image"
+            app:layout_constraintStart_toEndOf="@id/top_image"
+            app:layout_constraintTop_toTopOf="@id/top_image" />
+
+        <CheckBox
+            android:id="@+id/btPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/selector_cb_player"
+            android:button="@null"
+            android:checked="@={viewModel.playOn}"
+            android:enabled="@{viewModel.enablePlay}"
+            app:layout_constraintBottom_toBottomOf="@id/bigContainer"
+            app:layout_constraintEnd_toEndOf="@id/bigContainer"
+            app:layout_constraintTop_toTopOf="@id/bigContainer" />
+
+
+        <TextView
+            android:id="@+id/contentView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="@id/bigContainer"
+            app:layout_constraintStart_toStartOf="@id/bigContainer"
+            app:layout_constraintTop_toBottomOf="@id/bigContainer"
+            tools:text="I am the fans of Red Velvet" />
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            style="@style/Widget.Design.NavigationView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
 
 </layout>

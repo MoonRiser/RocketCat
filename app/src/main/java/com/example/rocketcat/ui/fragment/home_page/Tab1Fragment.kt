@@ -23,7 +23,6 @@ import com.xres.address_selector.widget.address_selector.OnSelectedListener
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
 
-    private lateinit var behavior: BottomSheetBehavior<View>
     private lateinit var selector: AddressSelector
 
     override fun layoutId() = R.layout.fragment_tab1

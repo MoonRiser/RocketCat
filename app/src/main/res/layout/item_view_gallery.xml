@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="centerCrop"
-    app:cardCornerRadius="16dp"
     app:shapeAppearance="@style/RoundCornerShape16dp"
     tools:src="@drawable/ads">
 

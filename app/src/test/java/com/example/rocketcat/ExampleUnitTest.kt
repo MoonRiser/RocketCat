@@ -58,6 +58,13 @@ class ExampleUnitTest {
 
     }
 
+    @Test
+    fun someTest(){
+        val list = (0..10).toMutableList()
+        val target = list.take(3)
+        println("I am list : $target")
+    }
+
 
 }
 
