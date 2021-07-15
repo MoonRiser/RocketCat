@@ -26,6 +26,7 @@ public class MyGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
+
         MyViewHolder(View view) {
             super(view);
             this.imageView = view.findViewById(R.id.iv_content);

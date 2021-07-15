@@ -21,9 +21,11 @@ import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import com.example.common.base.BaseApplication
+import com.example.common.dialog.CustomDialog
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 
 fun showToast(msg: String) =
@@ -167,6 +169,9 @@ fun String.searchAllIndex(key: String): List<Int> {
     return list
 }
 
+
+
+
 fun interface SpanClickListener {
     fun onSpanClick(index: Int)
 }
@@ -229,6 +234,8 @@ class ValueProducer(
         val interpolator: Interpolator?
     )
 }
+
+
 
 
 

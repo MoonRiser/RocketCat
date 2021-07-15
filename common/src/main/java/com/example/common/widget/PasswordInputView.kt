@@ -8,6 +8,8 @@ import android.graphics.RectF
 import android.text.InputFilter
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.common.ext.dp
 import com.example.common.ext.primaryColor
 import com.example.common.utils.SoftKeyboardUtil

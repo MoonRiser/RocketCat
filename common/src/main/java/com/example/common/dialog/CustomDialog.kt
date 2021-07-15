@@ -336,6 +336,16 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun ratioScreenHeight(ratioScreenHeight: Float) =
             apply { this.ratioScreenHeight = ratioScreenHeight }
 
+        fun positiveButton(content: String, onDialogClick: ((CustomDialog) -> Unit) = {}) {
+            textRight = content
+            rightOnClickListener = object : DialogCallback {
+                override fun onClick(dialog: CustomDialog) {
+                    onDialogClick.invoke(dialog)
+                }
+            }
+        }
+
+
         open fun build() = CustomDialog(this, context).apply {
             create()
             if (context is ComponentActivity) {

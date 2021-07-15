@@ -1,4 +1,4 @@
-package com.example.common.ext
+ package com.example.common.ext
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -119,18 +119,15 @@ fun View.getDrawableById(@DrawableRes resourceID: Int): Drawable? =
  * @param color 书名号中的内容包括书名号的颜色
  * @param listener 点击监听器，被点击的第index个协议
  */
-@JvmOverloads
 fun TextView.setClickableSpan(
     rawString: String,
     @ColorInt color: Int = primaryColor,
     showSymbol: Boolean = true,
     listener: SpanClickListener? = null
 ) {
-    this.apply {
         text = string2SpannableStringBuilder(rawString, color, showSymbol, listener)
         highlightColor = ContextCompat.getColor(this.context, android.R.color.transparent)
         movementMethod = LinkMovementMethod.getInstance()
-    }
 }
 
 fun View.createSpringAnimation(

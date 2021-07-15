@@ -14,6 +14,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
 import com.example.common.ext.createSpringAnimation
@@ -72,6 +74,7 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
         initFabSpringAnimation()
         initImgScaleSpringAnimation()
         initImgRotationSpringAnimation()
+
 
     }
 

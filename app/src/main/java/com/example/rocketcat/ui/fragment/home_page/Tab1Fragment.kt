@@ -1,15 +1,14 @@
 package com.example.rocketcat.ui.fragment.home_page
 
 import android.os.Bundle
-import android.view.View
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
-import com.example.common.dialog.ListDialog
-import com.example.common.dialog.ListDialog.Builder.OnItemSelectListener
+import com.example.common.dialog.dialog
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.xres.address_selector.db.entity.Area
 import com.xres.address_selector.db.entity.City
 import com.xres.address_selector.db.entity.Province
@@ -18,9 +17,27 @@ import com.xres.address_selector.dialog.CustomDialog
 import com.xres.address_selector.ext.showToast
 import com.xres.address_selector.widget.address_selector.AddressSelector
 import com.xres.address_selector.widget.address_selector.OnSelectedListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 
 class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
+
+    private val contentLiveData = MutableLiveData("I am the Content")
+
+    private val dialog by lazy {
+
+        dialog(requireActivity()) {
+            title("I am a Dialog")
+            message(contentLiveData)
+            positiveButton("ok") {
+                showToast("just click Ok")
+                it.dismiss()
+            }
+            negativeButton("cancel")
+        }
+    }
 
 
     private lateinit var selector: AddressSelector
@@ -67,15 +84,17 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
     override fun getViewModelOwner(): ViewModelStoreOwner = requireParentFragment()
 
     private fun test() {
-        ListDialog.Builder<Int>(requireActivity())
-            .title("FBI WARNING")
-            .dataList(listOf(3, 1, 4, 5, 9, 2))
-            .itemListener(object : OnItemSelectListener<Int> {
-                override fun onSelect(index: Int, item: Int) {
-                    showToast("click $index,the value is $item")
-                }
-            })
-            .show()
+        dialog.show()
+        lifecycleScope.launch {
+            delay(500)
+            (1..100).asFlow().map {
+                delay(20)
+                it
+            }.collect {
+                contentLiveData.value = "current progress is : $it"
+            }
+
+        }
     }
 
 }

@@ -135,7 +135,6 @@ class MyFlowLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
-
         if (childCount == 0) {
             rowCount = 0
             return

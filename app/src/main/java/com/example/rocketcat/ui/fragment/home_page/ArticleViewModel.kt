@@ -12,6 +12,7 @@ import com.example.rocketcat.ui.fragment.response.ArticleBean
 import com.example.rocketcat.ui.fragment.response.ContentBean
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class ArticleViewModel : BaseViewModel() {
@@ -41,7 +42,9 @@ class ArticleViewModel : BaseViewModel() {
 
     private fun getArticle(pageNo: Int) {
 
-        viewModelScope.launch {
+//        listOf(0,1,2).find {  }
+        viewModelScope
+            .launch {
 
 /*            request(apiService.getArticleList(pageNo)).collect { result ->
 //                if (result.data.hasMore) {

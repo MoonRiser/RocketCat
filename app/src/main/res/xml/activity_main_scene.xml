@@ -3,7 +3,7 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetEnd="@id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="500">
 
@@ -12,7 +12,7 @@
             motion:maxAcceleration="25"
             motion:touchAnchorId="@id/bigContainer"
             motion:touchAnchorSide="top"
-            motion:touchRegionId="@id/tvName" />
+            motion:touchRegionId="@id/bigContainer" />
 
         <OnClick motion:targetId="@id/top_image" />
 
@@ -33,7 +33,7 @@
     <ConstraintSet android:id="@+id/start">
 
         <Constraint
-            android:id="@+id/appBar"
+            android:id="@id/appBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
 
 
         <Constraint
-            android:id="@+id/bottomNavigationView"
+            android:id="@id/bottomNavigationView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -51,7 +51,7 @@
 
 
         <Constraint
-            android:id="@+id/bigContainer"
+            android:id="@id/bigContainer"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginBottom="8dp"
@@ -62,7 +62,7 @@
 
 
         <Constraint
-            android:id="@+id/top_image"
+            android:id="@id/top_image"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"
@@ -73,7 +73,7 @@
 
 
         <Constraint
-            android:id="@+id/tvName"
+            android:id="@id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -83,7 +83,7 @@
             motion:layout_constraintTop_toTopOf="@id/top_image" />
 
         <Constraint
-            android:id="@+id/btPlay"
+            android:id="@id/btPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="48dp"
@@ -94,7 +94,7 @@
 
 
         <Constraint
-            android:id="@+id/contentView"
+            android:id="@id/contentView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -108,11 +108,11 @@
 
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@id/end">
 
 
         <Constraint
-            android:id="@+id/appBar"
+            android:id="@id/appBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintBottom_toTopOf="parent"
@@ -121,7 +121,7 @@
 
 
         <Constraint
-            android:id="@+id/bottomNavigationView"
+            android:id="@id/bottomNavigationView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintLeft_toLeftOf="parent"
@@ -130,7 +130,7 @@
 
 
         <Constraint
-            android:id="@+id/bigContainer"
+            android:id="@id/bigContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/design_default_color_background"
@@ -141,7 +141,7 @@
 
 
         <Constraint
-            android:id="@+id/top_image"
+            android:id="@id/top_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="48dp"
@@ -154,7 +154,7 @@
             motion:layout_constraintTop_toTopOf="@id/bigContainer" />
 
         <Constraint
-            android:id="@+id/tvName"
+            android:id="@id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -164,7 +164,7 @@
             motion:layout_constraintTop_toBottomOf="@id/top_image" />
 
         <Constraint
-            android:id="@+id/btPlay"
+            android:id="@id/btPlay"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
@@ -175,7 +175,7 @@
 
 
         <Constraint
-            android:id="@+id/contentView"
+            android:id="@id/contentView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

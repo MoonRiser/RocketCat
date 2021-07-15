@@ -125,7 +125,7 @@ fun ViewPager2.setListeners(
 fun SmartRefreshLayout.performRefresh(refresh: Boolean?) {
     refresh?.let {
         if (it && !isRefreshing) autoRefresh()
-        if (!it) finishRefresh()
+        if (!it) this.finishRefresh()
     }
 
 }

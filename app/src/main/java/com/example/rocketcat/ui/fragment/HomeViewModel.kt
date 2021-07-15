@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 
 /**
@@ -34,7 +35,7 @@ class HomeViewModel : BaseViewModel() {
                 .map {
                     delay(800)
                     it
-                }
+                }.onCompletion {  }
                 .collect {
 //                    currentItem.set(it)
                 }

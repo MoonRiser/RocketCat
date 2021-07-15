@@ -8,12 +8,15 @@ import com.example.common.data.network.NetState
 import com.example.common.data.network.Response
 import com.example.common.ext.showToast
 import kotlinx.coroutines.flow.*
+import kotlin.properties.Delegates
 
 open class BaseViewModel : ViewModel() {
 
     val loading = MutableLiveData(false)
 
+
     private fun onNetworkFailed(throwable: Throwable) {
+
         Log.i("xres", "some error may occurred in network retrofit,${throwable.message}")
         throwable.message?.let { showToast(it) }
     }

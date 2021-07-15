@@ -1,11 +1,8 @@
 package com.example.rocketcat
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import android.graphics.RectF
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.SimpleDateFormat
@@ -49,13 +46,54 @@ class ExampleUnitTest {
 
         runBlocking {
 
-            val flow = flow<Int> {
 
+            flow {
+                (0..10).forEach {
+                    emit(it)
+                    delay(500)
+                }
             }
-            val channel = Channel<Unit> { }
+                .onEach { println("onEach $it") }
+                .buffer()
+                .collect {
+                    delay(700)
+                    println("collect $it")
+                }
+
 
         }
 
+
+    }
+
+    @Test
+    fun flowTest2() {
+
+        runBlocking {
+
+            flow {
+                while (true) {
+                    println("a ${now()}")
+                    delay(500)
+                    emit(Unit)
+                    println("b ${now()}")
+                }
+            }
+                .onEach {
+                    println("c ${now()}")
+                    delay(800)
+                    println("d ${now()}")
+                }.launchIn(this)
+
+
+        }
+    }
+
+    @Test
+    fun test1437() {
+        val p = 1F
+        val bounds = RectF()
+        bounds[p, p, p] = p
     }
 
     @Test
@@ -64,6 +102,9 @@ class ExampleUnitTest {
         val target = list.take(3)
         println("I am list : $target")
     }
+
+
+    fun now() = System.currentTimeMillis().toString().substring(9..12)
 
 
 }
