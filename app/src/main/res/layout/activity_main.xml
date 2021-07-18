@@ -44,6 +44,12 @@
         </androidx.viewpager2.widget.ViewPager2>
 
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="bigContainer,top_image,touchBar,btPlay,tvName" />
+
         <FrameLayout
             android:id="@+id/bigContainer"
             android:layout_width="match_parent"
@@ -55,6 +61,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <View
+            android:id="@+id/touchBar"
+            android:layout_width="80dp"
+            android:layout_height="4dp"
+            android:background="@drawable/shape_2dp_round"
+            android:src="@color/colorSecondary"
+            app:layout_constraintEnd_toEndOf="@id/bigContainer"
+            app:layout_constraintStart_toStartOf="@id/bigContainer"
+            app:layout_constraintTop_toTopOf="@id/bigContainer" />
+
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/top_image"
@@ -65,7 +81,7 @@
             android:src="@drawable/the_red"
             app:layout_constraintBottom_toBottomOf="@id/bigContainer"
             app:layout_constraintStart_toStartOf="@id/bigContainer"
-            app:layout_constraintTop_toTopOf="@id/bigContainer"
+            app:layout_constraintTop_toTopOf="@id/touchBar"
             app:shapeAppearance="@style/RoundCornerShape8dp" />
 
 
@@ -88,9 +104,9 @@
             android:button="@null"
             android:checked="@={viewModel.playOn}"
             android:enabled="@{viewModel.enablePlay}"
-            app:layout_constraintBottom_toBottomOf="@id/bigContainer"
+            app:layout_constraintBottom_toBottomOf="@id/top_image"
             app:layout_constraintEnd_toEndOf="@id/bigContainer"
-            app:layout_constraintTop_toTopOf="@id/bigContainer" />
+            app:layout_constraintTop_toTopOf="@id/top_image" />
 
 
         <TextView

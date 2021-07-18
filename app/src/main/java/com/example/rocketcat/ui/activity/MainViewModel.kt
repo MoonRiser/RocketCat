@@ -4,8 +4,11 @@ import android.media.AudioAttributes
 import android.media.AudioAttributes.CONTENT_TYPE_MUSIC
 import android.media.MediaPlayer
 import android.util.Log
+import android.view.View
 import androidx.databinding.Observable
 import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableInt
+import androidx.lifecycle.MutableLiveData
 import com.example.common.base.BaseViewModel
 import com.example.common.ext.ClickCallback
 import com.example.common.ext.showToast
@@ -41,7 +44,6 @@ class MainViewModel : BaseViewModel() {
     init {
         playOn.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                Log.i("xres", "ff")
                 if (playOn.get()) {
                     mediaPlayer.start()
                 } else {

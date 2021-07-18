@@ -20,6 +20,9 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.common.base.BaseApplication
 import com.example.common.dialog.CustomDialog
 import kotlin.math.abs
@@ -30,6 +33,9 @@ import kotlin.properties.Delegates
 
 fun showToast(msg: String) =
     Toast.makeText(BaseApplication.INSTANCE, msg, Toast.LENGTH_SHORT).show()
+
+// At the top level of your kotlin file:
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 fun Bitmap.blurBitmap(
     context: Context,

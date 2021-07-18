@@ -12,7 +12,7 @@
             motion:maxAcceleration="25"
             motion:touchAnchorId="@id/bigContainer"
             motion:touchAnchorSide="top"
-            motion:touchRegionId="@id/bigContainer" />
+            motion:touchRegionId="@id/touchBar" />
 
         <OnClick motion:targetId="@id/top_image" />
 
@@ -54,12 +54,22 @@
             android:id="@id/bigContainer"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="0dp"
             android:backgroundTint="@color/colorPrimary"
             motion:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
             motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent" />
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:visibilityMode="ignore" />
 
+        <Constraint
+            android:id="@+id/touchBar"
+            android:layout_width="120dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="8dp"
+            motion:layout_constraintEnd_toEndOf="@id/bigContainer"
+            motion:layout_constraintStart_toStartOf="@id/bigContainer"
+            motion:layout_constraintTop_toTopOf="@id/bigContainer"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@id/top_image"
@@ -69,7 +79,8 @@
             android:src="@drawable/the_red"
             motion:layout_constraintBottom_toBottomOf="@id/bigContainer"
             motion:layout_constraintStart_toStartOf="@id/bigContainer"
-            motion:layout_constraintTop_toTopOf="@id/bigContainer" />
+            motion:layout_constraintTop_toTopOf="@id/touchBar"
+            motion:visibilityMode="ignore" />
 
 
         <Constraint
@@ -80,7 +91,8 @@
             android:textSize="14dp"
             motion:layout_constraintBottom_toBottomOf="@id/top_image"
             motion:layout_constraintStart_toEndOf="@id/top_image"
-            motion:layout_constraintTop_toTopOf="@id/top_image" />
+            motion:layout_constraintTop_toTopOf="@id/top_image"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@id/btPlay"
@@ -90,7 +102,8 @@
             android:src="@drawable/ic_round_play_arrow_24"
             motion:layout_constraintBottom_toBottomOf="@id/top_image"
             motion:layout_constraintEnd_toEndOf="@id/bigContainer"
-            motion:layout_constraintTop_toTopOf="@id/top_image" />
+            motion:layout_constraintTop_toTopOf="@id/top_image"
+            motion:visibilityMode="ignore" />
 
 
         <Constraint
@@ -138,6 +151,16 @@
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="@id/parent" />
+
+
+        <Constraint
+            android:id="@+id/touchBar"
+            android:layout_width="120dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="8dp"
+            motion:layout_constraintEnd_toEndOf="@id/bigContainer"
+            motion:layout_constraintStart_toStartOf="@id/bigContainer"
+            motion:layout_constraintTop_toTopOf="@id/bigContainer" />
 
 
         <Constraint

@@ -4,23 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseActivity
-import com.example.common.base.BaseViewModel
+import com.example.common.dialog.MyDialog
+import com.example.common.dialog.dialog
 import com.example.common.ext.init
-import com.example.common.ext.showToast
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.ActivityMainBinding
 import com.example.rocketcat.ui.fragment.BubbleFragment
 import com.example.rocketcat.ui.fragment.DashboardFragment
 import com.example.rocketcat.ui.fragment.HomeFragment
 import com.example.rocketcat.ui.fragment.SettingFragment
-import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
@@ -31,8 +28,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     private val bubbleFragment: BubbleFragment = BubbleFragment()
     private val settingFragment: SettingFragment = SettingFragment()
 
-
-    private var deltaY = 0F
 
     init {
 
@@ -81,7 +76,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
         binding.vp2Home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                binding.bigContainer.visibility = if (position == 0) View.VISIBLE else View.GONE
+                val visible = if (position == 0) View.VISIBLE else View.GONE
+                binding.group.visibility = visible
             }
         })
         binding.contentView.text = """
@@ -94,9 +90,16 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     }
 
-
-    override fun initObserver() {
-
+    override fun onBackPressed() {
+        dialog(this, modifier = MyDialog.Modifier(canceledOnTouchOutside = false)) {
+            title("确定退出吗？")
+            message("点击确定退出应用")
+            negativeButton("取消")
+            positiveButton("确定") {
+                super.onBackPressed()
+                it.dismiss()
+            }
+        }.show()
     }
 
 

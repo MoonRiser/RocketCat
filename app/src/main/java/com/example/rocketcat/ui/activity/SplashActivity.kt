@@ -10,18 +10,33 @@ import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseActivity
 import com.example.common.base.BaseViewModel
+import com.example.common.ext.dataStore
 import com.example.common.ext.dp
+import com.example.common.ext.enableFullScreen
 import com.example.common.ext.jumpTo
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.ActivitySplashBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
+
+
+    companion object {
+        const val HAS_SKIP = "has_skip"
+        val keyHasSkip = booleanPreferencesKey(HAS_SKIP)
+    }
 
     private val imgs = arrayListOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
     private val adapter1 = MyGalleryAdapter(imgs)
@@ -32,29 +47,7 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.apply {
-                systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                hide(WindowInsets.Type.systemBars())
-                //侵入刘海屏
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    window.attributes.layoutInDisplayCutoutMode =
-                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                }
-            }
-        } else {
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
-                    // Set the content to appear under the system bars so that the
-                    // content doesn't resize when the system bars hide and show.
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    // Hide the nav bar and status bar
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
-        }
+        enableFullScreen()
         val colors = imgs.map { createPaletteSync(it)?.dominantSwatch?.rgb }
         binding.vp2Welcome.apply {
             adapter = adapter1
@@ -85,8 +78,22 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
             })
         }
         binding.btSkip.setOnClickListener {
+            lifecycleScope.launch {
+                dataStore.edit {
+                    it[keyHasSkip] = true
+                }
+            }
             jumpTo<MainActivity>()
             finish()
+        }
+        //读取dataStore
+        lifecycleScope.launch {
+            dataStore.data.map {
+                it[keyHasSkip]
+            }.firstOrNull()?.takeIf { it }?.run {
+                jumpTo<MainActivity>()
+                finish()
+            }
         }
     }
 
@@ -94,5 +101,6 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         ContextCompat.getDrawable(this, resourceId)?.let {
             Palette.from(it.toBitmap()).generate()
         }
+
 
 }

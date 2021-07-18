@@ -20,6 +20,16 @@
         <item name="cornerSize">8dp</item>
     </style>
 
+    <style name="RoundCornerShape4dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="RoundCornerShape2dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
+    </style>
+
     <!-- 圆角矩形图片（来自Material组件）-->
     <style name="RoundCornerShape16dp">
         <item name="android:elevation">4dp</item>
