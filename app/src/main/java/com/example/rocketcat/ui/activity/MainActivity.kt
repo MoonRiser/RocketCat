@@ -76,7 +76,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
         binding.vp2Home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val visible = if (position == 0) View.VISIBLE else View.GONE
+                val visible = if (position == 3) View.VISIBLE else View.GONE
                 binding.group.visibility = visible
             }
         })

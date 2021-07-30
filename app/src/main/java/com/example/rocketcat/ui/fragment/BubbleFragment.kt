@@ -17,11 +17,13 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
     private lateinit var mDetector: GestureDetector
     private lateinit var animator: ValueAnimator
 
+
     override fun layoutId() = R.layout.fragment_bubble
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun initView(savedInstanceState: Bundle?) {
+
 
         animator = binding.bubbleView.anim
         val listener: SimpleOnGestureListener = object : SimpleOnGestureListener() {

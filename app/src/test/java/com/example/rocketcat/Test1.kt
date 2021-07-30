@@ -1,9 +1,12 @@
 package com.example.rocketcat
 
+import com.example.common.ext.withNonNull
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import org.junit.Test
 
 /**
  * @author WayneXie
@@ -34,7 +37,7 @@ class Test1 {
 
     suspend fun flowTest2() {
 
-        listOf(1,2,3,4).map {  }
+        listOf(1, 2, 3, 4).map { }
 
         flowOf(1, 2, 3)
             .onEach { println("each $it") }
@@ -44,4 +47,19 @@ class Test1 {
             }
 
     }
+
+
+    var a: Int = 100
+    var b: String? = "ss"
+    var c: Int? = 99
+
+
+    @Test
+    fun test2() {
+        withNonNull(a, c) { f, s ->
+            val d = f + s
+            println("f:$f s:$s d:$d")
+        }
+    }
+
 }

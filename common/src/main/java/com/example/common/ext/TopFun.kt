@@ -18,17 +18,13 @@ import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.annotation.ColorInt
-import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.common.base.BaseApplication
-import com.example.common.dialog.CustomDialog
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
-import kotlin.properties.Delegates
 
 
 fun showToast(msg: String) =
@@ -175,9 +171,6 @@ fun String.searchAllIndex(key: String): List<Int> {
     return list
 }
 
-
-
-
 fun interface SpanClickListener {
     fun onSpanClick(index: Int)
 }
@@ -241,6 +234,31 @@ class ValueProducer(
     )
 }
 
+
+inline fun <K, T, R> withNonNull(first: K?, second: T?, block: (K, T) -> R): R? {
+    return first?.let { f ->
+        second?.let { s ->
+            block(f, s)
+        }
+    }
+}
+
+
+inline fun <K, T, E, R> withNonNull(first: K?, second: T?, third: E, block: (K, T, E) -> R): R? {
+    return first?.let { f ->
+        second?.let { s ->
+            third?.let { t ->
+                block(f, s, t)
+            }
+        }
+    }
+}
+
+
+fun <T> sequence(a: List<T?>): List<T>? {
+    @Suppress("UNCHECKED_CAST")
+    return if (a.any { it == null }) null else a as List<T>
+}
 
 
 
