@@ -54,7 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //汉字转拼音
-    implementation 'com.github.promeg:tinypinyin:2.0.3'
+    implementation 'io.github.biezhi:TinyPinyin:2.0.3.RELEASE'
     //jetpack Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
