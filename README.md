@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/MoonRiser/RocketCat.svg)](https://jitpack.io/#MoonRiser/RocketCat)
 # android 四级联动地址选择器
 之前遇到一个需求，需要一个四级联动的地址选择器，Github上找了许久，要么是年代过于久远不维护，要么是只有三级联动没有满意的，遂自己动手实现，于是有了本项目
 
@@ -39,7 +40,7 @@ allprojects {
 
 ```
 dependencies {
- implementation  'com.github.MoonRiser.RocketCat:address-selector:v1.1'
+ implementation  'com.github.MoonRiser.RocketCat:address-selector:v1.2'
 }
 ```
 
