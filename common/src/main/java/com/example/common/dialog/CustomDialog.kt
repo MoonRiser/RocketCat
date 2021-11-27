@@ -1,5 +1,6 @@
 package com.example.common.dialog
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -14,9 +15,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.annotation.ColorInt
+import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatDialog
-import androidx.lifecycle.LifecycleOwner
-import com.example.common.ext.DialogCallback
+import androidx.lifecycle.*
 import com.example.common.ext.dp
 import com.example.common.utils.getScreenSize
 
@@ -27,22 +28,31 @@ import com.example.common.utils.getScreenSize
  * @Description:
  */
 
+@MainThread
+fun customDialogOf(
+    context: Context,
+    builderScope: CustomDialog.Builder.() -> Unit
+): Dialog {
+    val builder = CustomDialog.Builder(context)
+    builder.builderScope()
+    return builder.build()
+}
 
-open class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
+open class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context), LifecycleEventObserver {
 
+    companion object {
+        const val TAG_CONTENT_TV = "tag_content_tv"
+    }
 
-    private val observer = DialogLifecycleObserver(::dismiss)
     private val gradientDrawable = GradientDrawable().apply {
         setColor(Color.WHITE)
     }
 
     init {
         apply {
-            setCanceledOnTouchOutside(builder.canBeCancelOutside)
+            setCanceledOnTouchOutside(builder.canCancelOutside)
             builder.windowsAnimation?.let { window?.setWindowAnimations(it) }
         }
-        builder.lifecycleOwner?.lifecycle?.addObserver(observer)
-
     }
 
     override fun onAttachedToWindow() {
@@ -70,22 +80,12 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        builder.lifecycleOwner?.lifecycle?.addObserver(this)
         val radius = builder.roundCorner.dp.toFloat()
         //设置圆角属性
-        if (builder.bottomWithRoundCorner) {
-            gradientDrawable.cornerRadius = radius
-        } else {
-            gradientDrawable.cornerRadii = floatArrayOf(
-                radius,
-                radius,
-                radius,
-                radius,
-                0f,
-                0f,
-                0f,
-                0f
-            )
-        }
+        if (builder.bottomWithRoundCorner) gradientDrawable.cornerRadius = radius
+        else gradientDrawable.cornerRadii = floatArrayOf(radius, radius, radius, radius, 0f, 0f, 0f, 0f)
+
         //根线性布局
         val linearLayout = LinearLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -111,10 +111,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f)
             }
         } ?: TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                10f.dp
-            )
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 10f.dp)
         }
         //中间布局、文字内容或者自定义布局二选一
         val middleContent: View = onCreateCustomView(context) ?: builder.inflater?.inflate(
@@ -126,6 +123,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             ).apply {
                 setMargins(30f.dp, 10f.dp, 30f.dp, 20f.dp)
             }
+            tag = TAG_CONTENT_TV
             text = builder.content
             minHeight = 56f.dp
             gravity = Gravity.CENTER_VERTICAL
@@ -140,28 +138,17 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         }
         //横向的分割线
         val divider1 = View(context).apply {
-            layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dp)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1f.dp)
             setBackgroundColor(Color.parseColor("#dedfe0"))
         }
         //按钮布局
         val bottomLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dp)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dp)
             if (builder.bottomWithRoundCorner) {
                 background = GradientDrawable().apply {
                     setColor(Color.WHITE)
-                    cornerRadii = floatArrayOf(
-                        0f,
-                        0f,
-                        0f,
-                        0f,
-                        radius,
-                        radius,
-                        radius,
-                        radius
-                    )
+                    cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, radius, radius, radius, radius)
                 }
             }
         }
@@ -178,7 +165,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                     1F
                 )
                 setOnClickListener {
-                    builder.leftOnClickListener?.onClick(this@CustomDialog) ?: dismiss()
+                    builder.leftOnClickListener?.invoke(this@CustomDialog) ?: dismiss()
                 }
             }
         }
@@ -196,7 +183,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
                     1F
                 )
                 setOnClickListener {
-                    builder.rightOnClickListener?.onClick(this@CustomDialog)
+                    builder.rightOnClickListener?.invoke(this@CustomDialog)
                 }
 
             }
@@ -227,33 +214,37 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     override fun onStop() {
         super.onStop()
-        builder.lifecycleOwner?.lifecycle?.removeObserver(observer)
+        builder.lifecycleOwner?.lifecycle?.removeObserver(this)
+    }
 
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event <= Lifecycle.Event.ON_DESTROY) dismiss()
     }
 
     open fun onCreateCustomView(context: Context): View? = null
 
     open class Builder(val context: Context) {
 
+        var title: CharSequence? = null
+            private set
+        var subTitle: CharSequence? = null
+            private set
+        var content: CharSequence = "assert content not be empty"
+            private set
+        private var contentLiveData: LiveData<out CharSequence>? = null
 
-        var title: String? = null
+        var textLeft: CharSequence? = null
             private set
-        var subTitle: String? = null
+        var textRight: CharSequence? = null
             private set
-        var content: String = "assert content not be empty"
+        var leftOnClickListener: OnDialogClickListener? = null
             private set
-        var textLeft: String? = null
-            private set
-        var textRight: String? = null
-            private set
-        var leftOnClickListener: DialogCallback? = null
-            private set
-        var rightOnClickListener: DialogCallback? = null
+        var rightOnClickListener: OnDialogClickListener? = null
             private set
         var inflater: CustomViewInflater? = null
             private set
 
-        var canBeCancelOutside: Boolean = true
+        var canCancelOutside: Boolean = true
             private set
 
         var windowsAnimation: Int? = null
@@ -297,16 +288,10 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         var lifecycleOwner: LifecycleOwner? = null
             private set
 
-        fun subTitle(subTitle: String) = apply { this.subTitle = subTitle }
-        fun title(title: String) = apply { this.title = title }
-        fun content(content: String) = apply { this.content = content }
-        fun textLeft(textLeft: String) = apply { this.textLeft = textLeft }
-        fun textRight(textRight: String) = apply { this.textRight = textRight }
-        fun leftOnClickListener(callback: DialogCallback) =
-            apply { this.leftOnClickListener = callback }
-
-        fun rightOnClickListener(callback: DialogCallback) =
-            apply { this.rightOnClickListener = callback }
+        fun subTitle(subTitle: CharSequence) = apply { this.subTitle = subTitle }
+        fun title(title: CharSequence) = apply { this.title = title }
+        fun message(content: CharSequence) = apply { this.content = content }
+        fun message(content: LiveData<out CharSequence>) = apply { this.contentLiveData = content }
 
         fun customView(inflater: CustomViewInflater) = apply { this.inflater = inflater }
         fun bgColor(@ColorInt bgColor: Int) = apply { this.bgColor = bgColor }
@@ -314,8 +299,8 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun lifecycleOwner(lifecycleOwner: LifecycleOwner) =
             apply { this.lifecycleOwner = lifecycleOwner }
 
-        fun canBeCancledOutside(canBeCancledOutside: Boolean) =
-            apply { this.canBeCancelOutside = canBeCancledOutside }
+        fun canCanceledOutside(canCanceledOutside: Boolean) =
+            apply { this.canCancelOutside = canCanceledOutside }
 
         fun textLeftColor(@ColorInt textLeftColor: Int) =
             apply { this.textLeftColor = textLeftColor }
@@ -336,33 +321,44 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
         fun ratioScreenHeight(ratioScreenHeight: Float) =
             apply { this.ratioScreenHeight = ratioScreenHeight }
 
-        fun positiveButton(content: String, onDialogClick: ((CustomDialog) -> Unit) = {}) {
+        fun negativeButton(content: CharSequence, listener: OnDialogClickListener? = null) = apply {
+            textLeft = content
+            leftOnClickListener = listener
+        }
+
+        fun positiveButton(content: CharSequence, listener: OnDialogClickListener? = null) = apply {
             textRight = content
-            rightOnClickListener = object : DialogCallback {
-                override fun onClick(dialog: CustomDialog) {
-                    onDialogClick.invoke(dialog)
-                }
-            }
+            rightOnClickListener = listener
         }
 
 
         open fun build() = CustomDialog(this, context).apply {
             create()
-            if (context is ComponentActivity) {
-                lifecycleOwner = context as ComponentActivity
+
+            val localContext = context
+            if (localContext is ComponentActivity) {
+                lifecycleOwner = localContext
+            }
+            var messageObserver: Observer<CharSequence>? = null
+            setOnShowListener {
+                messageObserver = Observer<CharSequence> {
+                    window?.decorView?.findViewWithTag<TextView>(TAG_CONTENT_TV)?.text = it
+                }
+                contentLiveData?.observeForever(messageObserver!!)
+            }
+            setOnDismissListener {
+                contentLiveData?.removeObserver(messageObserver!!)
             }
         }
 
-        open fun show() {
-            build().show()
-        }
-
+        open fun show() = build().show()
 
     }
 
-
 }
 
-interface CustomViewInflater {
+fun interface CustomViewInflater {
     fun inflate(inflater: LayoutInflater, parent: ViewGroup): View
 }
+
+typealias OnDialogClickListener = (CustomDialog) -> Unit

@@ -1,6 +1,8 @@
 package com.example.rocketcat
 
-import com.example.common.ext.withNonNull
+import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
@@ -14,21 +16,22 @@ import org.junit.Test
  */
 class Test1 {
 
-    val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        println("fire ")
+    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        println("coroutine error msg : ${throwable.message}")
     }
-    val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+
+    val lifecycleScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined + exceptionHandler)
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             val test1 = Test1()
-
-            test1.scope.launch(test1.exceptionHandler) {
-                test1.flowTest2()
-                supervisorScope {
-                    1 / 0
-                }
+            test1.onBegin()
+            runBlocking {
+//                test1.onStart()
+            }
+            test1.lifecycleScope.launch {
+//                test1.flowTest2()
             }
 
         }
@@ -48,18 +51,104 @@ class Test1 {
 
     }
 
+    fun onBegin() {
+        val student = Student("Tom", 17, 77)
+        val teacher = Teacher("Hanks", 55)
+        val arr1 = arrayOf(student)
+        val arr2 = arrayOf(teacher)
+        val arr3 = arrayOfNulls<Person>(2)
+        val arr4 = arrayOfNulls<Any>(2)
+        val arr5 = arrayOf<Person>(student, teacher)
 
-    var a: Int = 100
-    var b: String? = "ss"
-    var c: Int? = 99
+        val liveData = MutableLiveData<Student>(student)
+        val observer = Observer<Person> {
 
-
-    @Test
-    fun test2() {
-        withNonNull(a, c) { f, s ->
-            val d = f + s
-            println("f:$f s:$s d:$d")
         }
+
+        liveData.observeForever(observer)
+
     }
+
+    class Success<T : Person> constructor(var data: T)
+
+    sealed class Person
+    data class Student(val name: String, val age: Int, val score: Int) : Person()
+    data class Teacher(val name: String, val age: Int) : Person()
+
+    open class Animal
+    class Dog : Animal()
+    class Cat : Animal()
+
+//    fun test2134() {
+//        val cat = Cat()
+//        val dog = Dog()
+//        val person1 = Person(cat)
+//        val person2 = Person(dog)
+//        val person3 = Person<Animal>(cat)
+//
+//        person1.give(person2)
+//        person1.give(person3)
+//
+//
+//    }
+
+//    class Person<T>(var pet: T) {
+//
+//        fun give(p: Person<in T>) {
+//            p.pet = this.pet
+//            val my: T = p.pet
+//        }
+//
+//    }
+
+
+    private lateinit var userTv: TextView
+
+
+    fun onStart() {
+
+
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            val name = fetchUserName()
+            val age = fetchUserAge()
+            val msg = "姓名：${name} 年龄：${age}"
+            showUser(msg)
+
+        }
+
+        lifecycleScope.launch {
+
+            val name: Deferred<String> = async {
+                fetchUserName()
+            }
+            val age: Deferred<Int> = async {
+                fetchUserAge()
+            }
+            userTv.text = "姓名：${name.await()} 年龄：${age.await()}"
+
+        }
+
+
+    }
+
+    private suspend fun showUser(msg: String) =
+        withContext(Dispatchers.Main.immediate) {
+            userTv.text = msg
+        }
+
+    private suspend fun fetchUserName() =
+        withContext(Dispatchers.IO) {
+            delay(500)//模拟网络耗时
+            "小明"
+
+        }
+
+    private suspend fun fetchUserAge() =
+        withContext(Dispatchers.IO) {
+            delay(800)//模拟网络耗时
+            17
+        }
+
 
 }

@@ -90,7 +90,7 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         lifecycleScope.launch {
             dataStore.data.map {
                 it[keyHasSkip]
-            }.firstOrNull()?.takeIf { it }?.run {
+            }.firstOrNull().takeIf { it==true }?.run {
                 jumpTo<MainActivity>()
                 finish()
             }

@@ -8,12 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.common.BR
 import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -21,11 +19,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     //是否第一次加载
     private var isFirst: Boolean = true
 
-    //该类负责绑定视图数据的Viewmodel
+    //该类负责绑定视图数据的ViewModel
     lateinit var viewModel: VM
 
     //该类绑定的ViewDataBinding
-    lateinit var binding: DB
+    private var _binding: DB? = null
+    val binding: DB get() = _binding!!
 
     /**
      * 当前Fragment绑定的视图布局
@@ -38,7 +37,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         savedInstanceState: Bundle?
     ): View? {
         return DataBindingUtil.inflate<DB>(inflater, layoutId(), container, false).let {
-            binding = it
+            _binding = it
             it.lifecycleOwner = this
             viewModel = createViewModel()
             it.setVariable(BR.viewModel, viewModel)
@@ -63,8 +62,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        val vmClazz =
-            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+        val vmClazz = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
         return ViewModelProvider(getViewModelOwner()).get(vmClazz)
     }
 
@@ -86,7 +84,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     open fun getViewModelOwner(): ViewModelStoreOwner = this
 
-
     override fun onResume() {
         super.onResume()
         onVisible()
@@ -94,7 +91,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.unbind()
+        _binding?.unbind()
+        //防止泄漏
+        _binding = null
     }
 
     /**
@@ -110,10 +109,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             }
             initObserver()
-
         }
-
-
     }
 
 

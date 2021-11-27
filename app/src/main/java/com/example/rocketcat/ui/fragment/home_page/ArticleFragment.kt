@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
@@ -14,6 +15,8 @@ import com.example.rocketcat.R
 import com.example.rocketcat.adapter.ArticleAdapter
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import com.example.rocketcat.ui.fragment.HomeViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -51,7 +54,6 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                 }
             })
         }
-        binding.fab.performClick()
 
     }
 

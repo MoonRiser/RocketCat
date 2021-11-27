@@ -235,24 +235,20 @@ class ValueProducer(
 }
 
 
-inline fun <K, T, R> withNonNull(first: K?, second: T?, block: (K, T) -> R): R? {
-    return first?.let { f ->
-        second?.let { s ->
-            block(f, s)
-        }
-    }
-}
+inline fun <A, B, R> with2(first: A?, second: B?, block: (first: A, second: B) -> R): R? =
+    if (first != null && second != null) {
+        block(first, second)
+    } else null
 
 
-inline fun <K, T, E, R> withNonNull(first: K?, second: T?, third: E, block: (K, T, E) -> R): R? {
-    return first?.let { f ->
-        second?.let { s ->
-            third?.let { t ->
-                block(f, s, t)
-            }
-        }
-    }
-}
+inline fun <A, B, C, R> with3(
+    first: A?,
+    second: B?,
+    third: C?,
+    block: (first: A, second: B, third: C) -> R
+): R? = if (first != null && second != null && third != null) {
+    block(first, second, third)
+} else null
 
 
 fun <T> sequence(a: List<T?>): List<T>? {

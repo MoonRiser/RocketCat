@@ -37,6 +37,7 @@ import java.io.File
 import java.lang.RuntimeException
 import kotlin.coroutines.resume
 import kotlin.math.hypot
+import kotlin.reflect.typeOf
 
 /**
  * @Author:         Xres
@@ -80,7 +81,7 @@ inline fun <reified T : Activity> Activity.jumpTo(extras: Bundle? = null) {
     this.startActivity(intent)
 }
 
-val View.primaryColor
+inline val View.primaryColor
     get() = MaterialColors.getColor(this, R.attr.colorPrimary)
 
 /**
@@ -120,7 +121,6 @@ fun Uri.toRequestBody(context: Context, contentType: MediaType? = null): Request
         e.printStackTrace()
     }
     return requestBody
-
 
 }
 

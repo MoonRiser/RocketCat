@@ -12,10 +12,4 @@ import com.example.common.dialog.CustomDialog
 
 typealias ClickCallback = View.OnClickListener
 
-typealias DialogCallback = OnDialogClickListener
-
-interface OnDialogClickListener {
-    fun onClick(dialog: CustomDialog)
-}
-
 typealias ObservableString = ObservableField<String>

@@ -4,13 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseFragment
+import com.example.common.dialog.customDialogOf
 import com.example.common.ext.enableNestedScroll
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.FragmentTab3Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
-import com.xres.address_selector.dialog.CustomDialog
-import com.xres.address_selector.ext.DialogCallback
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -47,22 +46,19 @@ class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
 
     private suspend fun awaitDialog(context: Context) =
         suspendCancellableCoroutine<String> { cont ->
-            CustomDialog.Builder(context)
-                .title("这是标题")
-                .content("这是内容")
-                .textLeft("cancel")
-                .textRight("OK")
-                .leftOnClickListener(object : DialogCallback {
-                    override fun onClick(dialog: CustomDialog) {
-                        cont.resume("已取消")
-                    }
-                })
-                .rightOnClickListener(object : DialogCallback {
-                    override fun onClick(dialog: CustomDialog) {
-                        cont.resume("已确定")
-                        dialog.dismiss()
-                    }
-                }).show()
+            customDialogOf(context) {
+                title("这是标题")
+                message("这是内容")
+                negativeButton("cancel") {
+                    cont.resume("已取消")
+                    it.dismiss()
+                }
+                positiveButton("OK") {
+                    cont.resume("已确定")
+                    it.dismiss()
+                }
+            }.show()
+
         }
 
 

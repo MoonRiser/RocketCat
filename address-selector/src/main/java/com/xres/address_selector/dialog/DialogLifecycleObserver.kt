@@ -11,7 +11,7 @@ import androidx.lifecycle.OnLifecycleEvent
  * @Description:
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-class DialogLifecycleObserver(private val dismiss: () -> Unit) : LifecycleObserver {
+internal class DialogLifecycleObserver(private val dismiss: () -> Unit) : LifecycleObserver {
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

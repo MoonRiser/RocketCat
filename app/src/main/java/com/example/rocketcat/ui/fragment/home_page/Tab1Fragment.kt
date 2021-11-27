@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
-import com.example.common.dialog.dialog
+import com.example.common.dialog.customDialogOf
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
@@ -13,12 +13,13 @@ import com.xres.address_selector.db.entity.Area
 import com.xres.address_selector.db.entity.City
 import com.xres.address_selector.db.entity.Province
 import com.xres.address_selector.db.entity.Street
-import com.xres.address_selector.dialog.CustomDialog
 import com.xres.address_selector.ext.showToast
 import com.xres.address_selector.widget.address_selector.AddressSelector
 import com.xres.address_selector.widget.address_selector.OnSelectedListener
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -28,7 +29,7 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
     private val dialog by lazy {
 
-        dialog(requireActivity()) {
+        customDialogOf(requireActivity()) {
             title("I am a Dialog")
             message(contentLiveData)
             positiveButton("ok") {
@@ -62,15 +63,16 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
             })
         }
         binding.btTest2.setOnClickListener {
+            showToast("hello")
             selector.show()
         }
         binding.btTest3.setOnClickListener {
-            CustomDialog.Builder(requireActivity())
-                .title("FBI WARNING")
-                .content("Why so serious")
-                .textLeft("取消")
-                .textRight("OK")
-                .show()
+            customDialogOf(requireActivity()) {
+                title("FBI WARNING")
+                message("Why so serious")
+                negativeButton("取消")
+                positiveButton("OK")
+            }.show()
         }
         binding.btLoading.setOnClickListener {
             binding.loading.switchState()

@@ -28,7 +28,7 @@ import com.xres.address_selector.ext.getScreenSize
  * @Description:
  */
 
-open class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
+internal class CustomDialog(private val builder: Builder, context: Context) : AppCompatDialog(context) {
 
 
     private val observer = DialogLifecycleObserver(::dismiss)

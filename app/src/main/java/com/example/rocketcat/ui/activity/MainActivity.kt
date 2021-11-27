@@ -2,15 +2,13 @@ package com.example.rocketcat.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseActivity
-import com.example.common.dialog.MyDialog
-import com.example.common.dialog.dialog
+import com.example.common.dialog.customDialogOf
 import com.example.common.ext.init
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.ActivityMainBinding
@@ -91,7 +89,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     }
 
     override fun onBackPressed() {
-        dialog(this, modifier = MyDialog.Modifier(canceledOnTouchOutside = false)) {
+        customDialogOf(this) {
             title("确定退出吗？")
             message("点击确定退出应用")
             negativeButton("取消")

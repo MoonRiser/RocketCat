@@ -1,60 +1,39 @@
 package com.example.common.data.network
 
-sealed class NetState<out T>() {
+import kotlinx.coroutines.flow.Flow
 
+sealed class NetResult<out T> {
 
-    inline fun onSuccess(action: (value: T) -> Unit): NetState<T> {
-
-        if (this is Response) {
-            if (isSuccess) action(data)
-        }
-        return this
+    inline fun isSuccess(block: (value: T) -> Unit) = apply {
+        if (this is Success) block.invoke(this.data)
     }
 
-    inline fun onFailure(action: (errorCode: Int, errorMsg: String) -> Unit): NetState<T> {
+    inline fun isFailure(block: (errorCode: Int, errorMsg: String) -> Unit) = apply {
+        if (this is Failure) block.invoke(errorCode, errorMsg)
 
-        if (this is Response) {
-            if (!isSuccess) action(errorCode, errorMsg)
-        }
-        return this
     }
 
-    inline fun onError(action: (Throwable) -> Unit): NetState<T> {
-
-        if (this is Error) {
-            action(this.throwable)
-        }
-        return this
+    inline fun isError(block: (Throwable) -> Unit) = apply {
+        if (this is Error) block.invoke(throwable)
     }
-
-    /**
-     * 根据函数的调用顺序执行，可以配合上面三个函数插入匹配时机
-     * e.g. onSuccess{}.onError{}.onAction{}这里的onAction可以当成是onComplete
-     */
-    inline fun onAction(action: () -> Unit): NetState<T> {
-        action()
-        return this
-    }
-
 
 }
 
-data class Error(val throwable: Throwable) : NetState<Nothing>()
+data class Success<out T>(val data: T) : NetResult<T>()
+data class Failure(val errorCode: Int, val errorMsg: String) : NetResult<Nothing>()
+data class Error(val throwable: Throwable) : NetResult<Nothing>()
+object Loading : NetResult<Nothing>()
+
 
 data class Response<T>(
     val `data`: T,
     val errorCode: Int = 1,
     val errorMsg: String = ""
-) : NetState<T>() {
-
-    val isSuccess
-        get() = errorCode == 0
-
-
+) {
+    val isSuccess get() = errorCode == 0
 }
 
-
-
+typealias FlowOfResponse<T> = Flow<Response<T>>
 
 
 
