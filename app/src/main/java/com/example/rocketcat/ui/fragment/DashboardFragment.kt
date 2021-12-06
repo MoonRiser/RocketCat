@@ -11,14 +11,12 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import android.widget.Toast
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
-import com.example.common.ext.createSpringAnimation
+import com.example.common.ext.showToast
+import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
@@ -28,8 +26,7 @@ import java.lang.Math.toDegrees
 import kotlin.math.absoluteValue
 import kotlin.math.atan2
 
-class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(),
-    SensorEventListener {
+class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(), SensorEventListener {
 
     private val imgs = listOf(
         R.drawable.ads,
@@ -42,9 +39,7 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     )
 
     private val sensorManager by lazy { context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    private val sensor: Sensor? by lazy {
-        sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
-    }
+    private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
 
 
     private lateinit var scaleGestureDetector: ScaleGestureDetector
@@ -75,7 +70,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
         initImgScaleSpringAnimation()
         initImgRotationSpringAnimation()
 
-
     }
 
     private var xDiffLeft: Float = 0f
@@ -99,17 +93,15 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     private fun initFabSpringAnimation() {
 
         binding.fab.run {
-            createSpringAnimation(SpringAnimation.TRANSLATION_X) to
-                    createSpringAnimation(DynamicAnimation.TRANSLATION_Y)
+            springAnimationOf(SpringAnimation.TRANSLATION_X) to springAnimationOf(DynamicAnimation.TRANSLATION_Y)
         }.let {
             anim1X = it.first
             anim1Y = it.second
         }
         binding.fab.setOnClickListener {
-            Toast.makeText(requireContext(), "look carefully", Toast.LENGTH_LONG).show()
+            showToast("look carefully")
         }
         binding.fab.setOnTouchListener { view, event ->
-
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     xDiffLeft = event.rawX - binding.fab.x
@@ -128,11 +120,9 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
                     if (!isMoved) {
                         view.performClick()
                     }
-
                     anim1X.start()
                     anim1Y.start()
                 }
-
             }
             true
         }
@@ -143,8 +133,7 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     @SuppressLint("ClickableViewAccessibility")
     private fun initImgScaleSpringAnimation() {
         val (animX, animY) = binding.imgMH.run {
-            createSpringAnimation(SpringAnimation.SCALE_X, INITIAL_SCALE) to
-                    createSpringAnimation(SpringAnimation.SCALE_Y, INITIAL_SCALE)
+            springAnimationOf(SpringAnimation.SCALE_X, INITIAL_SCALE) to springAnimationOf(SpringAnimation.SCALE_Y, INITIAL_SCALE)
         }
         var scaleFactor = 1f
         binding.imgMH.setOnTouchListener { _, event ->
@@ -186,10 +175,8 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
             return view.rotation + toDegrees(atan2(event.x - centerX, centerY - event.y)).toFloat()
         }
 
-        val anim =
-            binding.imgArrow.createSpringAnimation(SpringAnimation.ROTATION, INITIAL_ROTATION)
+        val anim = binding.imgArrow.springAnimationOf(SpringAnimation.ROTATION, INITIAL_ROTATION)
         binding.imgArrow.setOnTouchListener { v, event ->
-
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     // cancel so we can grab the view during previous animation

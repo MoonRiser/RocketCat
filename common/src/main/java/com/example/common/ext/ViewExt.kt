@@ -1,4 +1,4 @@
- package com.example.common.ext
+package com.example.common.ext
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -31,7 +30,7 @@ fun ViewPager2.init(
     fragment: Fragment,
     fragments: List<Fragment>,
     isUserInputEnabled: Boolean = true
-): ViewPager2 {
+) = apply {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
     offscreenPageLimit = fragments.size
@@ -40,10 +39,8 @@ fun ViewPager2.init(
         override fun createFragment(position: Int) = fragments[position]
         override fun getItemCount() = fragments.size
         override fun getItemId(position: Int) = fragments[position].hashCode().toLong()
-        override fun containsItem(itemId: Long) =
-            fragments.map { it.hashCode().toLong() }.contains(itemId)
+        override fun containsItem(itemId: Long) = fragments.map { it.hashCode().toLong() }.contains(itemId)
     }
-    return this
 }
 
 
@@ -52,7 +49,7 @@ fun ViewPager2.init(
     fragments: List<Fragment>,
     isUserInputEnabled: Boolean = true,
     offscreenPageLimit: Int = 1
-): ViewPager2 {
+) = apply {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
     this.offscreenPageLimit = offscreenPageLimit
@@ -61,10 +58,8 @@ fun ViewPager2.init(
         override fun createFragment(position: Int) = fragments[position]
         override fun getItemCount() = fragments.size
         override fun getItemId(position: Int) = fragments[position].hashCode().toLong()
-        override fun containsItem(itemId: Long) =
-            fragments.map { it.hashCode().toLong() }.contains(itemId)
+        override fun containsItem(itemId: Long) = fragments.map { it.hashCode().toLong() }.contains(itemId)
     }
-    return this
 }
 
 /**
@@ -77,23 +72,9 @@ fun ViewPager2.enableNestedScroll() {
     p.removeViewAt(index)
     val container = ViewPager2Container(context).apply {
         layoutParams = vp2.layoutParams
-        addView(vp2.apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        })
+        addView(vp2)
     }
     p.addView(container, index)
-
-}
-
-fun AppCompatActivity.showToast(msg: String) {
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-}
-
-fun Fragment.showToast(msg: String) {
-    Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
 }
 
 @ColorInt
@@ -125,24 +106,22 @@ fun TextView.setClickableSpan(
     showSymbol: Boolean = true,
     listener: SpanClickListener? = null
 ) {
-        text = string2SpannableStringBuilder(rawString, color, showSymbol, listener)
-        highlightColor = ContextCompat.getColor(this.context, android.R.color.transparent)
-        movementMethod = LinkMovementMethod.getInstance()
+    text = string2SpannableStringBuilder(rawString, color, showSymbol, listener)
+    highlightColor = ContextCompat.getColor(this.context, android.R.color.transparent)
+    movementMethod = LinkMovementMethod.getInstance()
 }
 
-fun View.createSpringAnimation(
+fun View.springAnimationOf(
     property: DynamicAnimation.ViewProperty,
     finalPosition: Float = 0f,
     stiffness: Float = SpringForce.STIFFNESS_LOW,
     dampingRatio: Float = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
-): SpringAnimation {
-    return SpringForce(finalPosition).also {
-        it.stiffness = stiffness
-        it.dampingRatio = dampingRatio
-    }.let { force ->
-        SpringAnimation(this, property).also {
-            it.spring = force
-        }
+) = SpringForce(finalPosition).also {
+    it.stiffness = stiffness
+    it.dampingRatio = dampingRatio
+}.let { force ->
+    SpringAnimation(this, property).also {
+        it.spring = force
     }
 }
 

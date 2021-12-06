@@ -27,8 +27,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 
-fun showToast(msg: String) =
-    Toast.makeText(BaseApplication.INSTANCE, msg, Toast.LENGTH_SHORT).show()
+fun showToast(msg: String) = Toast.makeText(BaseApplication.INSTANCE, msg, Toast.LENGTH_SHORT).show()
 
 // At the top level of your kotlin file:
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

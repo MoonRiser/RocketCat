@@ -3,11 +3,7 @@ package com.example.common.base
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.common.data.network.Error
-import com.example.common.data.network.NetResult
-import com.example.common.data.network.Response
 import com.example.common.ext.showToast
-import kotlinx.coroutines.flow.*
 
 open class BaseViewModel : ViewModel() {
 

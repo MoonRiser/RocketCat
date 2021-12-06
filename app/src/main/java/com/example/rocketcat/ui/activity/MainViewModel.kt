@@ -3,21 +3,14 @@ package com.example.rocketcat.ui.activity
 import android.media.AudioAttributes
 import android.media.AudioAttributes.CONTENT_TYPE_MUSIC
 import android.media.MediaPlayer
-import android.util.Log
-import android.view.View
 import androidx.databinding.Observable
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableInt
-import androidx.lifecycle.MutableLiveData
 import com.example.common.base.BaseViewModel
-import com.example.common.ext.ClickCallback
-import com.example.common.ext.showToast
 
 class MainViewModel : BaseViewModel() {
 
     companion object {
-        const val MUSIC_URL =
-            "https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3"
+        const val MUSIC_URL = "https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3"
     }
 
     val playOn = ObservableBoolean()

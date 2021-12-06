@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-parcelize'
 //    id 'com.github.panpf.bintray-publish'
     id 'kotlin-kapt'
-    id 'com.github.dcendents.android-maven'
+//    id 'com.github.dcendents.android-maven'
 
 
 
