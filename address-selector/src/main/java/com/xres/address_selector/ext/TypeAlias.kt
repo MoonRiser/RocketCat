@@ -11,8 +11,8 @@ import com.xres.address_selector.dialog.CustomDialog
 
 typealias ClickCallback = View.OnClickListener
 
-typealias DialogCallback = OnDialogClickListener
+internal typealias DialogCallback = OnDialogClickListener
 
-interface OnDialogClickListener {
+internal interface OnDialogClickListener {
     fun onClick(dialog: CustomDialog)
 }

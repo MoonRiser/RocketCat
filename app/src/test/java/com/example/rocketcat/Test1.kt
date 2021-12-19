@@ -1,14 +1,11 @@
 package com.example.rocketcat
 
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import org.junit.Test
 
 /**
  * @author WayneXie
@@ -52,20 +49,9 @@ class Test1 {
     }
 
     fun onBegin() {
-        val student = Student("Tom", 17, 77)
-        val teacher = Teacher("Hanks", 55)
-        val arr1 = arrayOf(student)
-        val arr2 = arrayOf(teacher)
-        val arr3 = arrayOfNulls<Person>(2)
-        val arr4 = arrayOfNulls<Any>(2)
-        val arr5 = arrayOf<Person>(student, teacher)
-
-        val liveData = MutableLiveData<Student>(student)
-        val observer = Observer<Person> {
-
+        (1..100).asSequence().onEach {
+            println(it)
         }
-
-        liveData.observeForever(observer)
 
     }
 

@@ -14,17 +14,14 @@ import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.util.Base64
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.annotation.ColorInt
-import androidx.core.animation.addPauseListener
 import androidx.fragment.app.FragmentActivity
 import com.example.common.R
 import com.example.common.utils.dp2px
-import com.example.common.utils.px2dp
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -34,10 +31,8 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.lang.RuntimeException
 import kotlin.coroutines.resume
 import kotlin.math.hypot
-import kotlin.reflect.typeOf
 
 /**
  * @Author:         Xres
@@ -54,7 +49,8 @@ fun Float.dpValue(): Int = dp2px(this)
 val Float.dp
     get() = dp2px(this)
 
-fun Int.pxValue(): Float = px2dp(this)
+inline val Int.dp
+    get() = dp2px(this.toFloat())
 
 val String.color
     @ColorInt

@@ -70,6 +70,9 @@ class ExampleUnitTest {
     fun flowTest2() {
 
         runBlocking {
+            sequence {
+                yield(1)
+            }
 
             flow {
                 while (true) {
@@ -97,10 +100,20 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun someTest(){
-        val list = (0..10).toMutableList()
-        val target = list.take(3)
-        println("I am list : $target")
+    fun someTest() {
+        (1..10).asSequence()
+            .filter {
+                println("filter $it")
+                it % 2 == 0
+            }.onEach {
+                println("onEach $it")
+            }.map {
+                val v = it * 2
+                println("map $v")
+                v
+            }.take(6).forEach {
+                println("foreach $it")
+            }
     }
 
 

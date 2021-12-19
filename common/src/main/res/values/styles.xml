@@ -8,6 +8,7 @@
         <item name="colorPrimaryVariant">@color/colorPrimaryVibrant</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <!-- 圆形图片（来自Material组件）-->

@@ -2,6 +2,7 @@ package com.example.rocketcat.ui.fragment.home_page
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
     override fun layoutId() = R.layout.fragment_article
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
         binding.rvArticle.apply {
             val linearLayoutManager: LinearLayoutManager
@@ -38,7 +39,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                         val viewHolder = findViewHolderForAdapterPosition(i)
                         if (viewHolder is ArticleAdapter.AdViewHolder) {
                             viewHolder.imageView.setOffset(
-                                linearLayoutManager.height,
+                                recyclerView.height,
                                 viewHolder.imageView.top
                             )
                         }

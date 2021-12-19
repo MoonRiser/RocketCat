@@ -29,7 +29,7 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
     override fun layoutId() = R.layout.fragment_tab2
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
 
         val lastView = TextView(requireContext()).apply {
@@ -90,7 +90,10 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
         Glide.with(requireActivity())
             .load(R.drawable.cp)
-            .transform(CenterCrop(), BlurTransformation(requireContext(), 15f, 0.3f))
+            .transform(
+                CenterCrop(),
+                BlurTransformation(requireContext(), 15f, 0.2f to 0.8f, 0.3f to 0.8f)
+            )
             .into(binding.imgGS)
 
 

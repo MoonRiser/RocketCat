@@ -18,6 +18,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatDialog
 import androidx.lifecycle.*
+import com.example.common.ext.color
 import com.example.common.ext.dp
 import com.example.common.utils.getScreenSize
 
@@ -42,21 +43,23 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     companion object {
         const val TAG_CONTENT_TV = "tag_content_tv"
+        const val DEFAULT_BACKGROUND_COLOR = "#EEFFFFFF"
+        const val DEFAULT_ACCENT_COLOR = "#FF0096DF"
+        const val DEFAULT_CORNER_RADIUS = 12F
     }
 
     private val gradientDrawable = GradientDrawable().apply {
+        setColor(builder.bgColor)
+    }
+
+    private val buttonGradientDrawable = GradientDrawable().apply {
         setColor(Color.WHITE)
     }
 
-    init {
-        apply {
-            setCanceledOnTouchOutside(builder.canCancelOutside)
-            builder.windowsAnimation?.let { window?.setWindowAnimations(it) }
-        }
-    }
 
     override fun onAttachedToWindow() {
         window?.apply {
+            builder.windowsAnimation?.let { setWindowAnimations(it) }
             setBackgroundDrawableResource(android.R.color.transparent)
             setGravity(builder.gravity)
             attributes = attributes.apply {
@@ -80,6 +83,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setCanceledOnTouchOutside(builder.canCancelOutside)
         builder.lifecycleOwner?.lifecycle?.addObserver(this)
         val radius = builder.roundCorner.dp.toFloat()
         //设置圆角属性
@@ -146,8 +150,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 45f.dp)
             if (builder.bottomWithRoundCorner) {
-                background = GradientDrawable().apply {
-                    setColor(Color.WHITE)
+                background = buttonGradientDrawable.apply {
                     cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, radius, radius, radius, radius)
                 }
             }
@@ -271,7 +274,7 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
 
 
         @ColorInt
-        var bgColor: Int = Color.parseColor("#EEFFFFFF")
+        var bgColor: Int = DEFAULT_BACKGROUND_COLOR.color
             private set
 
         @ColorInt
@@ -279,10 +282,10 @@ open class CustomDialog(private val builder: Builder, context: Context) : AppCom
             private set
 
         @ColorInt
-        var textRightColor: Int = Color.parseColor("#FF0096DF")
+        var textRightColor: Int = DEFAULT_ACCENT_COLOR.color
             private set
 
-        var roundCorner: Float = 16f
+        var roundCorner: Float = DEFAULT_CORNER_RADIUS
             private set
 
         var lifecycleOwner: LifecycleOwner? = null

@@ -2,6 +2,7 @@ package com.example.rocketcat.ui.fragment.home_page
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.base.BaseFragment
 import com.example.common.dialog.customDialogOf
@@ -24,7 +25,7 @@ class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
 
     override fun layoutId() = R.layout.fragment_tab3
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
         binding.ivAbove.pageCount = imgs.size
         binding.vp2below.apply {
             adapter = MyGalleryAdapter(imgs)

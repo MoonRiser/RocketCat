@@ -13,36 +13,25 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
-import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
+import com.example.rocketcat.adapter.CommonAdapter
+import com.example.rocketcat.adapter.ImageItem
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
 import com.example.rocketcat.customview.transformer.HorizontalStackTransformer
 import com.example.rocketcat.databinding.FragmentDashBoardBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.Math.toDegrees
 import kotlin.math.absoluteValue
 import kotlin.math.atan2
 
-class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(), SensorEventListener {
-
-    private val imgs = listOf(
-        R.drawable.ads,
-        R.drawable.the_red,
-        R.drawable.play,
-        R.drawable.watch,
-        R.drawable.jump,
-        R.drawable.paint,
-        R.drawable.sit
-    )
-
-    private val sensorManager by lazy { context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
-
-
-    private lateinit var scaleGestureDetector: ScaleGestureDetector
+class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(),
+    SensorEventListener {
 
     companion object {
         const val INITIAL_SCALE = 1f
@@ -50,18 +39,33 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
         const val BALANCE = 0.7F
     }
 
+    private val imageIds = listOf(
+        R.drawable.red_velvet_psycho,
+        R.drawable.red_velvet_the_red,
+        R.drawable.red_velvet_queendom,
+        R.drawable.red_velvet_summer,
+        R.drawable.play,
+        R.drawable.red_velvet_the_velvet,
+    )
+
+    private val sensorManager by lazy { requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
+    private lateinit var scaleGestureDetector: ScaleGestureDetector
+
+    private val galleryAdapter = CommonAdapter()
+
+
     override fun layoutId() = R.layout.fragment_dash_board
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
         binding.vp2Stack.apply {
-            adapter = MyGalleryAdapter(imgs)
+            adapter = galleryAdapter
             offscreenPageLimit = 3
             setPageTransformer(HorizontalStackTransformer(this))
-
         }
         binding.vp2Carou.apply {
-            adapter = MyGalleryAdapter(imgs)
+            adapter = MyGalleryAdapter(imageIds)
             offscreenPageLimit = 3
             currentItem = 2
             setPageTransformer(CarouselPageTransformer())
@@ -70,6 +74,10 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
         initImgScaleSpringAnimation()
         initImgRotationSpringAnimation()
 
+    }
+
+    override fun initData() {
+        galleryAdapter.submitList(imageIds.map { ImageItem(it) })
     }
 
     private var xDiffLeft: Float = 0f
@@ -94,12 +102,17 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
 
         binding.fab.run {
             springAnimationOf(SpringAnimation.TRANSLATION_X) to springAnimationOf(DynamicAnimation.TRANSLATION_Y)
-        }.let {
-            anim1X = it.first
-            anim1Y = it.second
+        }.also { (anim1X, anim1Y) ->
+            this.anim1X = anim1X
+            this.anim1Y = anim1Y
         }
         binding.fab.setOnClickListener {
-            showToast("look carefully")
+            galleryAdapter.submitList(imageIds.shuffled().map { ImageItem(it) }) {
+                lifecycleScope.launch {
+                    delay(20)
+                    binding.vp2Stack.currentItem = 0
+                }
+            }
         }
         binding.fab.setOnTouchListener { view, event ->
             when (event.action) {
@@ -133,7 +146,10 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     @SuppressLint("ClickableViewAccessibility")
     private fun initImgScaleSpringAnimation() {
         val (animX, animY) = binding.imgMH.run {
-            springAnimationOf(SpringAnimation.SCALE_X, INITIAL_SCALE) to springAnimationOf(SpringAnimation.SCALE_Y, INITIAL_SCALE)
+            springAnimationOf(SpringAnimation.SCALE_X, INITIAL_SCALE) to springAnimationOf(
+                SpringAnimation.SCALE_Y,
+                INITIAL_SCALE
+            )
         }
         var scaleFactor = 1f
         binding.imgMH.setOnTouchListener { _, event ->
@@ -153,7 +169,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
             object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 override fun onScale(detector: ScaleGestureDetector): Boolean {
                     scaleFactor *= detector.scaleFactor
-//                    Log.i("xres", "scaleFactor : $scaleFactor")
                     binding.imgMH.scaleX *= scaleFactor
                     binding.imgMH.scaleY *= scaleFactor
                     return true
@@ -162,11 +177,11 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     }
 
 
-    private var previousRotation = 0f
-    private var currentRotation = 0f
-
     @SuppressLint("ClickableViewAccessibility")
     private fun initImgRotationSpringAnimation() {
+
+        var previousRotation = 0f
+        var currentRotation: Float
 
         // angle calculation
         fun updateCurrentRotation(view: View, event: MotionEvent): Float {
@@ -193,7 +208,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
             }
             true
         }
-
 
     }
 

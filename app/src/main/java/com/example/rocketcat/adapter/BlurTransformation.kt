@@ -2,11 +2,12 @@ package com.example.rocketcat.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import android.util.Log
+import androidx.core.graphics.scale
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import java.security.MessageDigest
@@ -17,25 +18,42 @@ import java.security.MessageDigest
  */
 const val ID = "xres_blur"
 
+/**
+ * @param blurRadius 模糊半径
+ * @param ratioX 模糊部分宽度比率,默认 0f to 1f，指整个宽度
+ */
 class BlurTransformation(
     val context: Context,
     private var blurRadius: Float,
-    private val ratio: Float = 1f
+    private val ratioX: Pair<Float, Float> = 0f to 1f,
+    private val ratioY: Pair<Float, Float> = 0f to 1f,
+    private val scaleFactor: Int = 4
 ) : BitmapTransformation() {
 
+    private val uniKey: String
+        get() {
+            val (ratioLeft, ratioRight) = ratioX
+            val (ratioTop, ratioBottom) = ratioY
+            require(ratioLeft <= ratioRight) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            require(ratioTop <= ratioBottom) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            require(ratioLeft in 0f..1f) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            require(ratioTop in 0f..1f) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            require(ratioRight in 0f..1f) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            require(ratioBottom in 0f..1f) { "ratioX和ratioY Pair的两个值需要属于[0f,1f],且前面的值不能大于后面的值" }
+            return ID + blurRadius + ratioLeft + ratioTop + ratioRight + ratioBottom
+        }
 
-    override fun updateDiskCacheKey(messageDigest: MessageDigest) {
-        messageDigest.update(ID.toByteArray())
-    }
+    override fun updateDiskCacheKey(messageDigest: MessageDigest) =
+        messageDigest.update(uniKey.toByteArray())
 
-    override fun equals(other: Any?): Boolean {
-        val otherO = other as? BlurTransformation
-        return otherO?.blurRadius == blurRadius && otherO.ratio == ratio
-    }
 
-    override fun hashCode(): Int {
-        return (ID + blurRadius.hashCode() + ratio.hashCode()).hashCode()
-    }
+    override fun equals(other: Any?): Boolean = (other as? BlurTransformation)?.let {
+        it.blurRadius == blurRadius && it.ratioX == ratioX && it.ratioY == ratioY
+    } ?: false
+
+
+    override fun hashCode() = uniKey.hashCode()
+
 
     override fun transform(
         pool: BitmapPool,
@@ -48,11 +66,21 @@ class BlurTransformation(
         //可变的原始bitmap
         val originBitmap = toTransform.copy(toTransform.config, true)
         //底部bitmap参数
-        val offsetX = 0
-        val offsetY = ((1 - ratio) * outHeight).toInt()
-        val bWidth = outWidth
-        val bHeight = (ratio * outHeight).toInt()
-        val blurredBitmap = Bitmap.createBitmap(originBitmap, offsetX, offsetY, bWidth, bHeight)
+
+        val (ratioLeft, ratioRight) = ratioX
+        val (ratioTop, ratioBottom) = ratioY
+        val rect = Rect(
+            (originBitmap.width * ratioLeft).toInt(),
+            (originBitmap.height * ratioTop).toInt(),
+            (originBitmap.width * ratioRight).toInt(),
+            (originBitmap.height * ratioBottom).toInt()
+        )
+        val (bWidth, bHeight) = (rect.right - rect.left) to (rect.bottom - rect.top)
+        val blurredBitmap =
+            Bitmap.createBitmap(originBitmap, rect.left, rect.top, bWidth, bHeight).run {
+                scale(width / scaleFactor, height / scaleFactor, false)
+            }
+
         val pixels = IntArray(bWidth * bHeight)
         val rs = RenderScript.create(context)
 
@@ -77,8 +105,9 @@ class BlurTransformation(
         rs.destroy()
         output.destroy()
         script.destroy()
-        blurredBitmap.getPixels(pixels, 0, bWidth, 0, 0, bWidth, bHeight)
-        originBitmap.setPixels(pixels, 0, bWidth, offsetX, offsetY, bWidth, bHeight)
+        blurredBitmap.scale(bWidth, bHeight, false)
+            .getPixels(pixels, 0, bWidth, 0, 0, bWidth, bHeight)
+        originBitmap.setPixels(pixels, 0, bWidth, rect.left, rect.top, bWidth, bHeight)
         return originBitmap
 
 

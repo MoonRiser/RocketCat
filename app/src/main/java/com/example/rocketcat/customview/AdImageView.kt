@@ -2,7 +2,6 @@ package com.example.rocketcat.customview
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.absoluteValue
@@ -22,16 +21,18 @@ class AdImageView(
 
 
     private var offset: Float = 1f
-    private lateinit var myDrawable: Drawable
+
+    init {
+        scaleType = ScaleType.CENTER_CROP
+    }
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         minHeight = h
         //获取图片的真实比例，然后按照设定的宽，获得高度
-        realHeight = (width * 1.0f / drawable.intrinsicWidth * drawable.intrinsicHeight).toInt()
-        myDrawable = drawable.apply {
-            setBounds(0, 0, w, realHeight)
-        }
+        realHeight = (w.toFloat() / drawable.intrinsicWidth * drawable.intrinsicHeight).toInt()
+        drawable.setBounds(0, 0, w, realHeight)
+
 
     }
 
@@ -53,11 +54,15 @@ class AdImageView(
 
         val temp = topToParent / (parentHeight - minHeight).toFloat()
         if (temp.absoluteValue <= 1) {
-            this.offset = temp
+            offset = temp
             invalidate()
         }
 
 
+    }
+
+    fun reset() {
+        offset = 1f
     }
 
 

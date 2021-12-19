@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="16dp"
-            android:src="@drawable/the_red" />
+            android:src="@drawable/red_velvet_the_red" />
 
         <ImageView
             android:layout_width="wrap_content"

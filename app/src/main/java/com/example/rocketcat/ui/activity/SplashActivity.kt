@@ -1,15 +1,20 @@
 package com.example.rocketcat.ui.activity
 
 import android.animation.ArgbEvaluator
-import android.os.Build
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Matrix
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
@@ -25,35 +30,48 @@ import com.example.common.ext.jumpTo
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.ActivitySplashBinding
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
+class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>(), SensorEventListener {
 
 
     companion object {
-        const val HAS_SKIP = "has_skip"
-        val keyHasSkip = booleanPreferencesKey(HAS_SKIP)
+        val keyHasSkip = booleanPreferencesKey("has_skip")
     }
 
-    private val imgs = arrayListOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
-    private val adapter1 = MyGalleryAdapter(imgs)
+    private val imgs = listOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
 
-    val evaluator = ArgbEvaluator()
+    private val evaluator = ArgbEvaluator()
+
+    private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    private val sensor: Sensor by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
 
     override fun layoutId() = R.layout.activity_splash
 
     override fun initView(savedInstanceState: Bundle?) {
 
         enableFullScreen()
-        val colors = imgs.map { createPaletteSync(it)?.dominantSwatch?.rgb }
+        val palettes = imgs.map { createPaletteSync(it) }
+        val dominantSwatchColors = palettes.map { it?.dominantSwatch?.rgb }
+        val colors = palettes.map { it?.mutedSwatch?.rgb!! }
+        binding.imgDesert.post {
+            binding.imgDesert.apply {
+                val matrix = Matrix().apply {
+                    setScale(1.2f, 1.2f)
+                    postTranslate(-0.1f * width, -0.1f * height)
+                }
+                scaleType = ImageView.ScaleType.MATRIX
+                imageMatrix = matrix
+            }
+        }
+        binding.imgMoon.apply { pivotY += 800.dp }
         binding.vp2Welcome.apply {
-            adapter = adapter1
+            adapter = MyGalleryAdapter(imgs)
             offscreenPageLimit = 1
             setPageTransformer(
-                MarginPageTransformer(32f.dp)
+                MarginPageTransformer(32.dp)
             )
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
@@ -61,19 +79,27 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
                     positionOffset: Float,
                     positionOffsetPixels: Int
                 ) {
-                    binding.btSkip.visibility = if (position < colors.size - 1) {
-                        val color =
-                            evaluator.evaluate(
-                                positionOffset,
-                                colors[position],
-                                colors[position + 1]
-                            ) as Int
-                        binding.imgBg.setBackgroundColor(color)
-                        View.GONE
-                    } else {
-                        View.VISIBLE
+                    binding.imgMoon.apply {
+                        rotation = (position + positionOffset) * 10
+                        alpha = 1 - (position + positionOffset) / 2.1f
                     }
+                    binding.imgWindmill.apply {
+                        ImageViewCompat.setImageTintList(
+                            this,
+                            ColorStateList.valueOf(colors[position])
+                        )
+                        rotation = 360 * positionOffset
+                    }
+                    binding.btSkip.isVisible = position == dominantSwatchColors.lastIndex
+                    if (position < dominantSwatchColors.lastIndex) {
+                        val color = evaluator.evaluate(
+                            positionOffset,
+                            dominantSwatchColors[position],
+                            dominantSwatchColors[position + 1]
+                        ) as Int
+                        binding.imgBg.setBackgroundColor(color)
 
+                    }
                 }
             })
         }
@@ -88,14 +114,49 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>() {
         }
         //读取dataStore
         lifecycleScope.launch {
-            dataStore.data.map {
-                it[keyHasSkip]
-            }.firstOrNull().takeIf { it==true }?.run {
+            val skip = dataStore.data.map {
+                it[keyHasSkip] == true
+            }.first()
+            if (skip) {
                 jumpTo<MainActivity>()
                 finish()
             }
+
         }
+
     }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_GRAVITY) {
+            //归一化处理[0,1]
+            val xt = event.values[0] / -10f
+            val yt = event.values[1] / 10f
+            binding.imgCamelCactus.apply {
+                x = left + xt * width / 4
+                y = top + yt * height / 4
+            }
+            binding.imgDesert.apply {
+                scrollTo((width * 0.1 * xt).toInt(), (height * 0.1 * yt).toInt())
+            }
+
+        }
+
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+
+    }
+
 
     private fun createPaletteSync(@DrawableRes resourceId: Int): Palette? =
         ContextCompat.getDrawable(this, resourceId)?.let {

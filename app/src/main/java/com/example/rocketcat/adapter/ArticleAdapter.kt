@@ -2,7 +2,6 @@ package com.example.rocketcat.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
@@ -35,7 +34,8 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
     }
 
 
-    class MyViewHolder(private val binding: ItemRvArticleBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ItemRvArticleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(bean: ArticleBean) {
             binding.apply {
                 articleBean = bean
@@ -46,7 +46,12 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
         }
     }
 
-    class AdViewHolder(val imageView: AdImageView) : RecyclerView.ViewHolder(imageView)
+    class AdViewHolder(val imageView: AdImageView) : RecyclerView.ViewHolder(imageView) {
+        fun bind() {
+            imageView.setImageResource(R.drawable.cp)
+            imageView.reset()
+        }
+    }
 
 
     override fun getItemViewType(position: Int): Int {
@@ -60,7 +65,6 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
         return when (viewType) {
             TYPE_AD -> {
                 AdImageView(parent.context).apply {
-                    scaleType = ImageView.ScaleType.CENTER_CROP
                     layoutParams = RecyclerView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, 260f.dp
                     )
@@ -87,7 +91,7 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
                 holder.bind(data as ArticleBean)
             }
             is AdViewHolder -> {
-                holder.imageView.setImageResource(R.drawable.cp)
+                holder.bind()
             }
 
         }

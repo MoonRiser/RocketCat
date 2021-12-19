@@ -48,7 +48,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(savedInstanceState)
+        initView(view, savedInstanceState)
         onVisible()
         initData()
     }
@@ -62,15 +62,16 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        val vmClazz = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
-        return ViewModelProvider(getViewModelOwner()).get(vmClazz)
+        val vmClazz =
+            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+        return ViewModelProvider(getViewModelOwner())[vmClazz]
     }
 
 
     /**
      * 初始化view
      */
-    abstract fun initView(savedInstanceState: Bundle?)
+    abstract fun initView(view: View, savedInstanceState: Bundle?)
 
     /**
      * 懒加载

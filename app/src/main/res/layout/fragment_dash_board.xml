@@ -20,7 +20,8 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/colorPrimaryDark">
 
 
         </androidx.viewpager2.widget.ViewPager2>
@@ -29,13 +30,13 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp2_stack"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_marginHorizontal="32dp"
+            android:layout_height="280dp"
             android:layout_marginTop="16dp"
             android:clipChildren="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vp2_carou" />
+            app:layout_constraintTop_toBottomOf="@+id/vp2_carou"
+            tools:background="@color/colorPrimaryDark" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -68,16 +69,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/colorPrimaryVibrant" />
 
-        <com.example.common.widget.LikeButton
-            android:id="@+id/likeButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@+id/imgArrow"
-            app:layout_constraintEnd_toEndOf="@+id/imgArrow"
-            app:layout_constraintStart_toStartOf="@+id/imgArrow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

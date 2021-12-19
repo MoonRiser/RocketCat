@@ -1,6 +1,7 @@
 package com.example.rocketcat.ui.fragment
 
 import android.os.Bundle
+import android.view.View
 import com.example.common.base.BaseFragment
 import com.example.common.ext.init
 import com.example.rocketcat.R
@@ -22,7 +23,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun layoutId() = R.layout.fragment_home
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
         binding.vp2Tab.init(this, fragments)
         TabLayoutMediator(binding.tabHome, binding.vp2Tab) { tab, position ->
             tab.text = "Title" + (position + 1)

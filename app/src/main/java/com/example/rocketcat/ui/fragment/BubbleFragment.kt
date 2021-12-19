@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
+import android.view.View
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
 import com.example.common.ext.showToast
@@ -14,7 +15,7 @@ import com.example.rocketcat.databinding.FragmentBubbleBinding
 
 class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
 
-    private lateinit var mDetector: GestureDetector
+    private lateinit var gestureDetector: GestureDetector
     private lateinit var animator: ValueAnimator
 
 
@@ -22,7 +23,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
 
         animator = binding.bubbleView.anim
@@ -58,9 +59,9 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
                 return super.onDoubleTap(e)
             }
         }
-        mDetector = GestureDetector(requireActivity(), listener)
+        gestureDetector = GestureDetector(requireActivity(), listener)
         binding.rlRoot.setOnTouchListener { _, motionEvent ->
-            mDetector.onTouchEvent(motionEvent)
+            gestureDetector.onTouchEvent(motionEvent)
         }
 
 

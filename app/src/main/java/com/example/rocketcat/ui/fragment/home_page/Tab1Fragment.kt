@@ -1,6 +1,7 @@
 package com.example.rocketcat.ui.fragment.home_page
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +46,7 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
     override fun layoutId() = R.layout.fragment_tab1
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
 
 
         selector = AddressSelector(requireActivity()).apply {

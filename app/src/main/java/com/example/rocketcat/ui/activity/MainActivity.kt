@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
-import androidx.fragment.app.Fragment
+import androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.common.base.BaseActivity
 import com.example.common.dialog.customDialogOf
 import com.example.common.ext.init
@@ -18,22 +20,12 @@ import com.example.rocketcat.ui.fragment.SettingFragment
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
 
-    private val fragments = arrayListOf<Fragment>()
-    private val homeFragment: HomeFragment = HomeFragment()
-    private val dashboardFragment: DashboardFragment = DashboardFragment()
-    private val bubbleFragment: BubbleFragment = BubbleFragment()
-    private val settingFragment: SettingFragment = SettingFragment()
-
-
-    init {
-
-        fragments.apply {
-            add(homeFragment)
-            add(dashboardFragment)
-            add(bubbleFragment)
-            add(settingFragment)
-        }
-    }
+    private val fragments = listOf(
+        HomeFragment(),
+        DashboardFragment(),
+        BubbleFragment(),
+        SettingFragment()
+    )
 
 
     override fun layoutId() = R.layout.activity_main
@@ -42,6 +34,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun initView(savedInstanceState: Bundle?) {
 
+        setOnApplyWindowInsetsListener(binding.appBar) { v, insets ->
+            val statusBarSize = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.updatePadding(top = statusBarSize)
+            insets
+        }
 
         setSupportActionBar(binding.toolbar)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -70,7 +67,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
             }
 
         }
-
 
     }
 

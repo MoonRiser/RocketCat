@@ -1,15 +1,13 @@
 package com.example.rocketcat.ui.fragment.home_page
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.databinding.Observable
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.ext.richText
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.MyBindingFragmentBinding
-import com.example.rocketcat.ui.activity.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -26,7 +24,7 @@ class MyBindingFragment : BaseFragment<MyBindingViewModel, MyBindingFragmentBind
 
     override fun layoutId() = R.layout.my_binding_fragment
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun initView(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launch {
             delay(200)
 //            viewModel.name.set("yyyname")
