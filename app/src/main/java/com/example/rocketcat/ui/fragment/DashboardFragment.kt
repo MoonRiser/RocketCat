@@ -16,14 +16,17 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
+import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
-import com.example.rocketcat.adapter.CommonAdapter
 import com.example.rocketcat.adapter.ImageItem
 import com.example.rocketcat.adapter.MyGalleryAdapter
+import com.example.rocketcat.adapter.listAdapterOf
+import com.example.rocketcat.adapter.withType
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
 import com.example.rocketcat.customview.transformer.HorizontalStackTransformer
 import com.example.rocketcat.databinding.FragmentDashBoardBinding
+import com.example.rocketcat.databinding.ItemViewGalleryBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Math.toDegrees
@@ -52,7 +55,11 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
     private lateinit var scaleGestureDetector: ScaleGestureDetector
 
-    private val galleryAdapter = CommonAdapter()
+    private val galleryAdapter = listAdapterOf {
+        withType<ItemViewGalleryBinding, ImageItem> { data: ImageItem, position: Int ->
+            showToast("you just click No.$position picture")
+        }
+    }
 
 
     override fun layoutId() = R.layout.fragment_dash_board

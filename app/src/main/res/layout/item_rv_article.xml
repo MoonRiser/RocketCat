@@ -8,7 +8,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="articleBean"
+            name="dataItem"
             type="com.example.rocketcat.ui.fragment.response.ArticleBean" />
     </data>
 
@@ -41,7 +41,7 @@
                     android:id="@+id/item_home_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{TextUtils.isEmpty(articleBean.author)?articleBean.shareUser:articleBean.author}"
+                    android:text="@{TextUtils.isEmpty(dataItem.author)?dataItem.shareUser:dataItem.author}"
                     android:textSize="13dp"
                     tools:text="有何高见" />
 
@@ -55,7 +55,7 @@
                     android:text="置顶"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="10dp"
-                    android:visibility="@{articleBean.type==1?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{dataItem.type==1?View.VISIBLE:View.GONE}" />
 
                 <TextView
                     android:id="@+id/item_home_new"
@@ -67,7 +67,7 @@
                     android:text="新"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="10dp"
-                    android:visibility="@{articleBean.fresh?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{dataItem.fresh?View.VISIBLE:View.GONE}" />
 
                 <TextView
                     android:id="@+id/item_home_type1"
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="@{articleBean.niceDate}"
+                    android:text="@{dataItem.niceDate}"
                     android:textSize="13dp"
                     tools:text="1小时前" />
             </LinearLayout>
@@ -104,7 +104,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="@{articleBean.title}"
+                android:text="@{dataItem.title}"
                 android:textSize="14dp"
                 android:textStyle="bold"
                 tools:text="这是一个根据JetpackMvvm框架开发玩Android的一个APP" />
@@ -122,7 +122,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:text='@{articleBean.superChapterName+"·"+articleBean.chapterName}'
+                    android:text='@{dataItem.superChapterName+"·"+dataItem.chapterName}'
                     android:textSize="13dp"
                     tools:text="分类·项目" />
 
@@ -135,7 +135,7 @@
                     android:layout_marginEnd="8dp"
                     android:backgroundTint="@drawable/selector_favorite"
                     android:button="@drawable/ic_baseline_favorite_24"
-                    android:checked="@{articleBean.collect}" />
+                    android:checked="@{dataItem.collect}" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

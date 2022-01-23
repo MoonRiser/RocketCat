@@ -2,7 +2,6 @@ package com.example.rocketcat.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +37,7 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
         RecyclerView.ViewHolder(binding.root) {
         fun bind(bean: ArticleBean) {
             binding.apply {
-                articleBean = bean
+                dataItem = bean
                 executePendingBindings()
             }
 
@@ -73,13 +72,7 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
                 }
             }
             else -> {
-                DataBindingUtil.inflate<ItemRvArticleBinding>(
-                    LayoutInflater.from(parent.context),
-                    R.layout.item_rv_article,
-                    parent, false
-                ).let {
-                    MyViewHolder(it)
-                }
+                MyViewHolder(ItemRvArticleBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             }
         }
     }

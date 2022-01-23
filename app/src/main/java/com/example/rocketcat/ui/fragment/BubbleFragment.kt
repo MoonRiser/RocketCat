@@ -60,7 +60,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
             }
         }
         gestureDetector = GestureDetector(requireActivity(), listener)
-        binding.rlRoot.setOnTouchListener { _, motionEvent ->
+        binding.root.setOnTouchListener { _, motionEvent ->
             gestureDetector.onTouchEvent(motionEvent)
         }
 

@@ -2,18 +2,18 @@ package com.example.common.utils
 
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.databinding.*
+import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.common.ext.ClickCallback
 import com.jakewharton.rxbinding2.view.RxView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -21,33 +21,21 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.concurrent.TimeUnit
 
-@BindingAdapter(value = ["CornerRadius"])
-fun ImageView.roundedCorners(roundingRadius: Int) {
-    Glide.with(this.context)
-        .load(this.drawable)
-        .apply(
-            RequestOptions.bitmapTransform(
-                RoundedCorners(
-                    dp2px(
-                        roundingRadius.toFloat()
-                    )
-                )
-            )
-        )
+
+@BindingAdapter(value = ["src", "cornerRadius", "circleCrop"], requireAll = false)
+fun ImageView.load(src: Any?, cornerRadius: Float?, circleCrop: Boolean?) {
+
+    val trans = listOfNotNull(
+        cornerRadius?.let { RoundedCorners(it.toInt()) },
+        if (circleCrop == true) CircleCrop() else null
+    ).toTypedArray()
+
+    Glide.with(this)
+        .load(src)
+        .transform(*trans)
         .into(this)
 }
 
-
-@BindingAdapter(value = ["circleAvatar"])
-fun circleImageUrl(view: ImageView, circle: Boolean) {
-    if (circle) {
-        Glide.with(view.context.applicationContext)
-            .load(view.drawable)
-            .apply(RequestOptions.bitmapTransform(CircleCrop()))
-            .into(view)
-    }
-
-}
 
 typealias OnClickCallback = (view: View) -> Unit
 

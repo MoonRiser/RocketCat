@@ -116,6 +116,26 @@ class ExampleUnitTest {
             }
     }
 
+    @Test
+    fun test0107() {
+
+        val b = BB()
+    }
+
+    abstract class AA {
+        val type: String? = this::class.qualifiedName
+
+        init {
+            println("AA ,current class is $type")
+
+        }
+    }
+
+    class BB : AA() {
+        init {
+            println("BB,current class is $type")
+        }
+    }
 
     fun now() = System.currentTimeMillis().toString().substring(9..12)
 

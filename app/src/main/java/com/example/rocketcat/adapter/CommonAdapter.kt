@@ -67,5 +67,4 @@ class GalleryViewHolder(private val binding: ItemViewGalleryBinding) :
 }
 
 
-@JvmInline
-value class ImageItem(val imageId: Int)
+class ImageItem(val imageId: Int) : DataItem(imageId)

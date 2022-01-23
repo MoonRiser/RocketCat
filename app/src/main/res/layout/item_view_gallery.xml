@@ -3,12 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="dataItem"
+            type="com.example.rocketcat.adapter.ImageItem" />
+    </data>
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:shapeAppearance="@style/RoundCornerShape16dp"
+        app:src="@{dataItem.id}"
         tools:src="@drawable/ads">
 
 

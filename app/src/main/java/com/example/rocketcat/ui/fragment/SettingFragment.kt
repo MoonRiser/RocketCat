@@ -1,7 +1,9 @@
 package com.example.rocketcat.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -16,6 +18,14 @@ import kotlinx.coroutines.launch
 
 
 class SettingFragment : BaseFragment<SettingViewModel, FragmentSettingBinding>() {
+
+    companion object {
+        private val nightModes = listOf(
+            AppCompatDelegate.MODE_NIGHT_YES to "夜间模式",
+            AppCompatDelegate.MODE_NIGHT_NO to "白天模式",
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM to "跟随系统"
+        )
+    }
 
 
     override fun layoutId() = R.layout.fragment_setting
@@ -36,6 +46,13 @@ class SettingFragment : BaseFragment<SettingViewModel, FragmentSettingBinding>()
                 }
                 negativeButton("cancel")
             }.show()
+        }
+        binding.dayNightShiftBtn.setOnClickListener {
+            val (mode, content) = nightModes[viewModel.index]
+            Log.i("xres", "mode:$mode content:$content vm:$viewModel index:${viewModel.index} fragment:$this ")
+            binding.dayNightShiftBtn.text = content
+            AppCompatDelegate.setDefaultNightMode(mode)
+            viewModel.index = (++viewModel.index) % 3
         }
         Glide.with(requireActivity())
             .load(R.drawable.bvs)
