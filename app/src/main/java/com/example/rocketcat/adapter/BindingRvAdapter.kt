@@ -1,6 +1,7 @@
 package com.example.rocketcat.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
@@ -51,7 +52,14 @@ class BindingViewHolder<T : DataItem>(val binding: ViewDataBinding) : RecyclerVi
 }
 
 abstract class DataItem(val id: Any) {
+    init {
+        if (!this::class.isData) {
+            Log.w("BindingRvAdapter", "子类请使用data class,否则可能需要重写数据类的equals方法，确保diffUtil正确判断")
+        }
+    }
+
     var type: Int = this::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
+
 }
 
 fun listAdapterOf(block: HashMap<Int, ViewHolderCreator>.() -> Unit): BindingRvAdapter {
@@ -60,10 +68,9 @@ fun listAdapterOf(block: HashMap<Int, ViewHolderCreator>.() -> Unit): BindingRvA
     return BindingRvAdapter(configMap)
 }
 
-inline fun <reified VB : ViewDataBinding, reified D : DataItem>
-        HashMap<Int, ViewHolderCreator>.withType(
-    crossinline onViewHolderCreate: (viewHolder: BindingViewHolder<D>) -> Unit = {},
-    crossinline onItemClick: (data: D, position: Int) -> Unit = { _, _ -> }
+inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, ViewHolderCreator>.withType(
+    crossinline onViewHolderCreate: BindingViewHolder<D>.(data: () -> D) -> Unit = { _ -> },
+    noinline onItemClick: ((data: D, position: Int) -> Unit)? = null
 ) {
     val dataId = D::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
     val creator: ViewHolderCreator = { parent: ViewGroup, list ->
@@ -75,11 +82,16 @@ inline fun <reified VB : ViewDataBinding, reified D : DataItem>
             Boolean::class.java
         ).invoke(null, inflater, parent, false) as VB
         BindingViewHolder<D>(binding).apply {
-            onViewHolderCreate.invoke(this)
-            itemView.setOnClickListener {
-                val dataItem = list.invoke()[bindingAdapterPosition]
-                onItemClick.invoke(dataItem as D, bindingAdapterPosition)
+            onViewHolderCreate {
+                list.invoke()[bindingAdapterPosition] as D
             }
+            onItemClick?.let { clickAction ->
+                itemView.setOnClickListener {
+                    val dataItem = list.invoke()[bindingAdapterPosition]
+                    clickAction.invoke(dataItem as D, bindingAdapterPosition)
+                }
+            }
+
         }
     }
     this[dataId] = creator
