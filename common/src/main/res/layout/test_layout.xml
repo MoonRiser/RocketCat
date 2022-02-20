@@ -4,6 +4,10 @@
     <data>
 
         <variable
+            name="dataItem"
+            type="com.example.common.base.DataItem" />
+
+        <variable
             name="viewModel"
             type="com.example.common.base.BaseViewModel" />
     </data>

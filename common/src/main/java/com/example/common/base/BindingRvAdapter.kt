@@ -1,4 +1,4 @@
-package com.example.rocketcat.adapter
+package com.example.common.base
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -8,7 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rocketcat.BR
+import com.example.common.BR
 
 
 typealias ViewHolderCreator = (parent: ViewGroup, list: () -> List<DataItem>) -> BindingViewHolder<*>
@@ -51,6 +51,9 @@ class BindingViewHolder<T : DataItem>(val binding: ViewDataBinding) : RecyclerVi
 
 }
 
+/**
+ * 数据基类
+ */
 abstract class DataItem(val id: Any) {
     init {
         if (!this::class.isData) {
@@ -62,6 +65,9 @@ abstract class DataItem(val id: Any) {
 
 }
 
+/**
+ * listAdapter构建器
+ */
 fun listAdapterOf(block: HashMap<Int, ViewHolderCreator>.() -> Unit): BindingRvAdapter {
     val configMap = hashMapOf<Int, ViewHolderCreator>()
     configMap.block()
@@ -72,7 +78,7 @@ inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, Vie
     crossinline onViewHolderCreate: BindingViewHolder<D>.(data: () -> D) -> Unit = { _ -> },
     noinline onItemClick: ((data: D, position: Int) -> Unit)? = null
 ) {
-    val dataId = D::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
+    val dataId = D::class.qualifiedName?.hashCode() ?: throw RuntimeException("请检查泛型D的类型")
     val creator: ViewHolderCreator = { parent: ViewGroup, list ->
         val inflater = LayoutInflater.from(parent.context)
         val binding = VB::class.java.getDeclaredMethod(
@@ -96,4 +102,6 @@ inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, Vie
     }
     this[dataId] = creator
 }
+
+
 

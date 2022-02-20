@@ -4,8 +4,6 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.viewModelScope
 import com.example.common.base.BaseViewModel
-import com.example.common.ext.showToast
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf

@@ -25,7 +25,9 @@ class AutoClearedValueLazy<T : Any>(
                 fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
                     viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {
-                            _value = DESTROYED_VALUE
+                            if (_value !== UNINITIALIZED_VALUE) {
+                                _value = DESTROYED_VALUE
+                            }
                         }
                     })
                 }

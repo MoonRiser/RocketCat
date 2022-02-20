@@ -16,13 +16,13 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
+import com.example.common.base.listAdapterOf
+import com.example.common.base.withType
 import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.ImageItem
 import com.example.rocketcat.adapter.MyGalleryAdapter
-import com.example.rocketcat.adapter.listAdapterOf
-import com.example.rocketcat.adapter.withType
 import com.example.rocketcat.customview.transformer.CarouselPageTransformer
 import com.example.rocketcat.customview.transformer.HorizontalStackTransformer
 import com.example.rocketcat.databinding.FragmentDashBoardBinding
