@@ -33,8 +33,7 @@ import java.lang.Math.toDegrees
 import kotlin.math.absoluteValue
 import kotlin.math.atan2
 
-class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(),
-    SensorEventListener {
+class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(), SensorEventListener {
 
     companion object {
         const val INITIAL_SCALE = 1f
@@ -149,7 +148,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
 
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
     private fun initImgScaleSpringAnimation() {
         val (animX, animY) = binding.imgMH.run {
@@ -182,7 +180,6 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
                 }
             })
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initImgRotationSpringAnimation() {

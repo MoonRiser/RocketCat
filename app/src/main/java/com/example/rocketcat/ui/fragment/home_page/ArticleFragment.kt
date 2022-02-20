@@ -2,7 +2,11 @@ package com.example.rocketcat.ui.fragment.home_page
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +21,10 @@ import kotlinx.coroutines.launch
 
 
 class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>() {
+
+    companion object {
+        private const val TAG = "ArticleFragment"
+    }
 
     private val articleAdapter = ArticleAdapter()
 
@@ -64,6 +72,16 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                 articleAdapter.submitData(it)
             }
         }
+
+        viewModel.logger.observe(viewLifecycleOwner) {
+            Log.i(TAG, it)
+        }
+
+        viewLifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                Log.i(TAG, "${event.name} Event happens")
+            }
+        })
 
     }
 

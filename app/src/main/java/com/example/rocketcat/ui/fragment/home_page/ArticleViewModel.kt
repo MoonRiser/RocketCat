@@ -1,5 +1,8 @@
 package com.example.rocketcat.ui.fragment.home_page
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.example.common.base.BaseViewModel
@@ -7,6 +10,9 @@ import com.example.common.data.network.NetworkApi
 import com.example.rocketcat.ui.fragment.response.AdBean
 import com.example.rocketcat.ui.fragment.response.ApiService
 import com.example.rocketcat.ui.fragment.response.ContentBean
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class ArticleViewModel : BaseViewModel() {
 
@@ -21,6 +27,29 @@ class ArticleViewModel : BaseViewModel() {
     ) {
         ArticlePagingSource(apiService)
     }.flow.cachedIn(viewModelScope)
+
+    private val _logger = MutableLiveData<Long>()
+
+    val logger = _logger.switchMap<Long, String> {
+        liveData {
+            source(it).collect {
+                emit(it)
+            }
+        }
+    }
+
+    private var i = 0L
+    fun change() {
+        i++
+        _logger.value = i * 1000
+    }
+
+    private fun source(delay: Long) = flow {
+        while (true) {
+            delay(delay)
+            emit("current timeStamp with delay $delay : ${System.currentTimeMillis()}")
+        }
+    }
 
 
 }
