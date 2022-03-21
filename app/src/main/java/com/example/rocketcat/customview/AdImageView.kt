@@ -3,14 +3,18 @@ package com.example.rocketcat.customview
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.util.Log
 import androidx.appcompat.widget.AppCompatImageView
-import kotlin.math.absoluteValue
 
 class AdImageView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
+
+    companion object {
+        private const val TAG = "AdImageView"
+    }
 
 
     //视觉所能看到的实际高度
@@ -39,7 +43,9 @@ class AdImageView(
     override fun onDraw(canvas: Canvas) {
 
         canvas.save()
-        canvas.translate(0f, (offset - 0.5f) * (minHeight - realHeight))
+        val dy = (offset - 0.5f) * (minHeight - realHeight)
+        Log.i(TAG, "dy: $dy")
+        canvas.translate(0f, dy)
         super.onDraw(canvas)
         canvas.restore()
 
@@ -53,7 +59,7 @@ class AdImageView(
     fun setOffset(parentHeight: Int, topToParent: Int) {
 
         val temp = topToParent / (parentHeight - minHeight).toFloat()
-        if (temp.absoluteValue <= 1) {
+        if (temp in 0F..1F) {
             offset = temp
             invalidate()
         }

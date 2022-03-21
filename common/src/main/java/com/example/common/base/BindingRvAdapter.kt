@@ -17,10 +17,12 @@ class BindingRvAdapter(private val viewHolders: HashMap<Int, ViewHolderCreator>)
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItem>() {
-            override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean = oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
+                oldItem::class == newItem::class && oldItem.id == newItem.id
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean = oldItem == newItem
+            override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
+                oldItem::class == newItem::class && oldItem == newItem
         }
 
     }
@@ -62,6 +64,22 @@ abstract class DataItem(val id: Any) {
     }
 
     var type: Int = this::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
+
+    object Header : DataItem(-1) {
+        operator fun plus(other: List<DataItem>): List<DataItem> {
+            return if (other is MutableList) {
+                other.add(0, this)
+                other
+            } else {
+                val result = ArrayList<DataItem>(other.size + 1)
+                result.add(this)
+                result.addAll(other)
+                result
+            }
+        }
+    }
+
+    object Footer : DataItem(-1)
 
 }
 

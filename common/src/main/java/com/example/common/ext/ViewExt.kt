@@ -20,6 +20,8 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.widget.ViewPager2Container
@@ -171,3 +173,15 @@ suspend fun NestedScrollView.awaitScroll(direction: Int) =
         // 这样协程就被挂起了，除非监听器中的 cont.resume() 方法被调用
 
     }
+
+inline fun RecyclerView.doOnScrollIdleState(crossinline block: (range: IntRange) -> Unit) {
+
+    addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            val linearLayoutManager = layoutManager as? LinearLayoutManager ?: return
+            val range = linearLayoutManager.run { findFirstVisibleItemPosition()..findLastVisibleItemPosition() }
+            if (range.contains(RecyclerView.NO_POSITION)) return
+            block.invoke(range)
+        }
+    })
+}
