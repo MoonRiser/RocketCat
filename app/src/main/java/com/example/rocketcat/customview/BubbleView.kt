@@ -8,6 +8,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.annotation.ColorInt
+import com.example.common.ext.dp
 import com.example.rocketcat.R
 import java.util.*
 import kotlin.math.abs
@@ -32,6 +34,24 @@ class BubbleView @JvmOverloads constructor(
     //贝塞尔曲线的控制变量
     private var tg = 0f
 
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 4.dp.toFloat()
+    }
+    var pathToDraw: Path = Path()
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    @ColorInt
+    var paintColor: Int = Color.BLUE
+        set(value) {
+            field = value
+            paint.color = field
+            invalidate()
+        }
+
     class Bubble(var center: PointF, var radius: Int)
 
 
@@ -42,6 +62,9 @@ class BubbleView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        canvas.drawPath(pathToDraw, paint)
+
         for (i in bubbles.indices) {
             for (j in i + 1 until bubbles.size) {
                 if (isApproach(bubbles[i], bubbles[j])) {

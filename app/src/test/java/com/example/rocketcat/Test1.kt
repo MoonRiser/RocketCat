@@ -2,10 +2,7 @@ package com.example.rocketcat
 
 import android.widget.TextView
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 
 /**
  * @author WayneXie
@@ -42,6 +39,7 @@ class Test1 {
         flowOf(1, 2, 3)
             .onEach { println("each $it") }
             .onCompletion { println("done") }
+            .map { }
             .collect {
 
             }
@@ -49,9 +47,6 @@ class Test1 {
     }
 
     fun onBegin() {
-        (1..100).asSequence().onEach {
-            println(it)
-        }
 
     }
 

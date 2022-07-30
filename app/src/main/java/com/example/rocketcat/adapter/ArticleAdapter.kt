@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
+import com.example.common.base.Section
 import com.example.common.ext.dp
 import com.example.rocketcat.R
 import com.example.rocketcat.customview.AdImageView
@@ -33,8 +34,7 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
     }
 
 
-    class MyViewHolder(private val binding: ItemRvArticleBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ItemRvArticleBinding) : RecyclerView.ViewHolder(binding.root), Section {
         fun bind(bean: ArticleBean) {
             binding.apply {
                 dataItem = bean
@@ -43,6 +43,8 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
 
 
         }
+
+        override fun isStickyHeader(): Boolean = bindingAdapterPosition % 3 == 0
     }
 
     class AdViewHolder(val imageView: AdImageView) : RecyclerView.ViewHolder(imageView) {
