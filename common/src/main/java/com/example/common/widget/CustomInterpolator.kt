@@ -5,9 +5,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 
 //在原生AccelerateDecelerateInterpolator增加了因子，当factor为0.8时，动画执行到80%，到达终点
-class CustomInterpolator(private val factor: Float = 1f) : AccelerateDecelerateInterpolator() {
-
-
+class CustomInterpolator(val factor: Float = 1f) : AccelerateDecelerateInterpolator() {
 
 
     private var currentValue = 0f

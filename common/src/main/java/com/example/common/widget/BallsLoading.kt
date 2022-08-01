@@ -9,10 +9,9 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.Animation
+import androidx.core.animation.doOnEnd
 import com.example.common.R
 import com.example.common.ext.dp
-
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -81,10 +80,14 @@ class BallsLoading
             animator.apply {
                 duration = 5000
                 interpolator = CustomInterpolator(1 - 0.02f * index)
-                repeatCount = Animation.INFINITE
-                repeatMode = ValueAnimator.RESTART
+                var offset = 0
+                doOnEnd {
+                    offset++
+                    offset %= 12
+                    start()
+                }
                 addUpdateListener {
-                    angles[index] = (it.animatedValue as Float)
+                    angles[index] = (it.animatedValue as Float) + offset * (1f / 12)
                     invalidate()
                 }
             }
@@ -126,14 +129,17 @@ class BallsLoading
             animators.forEach { it.start() }
             return
         }
-        if (animators[0].isPaused) {
-            animators.forEach { it.resume() }
-        } else if (animators[0].isRunning) {
-            animators.forEach { it.pause() }
+        when {
+            animators[0].isPaused -> {
+                animators.forEach { it.resume() }
+            }
+            animators[0].isRunning -> {
+                animators.forEach { it.pause() }
+            }
         }
     }
 
-    fun start(){
+    fun start() {
         if (!animators[0].isStarted) {
             animators.forEach { it.start() }
             return
