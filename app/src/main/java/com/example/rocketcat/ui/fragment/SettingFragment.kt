@@ -28,7 +28,6 @@ class SettingFragment : BaseFragment<SettingViewModel, FragmentSettingBinding>()
     }
 
 
-    override fun layoutId() = R.layout.fragment_setting
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

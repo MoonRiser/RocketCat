@@ -92,7 +92,7 @@ fun listAdapterOf(block: HashMap<Int, ViewHolderCreator>.() -> Unit): BindingRvA
     return BindingRvAdapter(configMap)
 }
 
-inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, ViewHolderCreator>.withType(
+inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, ViewHolderCreator>.withViewHolder(
     crossinline onViewHolderCreate: BindingViewHolder<D>.(data: () -> D) -> Unit = { _ -> },
     noinline onItemClick: ((data: D, position: Int) -> Unit)? = null
 ) {

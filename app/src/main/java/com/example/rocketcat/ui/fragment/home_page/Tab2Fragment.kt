@@ -27,7 +27,6 @@ class Tab2Fragment : BaseFragment<BaseViewModel, FragmentTab2Binding>() {
 
     private lateinit var dialog: BottomSheetDialog
 
-    override fun layoutId() = R.layout.fragment_tab2
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

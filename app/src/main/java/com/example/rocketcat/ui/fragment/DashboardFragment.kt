@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
 import com.example.common.base.listAdapterOf
-import com.example.common.base.withType
+import com.example.common.base.withViewHolder
 import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
@@ -55,13 +55,10 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     private lateinit var scaleGestureDetector: ScaleGestureDetector
 
     private val galleryAdapter = listAdapterOf {
-        withType<ItemViewGalleryBinding, ImageItem> { data: ImageItem, position: Int ->
+        withViewHolder<ItemViewGalleryBinding, ImageItem> { data: ImageItem, position: Int ->
             showToast("you just click No.$position picture")
         }
     }
-
-
-    override fun layoutId() = R.layout.fragment_dash_board
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

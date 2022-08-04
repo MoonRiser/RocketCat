@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
 import com.example.common.base.SectionLayoutManager
-import com.example.rocketcat.R
 import com.example.rocketcat.adapter.ArticleAdapter
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +28,6 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
     private val articleAdapter = ArticleAdapter()
 
-    override fun layoutId() = R.layout.fragment_article
 
     @SuppressLint("ClickableViewAccessibility")
     override fun initView(view: View, savedInstanceState: Bundle?) {

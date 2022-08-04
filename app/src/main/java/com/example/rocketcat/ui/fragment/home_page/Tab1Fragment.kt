@@ -8,7 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.dialog.customDialogOf
 import com.example.common.ext.showToast
-import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentTab1Binding
 import com.example.rocketcat.ui.fragment.HomeViewModel
 import com.xres.address_selector.db.entity.Area
@@ -44,7 +43,6 @@ class Tab1Fragment : BaseFragment<HomeViewModel, FragmentTab1Binding>() {
 
     private lateinit var selector: AddressSelector
 
-    override fun layoutId() = R.layout.fragment_tab1
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
 

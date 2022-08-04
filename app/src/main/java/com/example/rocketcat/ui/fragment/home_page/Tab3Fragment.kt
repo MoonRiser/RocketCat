@@ -23,7 +23,6 @@ class Tab3Fragment : BaseFragment<HomeViewModel, FragmentTab3Binding>() {
 
     private val imgs = arrayListOf(R.drawable.jump, R.drawable.paint, R.drawable.sit)
 
-    override fun layoutId() = R.layout.fragment_tab3
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
         binding.ivAbove.pageCount = imgs.size

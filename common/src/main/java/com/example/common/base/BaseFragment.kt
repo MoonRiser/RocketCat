@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -29,14 +28,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     /**
      * 当前Fragment绑定的视图布局
      */
-    abstract fun layoutId(): Int
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<DB>(inflater, layoutId(), container, false).let {
+        return createBinding(inflater, container).let {
             _binding = it
             it.lifecycleOwner = this
             viewModel = createViewModel()
@@ -62,11 +60,19 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        val vmClazz =
-            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+        val vmClazz = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
         return ViewModelProvider(getViewModelOwner())[vmClazz]
     }
 
+
+    private fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): DB {
+        val clazz = (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<DB>
+        val inflateMethod = clazz.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        return inflateMethod.run {
+            isAccessible = true
+            invoke(null, inflater, parent, false) as DB
+        }
+    }
 
     /**
      * 初始化view

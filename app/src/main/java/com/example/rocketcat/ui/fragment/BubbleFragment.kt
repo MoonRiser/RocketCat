@@ -14,7 +14,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
-import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentBubbleBinding
 import com.xres.address_selector.ext.showToast
 
@@ -42,7 +41,6 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
         }
     }
 
-    override fun layoutId() = R.layout.fragment_bubble
 
 
     @SuppressLint("ClickableViewAccessibility")
