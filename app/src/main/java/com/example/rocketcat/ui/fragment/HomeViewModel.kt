@@ -2,8 +2,11 @@ package com.example.rocketcat.ui.fragment
 
 import androidx.databinding.Observable
 import androidx.databinding.ObservableInt
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.common.base.BaseViewModel
+import com.example.common.base.LoadStateFooterAdapter
+import com.example.rocketcat.ui.fragment.home_page.BookInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
@@ -20,6 +23,33 @@ class HomeViewModel : BaseViewModel() {
 
     val currentItem = ObservableInt(0)
 
+    val footerLoadState = MutableLiveData<LoadStateFooterAdapter.LoadState>(LoadStateFooterAdapter.LoadState.Loading)
+
+    val bookList = MutableLiveData(emptyList<BookInfo>())
+
+    fun refreshBookList(count: Int = 20) {
+        viewModelScope.launch {
+            delay(500)
+            footerLoadState.value = LoadStateFooterAdapter.LoadState.Loading
+            bookList.value = List(count) { BookInfo.newInstance(it) }
+        }
+    }
+
+    fun loadMoreBook(from: Int, size: Int = 10) {
+        val t = listOf(0, 1, 2).random()
+        if (t > 0) {
+            val old = bookList.value ?: emptyList()
+            viewModelScope.launch {
+                delay(500)
+                footerLoadState.value = if (t > 1) LoadStateFooterAdapter.LoadState.NotLoading.Complete
+                else LoadStateFooterAdapter.LoadState.NotLoading.InComplete
+                bookList.value = old + List(size) { BookInfo.newInstance(it + from) }
+            }
+        } else {
+            footerLoadState.value = LoadStateFooterAdapter.LoadState.Error
+        }
+    }
+
 
     init {
         currentItem.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
@@ -33,7 +63,7 @@ class HomeViewModel : BaseViewModel() {
                 .map {
                     delay(800)
                     it
-                }.onCompletion {  }
+                }.onCompletion { }
                 .collect {
 //                    currentItem.set(it)
                 }

@@ -2,9 +2,12 @@ package com.example.common.base
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +15,9 @@ import com.example.common.BR
 
 
 typealias ViewHolderCreator = (parent: ViewGroup, list: () -> List<DataItem>) -> BindingViewHolder<*>
+typealias AdapterScope = SparseArray<ViewHolderCreator>
 
-class BindingRvAdapter(private val viewHolders: HashMap<Int, ViewHolderCreator>) : ListAdapter<DataItem, BindingViewHolder<*>>(DIFF_CALLBACK) {
+class BindingRvAdapter(private val viewHolders: SparseArray<ViewHolderCreator>) : ListAdapter<DataItem, BindingViewHolder<*>>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItem>() {
@@ -37,7 +41,7 @@ class BindingRvAdapter(private val viewHolders: HashMap<Int, ViewHolderCreator>)
         holder.bind(dataItem)
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position).type
+    override fun getItemViewType(position: Int): Int = getItem(position)._type
 
 
 }
@@ -63,7 +67,7 @@ abstract class DataItem(val id: Any) {
         }
     }
 
-    var type: Int = this::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
+    val _type: Int = this::class.qualifiedName?.hashCode() ?: throw RuntimeException("子类请继承本类，请不要使用匿名类")
 
     object Header : DataItem(-1) {
         operator fun plus(other: List<DataItem>): List<DataItem> {
@@ -86,15 +90,46 @@ abstract class DataItem(val id: Any) {
 /**
  * listAdapter构建器
  */
-fun listAdapterOf(block: HashMap<Int, ViewHolderCreator>.() -> Unit): BindingRvAdapter {
-    val configMap = hashMapOf<Int, ViewHolderCreator>()
+fun listAdapterOf(block: AdapterScope.() -> Unit): BindingRvAdapter {
+    val configMap = SparseArray<ViewHolderCreator>()
     configMap.block()
     return BindingRvAdapter(configMap)
 }
 
-inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, ViewHolderCreator>.withViewHolder(
-    crossinline onViewHolderCreate: BindingViewHolder<D>.(data: () -> D) -> Unit = { _ -> },
-    noinline onItemClick: ((data: D, position: Int) -> Unit)? = null
+fun BindingRvAdapter.withRefreshHeader(
+    enable: Boolean = true,
+    onRefresh: () -> Unit
+) = ConcatAdapter(LoadStateHeaderAdapter().apply {
+    this.enable = enable
+    doOnRefresh(onRefresh)
+}, this)
+
+fun BindingRvAdapter.withLoadStateFooter(
+    enable: Boolean = true,
+    loadState: LiveData<LoadStateFooterAdapter.LoadState>,
+    onLoadMore: () -> Unit
+) = ConcatAdapter(this, LoadStateFooterAdapter(loadState).apply {
+    this.enable = enable
+    doOnLoadMore(onLoadMore)
+})
+
+fun BindingRvAdapter.withLoadStateHeaderAndFooter(
+    enableHeader: Boolean = true,
+    enableFooter: Boolean = true,
+    loadState: LiveData<LoadStateFooterAdapter.LoadState>,
+    onRefresh: () -> Unit,
+    onLoadMore: () -> Unit
+) = ConcatAdapter(LoadStateHeaderAdapter().apply {
+    this.enable = enableHeader
+    doOnRefresh(onRefresh)
+}, this, LoadStateFooterAdapter(loadState).apply {
+    this.enable = enableFooter
+    doOnLoadMore(onLoadMore)
+})
+
+
+inline fun <reified D : DataItem, reified VB : ViewDataBinding> AdapterScope.withViewHolder(
+    crossinline viewHolderScope: ViewHolderScope<D, VB>.() -> Unit = { }
 ) {
     val dataId = D::class.qualifiedName?.hashCode() ?: throw RuntimeException("请检查泛型D的类型")
     val creator: ViewHolderCreator = { parent: ViewGroup, list ->
@@ -106,20 +141,45 @@ inline fun <reified VB : ViewDataBinding, reified D : DataItem> HashMap<Int, Vie
             Boolean::class.java
         ).invoke(null, inflater, parent, false) as VB
         BindingViewHolder<D>(binding).apply {
-            onViewHolderCreate {
-                list.invoke()[bindingAdapterPosition] as D
-            }
-            onItemClick?.let { clickAction ->
-                itemView.setOnClickListener {
-                    val dataItem = list.invoke()[bindingAdapterPosition]
-                    clickAction.invoke(dataItem as D, bindingAdapterPosition)
-                }
-            }
-
+            val impl = ViewHolderScopeImpl<D, VB>(this, list)
+            viewHolderScope.invoke(impl)
         }
     }
     this[dataId] = creator
 }
 
+interface ViewHolderScope<D : DataItem, VB : ViewDataBinding> {
 
+    val adapterPosition: Int
+
+    val itemBinding: VB
+
+    val data: D?
+
+    fun doOnItemViewClick(action: (D) -> Unit)
+
+    val currentList: List<DataItem>
+}
+
+class ViewHolderScopeImpl<D : DataItem, VB : ViewDataBinding>(
+    private val viewHolder: BindingViewHolder<D>,
+    private val listProvider: () -> List<DataItem>
+) : ViewHolderScope<D, VB> {
+
+    override val adapterPosition: Int
+        get() = viewHolder.bindingAdapterPosition
+    override val itemBinding: VB
+        get() = viewHolder.binding as VB
+    override val data: D?
+        get() = currentList.getOrNull(adapterPosition) as? D
+
+    override fun doOnItemViewClick(action: (D) -> Unit) {
+        viewHolder.itemView.setOnClickListener {
+            data?.let(action)
+        }
+    }
+
+    override val currentList: List<DataItem>
+        get() = listProvider.invoke()
+}
 

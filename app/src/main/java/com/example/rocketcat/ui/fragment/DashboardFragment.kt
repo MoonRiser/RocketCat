@@ -55,8 +55,10 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
     private lateinit var scaleGestureDetector: ScaleGestureDetector
 
     private val galleryAdapter = listAdapterOf {
-        withViewHolder<ItemViewGalleryBinding, ImageItem> { data: ImageItem, position: Int ->
-            showToast("you just click No.$position picture")
+        withViewHolder<ImageItem, ItemViewGalleryBinding> {
+            doOnItemViewClick {
+                showToast("you just click No.$adapterPosition picture")
+            }
         }
     }
 
