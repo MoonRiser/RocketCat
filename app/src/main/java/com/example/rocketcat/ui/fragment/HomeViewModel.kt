@@ -30,8 +30,8 @@ class HomeViewModel : BaseViewModel() {
     fun refreshBookList(count: Int = 20) {
         viewModelScope.launch {
             delay(500)
-            footerLoadState.value = LoadStateFooterAdapter.LoadState.Loading
             bookList.value = List(count) { BookInfo.newInstance(it) }
+            footerLoadState.value = LoadStateFooterAdapter.LoadState.Loading
         }
     }
 
@@ -41,9 +41,9 @@ class HomeViewModel : BaseViewModel() {
             val old = bookList.value ?: emptyList()
             viewModelScope.launch {
                 delay(500)
+                bookList.value = old + List(size) { BookInfo.newInstance(it + from) }
                 footerLoadState.value = if (t > 1) LoadStateFooterAdapter.LoadState.NotLoading.Complete
                 else LoadStateFooterAdapter.LoadState.NotLoading.InComplete
-                bookList.value = old + List(size) { BookInfo.newInstance(it + from) }
             }
         } else {
             footerLoadState.value = LoadStateFooterAdapter.LoadState.Error
