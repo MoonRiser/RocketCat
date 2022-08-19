@@ -99,7 +99,7 @@ fun listAdapterOf(block: AdapterScope.() -> Unit): BindingRvAdapter {
 fun BindingRvAdapter.withRefreshHeader(
     enable: Boolean = true,
     onRefresh: () -> Unit
-) = ConcatAdapter(LoadStateHeaderAdapter().apply {
+) = ConcatAdapter(RefreshHeaderAdapter().apply {
     this.enable = enable
     doOnRefresh(onRefresh)
 }, this)
@@ -119,7 +119,7 @@ fun BindingRvAdapter.withLoadStateHeaderAndFooter(
     loadState: LiveData<LoadStateFooterAdapter.LoadState>,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit
-) = ConcatAdapter(LoadStateHeaderAdapter().apply {
+) = ConcatAdapter(RefreshHeaderAdapter().apply {
     this.enable = enableHeader
     doOnRefresh(onRefresh)
 }, this, LoadStateFooterAdapter(loadState).apply {

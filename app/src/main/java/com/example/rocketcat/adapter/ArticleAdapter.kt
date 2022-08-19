@@ -2,9 +2,13 @@ package com.example.rocketcat.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
+import com.example.common.base.PagingFooterAdapter
+import com.example.common.base.RefreshHeaderAdapter
 import com.example.common.base.Section
 import com.example.common.ext.dp
 import com.example.rocketcat.R
@@ -90,6 +94,25 @@ class ArticleAdapter : PagingDataAdapter<ContentBean, RecyclerView.ViewHolder>(d
             }
 
         }
+    }
+
+    fun withRefreshHeaderAndLoadStateFooter(
+        header: RefreshHeaderAdapter = RefreshHeaderAdapter(),
+        footer: PagingFooterAdapter = PagingFooterAdapter()
+    ): ConcatAdapter {
+        header.doOnRefresh {
+            refresh()
+        }
+        footer.doOnRetry {
+            retry()
+        }
+        addLoadStateListener { loadStates ->
+            footer.loadState = loadStates.append
+            loadStates.refresh.takeIf { it is LoadState.Error }?.let {
+                footer.loadState = it
+            }
+        }
+        return ConcatAdapter(header, this, footer)
     }
 
 

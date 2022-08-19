@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
-import com.example.common.base.SectionLayoutManager
 import com.example.rocketcat.adapter.ArticleAdapter
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -42,8 +41,8 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
         binding.rvArticle.apply {
             val linearLayoutManager: LinearLayoutManager
-            adapter = articleAdapter
-            layoutManager = SectionLayoutManager(
+            adapter = articleAdapter.withRefreshHeaderAndLoadStateFooter()
+            layoutManager = LinearLayoutManager(
                 requireActivity(),
                 RecyclerView.VERTICAL,
                 false

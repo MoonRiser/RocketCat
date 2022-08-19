@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.paging.LoadState
+import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.R
@@ -68,7 +70,7 @@ class LoadStateFooterAdapter(
 
     override fun onBindViewHolder(holder: FooterViewHolder, position: Int) {
         when (loadState) {
-            LoadState.Loading -> footerCallback.startLoading(holder.itemView)
+            LoadState.Loading -> footerCallback.onLoading(holder.itemView)
             LoadState.NotLoading.Complete -> footerCallback.onComplete(holder.itemView)
             LoadState.Error -> footerCallback.onError(holder.itemView)
             else -> {}
@@ -108,7 +110,7 @@ interface LoadStateFooterCallback {
 
     fun footerView(parent: ViewGroup): View
 
-    fun startLoading(view: View)
+    fun onLoading(view: View)
 
     fun onError(view: View)
 
@@ -121,14 +123,16 @@ object ProgressLoadStateFooter : LoadStateFooterCallback {
         LayoutInflater.from(parent.context).inflate(R.layout.item_rv_progress_footer_layout, parent, false)
 
 
-    override fun startLoading(view: View) {
+    override fun onLoading(view: View) {
 
+        view.isVisible = true
         view.findViewById<ProgressBar>(R.id.progress_circular).isVisible = true
         view.findViewById<TextView>(R.id.tv_done).isVisible = false
         view.findViewById<TextView>(R.id.tv_failed).isVisible = false
     }
 
     override fun onError(view: View) {
+        view.isVisible = true
         view.findViewById<ProgressBar>(R.id.progress_circular).isVisible = false
         view.findViewById<TextView>(R.id.tv_done).isVisible = false
         view.findViewById<TextView>(R.id.tv_failed).isVisible = true
@@ -136,9 +140,35 @@ object ProgressLoadStateFooter : LoadStateFooterCallback {
     }
 
     override fun onComplete(view: View) {
+        view.isVisible = true
         view.findViewById<ProgressBar>(R.id.progress_circular).isVisible = false
         view.findViewById<TextView>(R.id.tv_done).isVisible = true
         view.findViewById<TextView>(R.id.tv_failed).isVisible = false
+    }
+
+}
+
+class PagingFooterAdapter : LoadStateAdapter<LoadStateFooterAdapter.FooterViewHolder>() {
+
+    private var _onRetry: (() -> Unit)? = null
+
+    fun doOnRetry(action: () -> Unit) {
+        _onRetry = action
+    }
+
+    override fun onBindViewHolder(holder: LoadStateFooterAdapter.FooterViewHolder, loadState: LoadState) {
+        when {
+            loadState is LoadState.NotLoading && loadState.endOfPaginationReached -> ProgressLoadStateFooter.onComplete(holder.itemView)
+            loadState is LoadState.NotLoading && !loadState.endOfPaginationReached -> holder.itemView.isVisible = false
+            loadState is LoadState.Error -> ProgressLoadStateFooter.onError(holder.itemView)
+            loadState is LoadState.Loading -> ProgressLoadStateFooter.onLoading(holder.itemView)
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateFooterAdapter.FooterViewHolder {
+        return LoadStateFooterAdapter.FooterViewHolder(ProgressLoadStateFooter.footerView(parent)).apply {
+            itemView.setOnClickListener { _onRetry?.invoke() }
+        }
     }
 
 }

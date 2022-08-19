@@ -58,9 +58,10 @@ class ArticleViewModel : BaseViewModel() {
 class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int, ContentBean>() {
 
     override fun getRefreshKey(state: PagingState<Int, ContentBean>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.nextKey
-        }
+//        return state.anchorPosition?.let { anchorPosition ->
+//            state.closestPageToPosition(anchorPosition)?.nextKey
+//        }
+        return null
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ContentBean> {
