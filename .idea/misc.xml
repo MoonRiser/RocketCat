@@ -3,9 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2175" />
+        <entry key="app/src/main/res/drawable/ic_fengdian.xml" value="0.35208333333333336" />
+        <entry key="app/src/main/res/drawable/selector_favorite.xml" value="0.2175" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33076923076923076" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/fragment_article.xml" value="0.3446153846153846" />
+        <entry key="app/src/main/res/layout/fragment_bubble.xml" value="0.2994791666666667" />
+        <entry key="app/src/main/res/layout/fragment_dash_board.xml" value="0.35" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.35" />
+        <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.35" />
         <entry key="app/src/main/res/layout/fragment_tab1.xml" value="0.29907407407407405" />
+        <entry key="app/src/main/res/layout/fragment_tab3.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/fragment_tab6_layout.xml" value="0.321875" />
+        <entry key="app/src/main/res/layout/item_rv_article.xml" value="0.3640625" />
+        <entry key="app/src/main/res/layout/item_rv_header_layout.xml" value="0.321875" />
+        <entry key="app/src/main/res/layout/item_rv_test_layout.xml" value="0.321875" />
+        <entry key="app/src/main/res/layout/item_view_gallery.xml" value="0.3359375" />
+        <entry key="app/src/main/res/xml/setting_preference.xml" value="0.3640625" />
+        <entry key="common/src/main/res/layout/common_loading_view.xml" value="0.175" />
+        <entry key="common/src/main/res/layout/item_address_pinyin.xml" value="0.175" />
+        <entry key="common/src/main/res/layout/item_rv_count_down_header_layout.xml" value="0.3640625" />
+        <entry key="common/src/main/res/layout/item_rv_progress_footer_layout.xml" value="0.3359375" />
+        <entry key="common/src/main/res/layout/test_layout.xml" value="0.175" />
       </map>
     </option>
   </component>

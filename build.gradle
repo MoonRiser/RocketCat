@@ -3,11 +3,11 @@
 buildscript {
 
     ext {
-        kotlin_version = '1.6.10'
+        kotlin_version = '1.7.10'
         room_version = "2.4.0-alpha03"
         dynamicanimation_version = "1.0.0"
-        paging_version = "3.1.0"
-        lifecycle_version = "2.4.1"
+        paging_version = "3.1.1"
+        lifecycle_version = "2.5.1"
 
     }
 
@@ -22,7 +22,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
     }
