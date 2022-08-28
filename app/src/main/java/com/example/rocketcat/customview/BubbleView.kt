@@ -10,22 +10,33 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.annotation.ColorInt
 import com.example.common.ext.dp
+import com.example.common.ext.zipWithNextInLoop
 import com.example.rocketcat.R
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-const val MAX_RADIUS = 120
 
 class BubbleView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    companion object {
+        const val MAX_RADIUS = 120
+    }
+
     private var size: PointF? = null
     private val maxDist: Float
-    private val bbPaint: Paint
-    private val bandPaint: Paint
+    private val bbPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+    private val bandPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        alpha = 128
+        style = Paint.Style.FILL
+    }
+
     private val bubbles: MutableList<Bubble> = ArrayList()
     lateinit var states: BooleanArray //false远离；true接近
     private val bubbleNum: Int
@@ -52,6 +63,60 @@ class BubbleView @JvmOverloads constructor(
             invalidate()
         }
 
+    /**
+     * 图表模拟
+     */
+    private val chartColors = listOf("#55ff0000", "#5500ff00", "#550000ff").map { Color.parseColor(it) }
+    private val chartPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        strokeWidth = 2f.dp.toFloat()
+        color = chartColors.first()
+    }
+
+    private val t1 = (1..9).map { (200..500).random() }
+    private val t2 = t1.map { it + 80 * (0..3).random() }
+    private val t3 = t2.map { it + 80 * (0..3).random() }
+
+    private fun List<Int>.toPath(isLine: Boolean = true): Path {
+        val itemWidth = width.toFloat() / (this.size + 1)
+        val path = Path()
+        val xs = (1..this.size).map { itemWidth * it }
+        xs.zip(this).forEachIndexed { index, (x, y) ->
+            if (index == 0) path.moveTo(x, y.toFloat())
+            else path.lineTo(x, y.toFloat())
+        }
+        if (isLine) return path
+        val b = bottom.toFloat()
+        val fx = xs.first()
+        val ex = xs.last()
+        path.lineTo(ex, b)
+        path.lineTo(fx, b)
+        path.close()
+        return path
+    }
+
+    private operator fun Path.minus(other: Path): Path {
+        val result = Path()
+        result.op(this, other, Path.Op.DIFFERENCE)
+        return result
+    }
+
+    private val lines by lazy { listOf(t1.toPath(), t2.toPath(), t3.toPath()) }
+    private val areas by lazy { listOf(t1.toPath(isLine = false), t2.toPath(isLine = false), t3.toPath(isLine = false)) }
+    private val areas2 by lazy { areas.zipWithNextInLoop().mapIndexed { index, (c, n) -> if (index == areas.lastIndex) c else c - n } }
+
+
+    init {
+        val array = context.obtainStyledAttributes(attrs, R.styleable.BubbleView, defStyleAttr, 0)
+        maxDist = 4 * array.getDimension(R.styleable.BubbleView_bubble_radius, 20f)
+        val bubbleColor = array.getColor(R.styleable.BubbleView_bubble_color, Color.BLUE)
+        bubbleNum = array.getInteger(R.styleable.BubbleView_bubble_num, 4)
+        array.recycle()
+
+        bandPaint.color = bubbleColor
+        bbPaint.color = bubbleColor
+    }
+
     class Bubble(var center: PointF, var radius: Int)
 
 
@@ -63,15 +128,11 @@ class BubbleView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawPath(pathToDraw, paint)
-
+        //小球动画
         for (i in bubbles.indices) {
             for (j in i + 1 until bubbles.size) {
                 if (isApproach(bubbles[i], bubbles[j])) {
-//                    states[i] = true;
-//                    states[j] = true;
-                    val path =
-                        getBezPathBetween2dots(bubbles[i], bubbles[j])
+                    val path = getBezPathBetween2dots(bubbles[i], bubbles[j])
                     canvas.drawPath(path, bandPaint)
                 }
             }
@@ -82,6 +143,18 @@ class BubbleView @JvmOverloads constructor(
                 states[i] = false
             }
         }
+        //图表模拟
+        chartPaint.style = Paint.Style.FILL
+        areas2.onEachIndexed { index, path ->
+            chartPaint.color = chartColors[index]
+            canvas.drawPath(path, chartPaint)
+        }
+        chartPaint.color = Color.YELLOW
+        chartPaint.style = Paint.Style.STROKE
+        lines.onEach { canvas.drawPath(it, chartPaint) }
+        //手写痕迹
+        canvas.drawPath(pathToDraw, paint)
+
     }
 
     private fun initView(w: Int, h: Int) {
@@ -125,10 +198,8 @@ class BubbleView @JvmOverloads constructor(
         val r = bubble.radius
         val p1 = getRandomDot((p0.x * p0.y).toInt())
         val p2 = getRandomDot((p0.x * p0.y * r).toInt())
-        val bx =
-            (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x
-        val by =
-            (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y
+        val bx = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x
+        val by = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y
         return PointF(bx, by)
     }
 
@@ -164,49 +235,26 @@ class BubbleView @JvmOverloads constructor(
         val x = sqrt(h * h + v * v.toDouble()).toFloat() //斜边。勾股定理
         val cos0 = h / x
         val sin0 = v / x
-        val Ax = f1.x - b1.radius * sin0
-        val Ay = f1.y - b1.radius * cos0
-        val Dx = f1.x + b1.radius * sin0
-        val Dy = f1.y + b1.radius * cos0
-        val Bx = f2.x - b2.radius * sin0
-        val By = f2.y - b2.radius * cos0
-        val Cx = f2.x + b2.radius * sin0
-        val Cy = f2.y + b2.radius * cos0
-        val oval1 =
-            RectF(f1.x - b1.radius, f1.y - b1.radius, f1.x + b1.radius, f1.y + b1.radius)
-        val oval2 =
-            RectF(f2.x - b1.radius, f2.y - b1.radius, f2.x + b1.radius, f2.y + b1.radius)
-        val sita1 =
-            (Math.PI - Math.asin(sin0.toDouble())).toFloat()
+        val ax = f1.x - b1.radius * sin0
+        val ay = f1.y - b1.radius * cos0
+        val dx = f1.x + b1.radius * sin0
+        val dy = f1.y + b1.radius * cos0
+        val bx = f2.x - b2.radius * sin0
+        val by = f2.y - b2.radius * cos0
+        val cx = f2.x + b2.radius * sin0
+        val cy = f2.y + b2.radius * cos0
+
         val path = Path()
         path.reset()
-        path.moveTo(Ax, Ay)
-        path.quadTo(anchorX, anchorY, Bx, By)
+        path.moveTo(ax, ay)
+        path.quadTo(anchorX, anchorY, bx, by)
         //        path.addArc(oval2, sita1 + 180, 180);
-        path.lineTo(Cx, Cy)
-        path.quadTo(anchorX, anchorY, Dx, Dy)
+        path.lineTo(cx, cy)
+        path.quadTo(anchorX, anchorY, dx, dy)
         //        path.addArc(oval1, 90 - sita1, 180);
         path.close()
         return path
     }
 
-
-    init {
-        val array =
-            context.obtainStyledAttributes(attrs, R.styleable.BubbleView, defStyleAttr, 0)
-        maxDist = 4 * array.getDimension(R.styleable.BubbleView_bubble_radius, 20f)
-        val bubbleColor =
-            array.getColor(R.styleable.BubbleView_bubble_color, Color.BLUE)
-        bubbleNum = array.getInteger(R.styleable.BubbleView_bubble_num, 4)
-        array.recycle()
-
-        bandPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        bandPaint.color = bubbleColor
-        bandPaint.alpha = 128
-        bandPaint.style = Paint.Style.FILL
-        bbPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        bbPaint.color = bubbleColor
-        bbPaint.style = Paint.Style.FILL
-    }
 
 }

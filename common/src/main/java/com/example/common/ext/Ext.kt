@@ -167,6 +167,22 @@ fun Canvas.drawRing(cx: Float, cy: Float, radius: Float, ringWidth: Float, paint
 infix fun PointF.distanceTo(destination: PointF): Float =
     hypot(x - destination.x, y - destination.y)
 
+inline fun <T, R> Iterable<T>.zipWithNextInLoop(transform: (a: T, b: T) -> R): List<R> {
+    val iterator = iterator()
+    if (!iterator.hasNext()) return emptyList()
+    val result = mutableListOf<R>()
+    var current = iterator.next()
+    while (iterator.hasNext()) {
+        val next = iterator.next()
+        result.add(transform(current, next))
+        current = next
+    }
+    if (result.isNotEmpty()) result.add(transform(last(), first()))
+    return result
+}
+
+fun <T> Iterable<T>.zipWithNextInLoop() = zipWithNextInLoop { a, b -> a to b }
+
 
 //作者：谷歌开发者
 //链接：https://zhuanlan.zhihu.com/p/270002338
