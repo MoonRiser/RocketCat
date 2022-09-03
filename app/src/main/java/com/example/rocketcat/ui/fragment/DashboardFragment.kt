@@ -16,8 +16,8 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
-import com.example.common.base.listAdapterOf
-import com.example.common.base.withViewHolder
+import com.example.common.dsl.listAdapterOf
+import com.example.common.dsl.withViewHolder
 import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
@@ -128,11 +128,13 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
                     anim1Y.cancel()
                     isMoved = false
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     isMoved = true
                     binding.fab.x = event.rawX - xDiffLeft
                     binding.fab.y = event.rawY - yDiffTop
                 }
+
                 MotionEvent.ACTION_UP -> {
                     //处理重写触摸事件后的冲突
                     if (!isMoved) {
@@ -201,12 +203,14 @@ class DashboardFragment : BaseFragment<BaseViewModel, FragmentDashBoardBinding>(
                     anim.cancel()
                     previousRotation = updateCurrentRotation(v, event)
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     currentRotation = updateCurrentRotation(v, event)
                     binding.imgArrow.rotation += (currentRotation - previousRotation)
                     previousRotation = currentRotation
 
                 }
+
                 MotionEvent.ACTION_UP -> anim.start()
             }
             true

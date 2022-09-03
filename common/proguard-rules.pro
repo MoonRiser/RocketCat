@@ -45,3 +45,8 @@
     @androidx.annotation.Keep <init>(...);
 }
 
+#-keep class * extends androidx.databinding.ViewDataBinding {
+#
+#    public static *** inflate(...);
+#}
+

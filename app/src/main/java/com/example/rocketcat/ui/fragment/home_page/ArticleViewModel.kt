@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.example.common.base.BaseViewModel
 import com.example.common.data.network.NetworkApi
+import com.example.common.dsl.DataItem
 import com.example.rocketcat.ui.fragment.response.AdBean
 import com.example.rocketcat.ui.fragment.response.ApiService
-import com.example.rocketcat.ui.fragment.response.ContentBean
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class ArticleViewModel : BaseViewModel() {
@@ -23,7 +22,7 @@ class ArticleViewModel : BaseViewModel() {
     val articleFlow = Pager(
         // Configure how data is loaded by passing additional properties to
         // PagingConfig, such as prefetchDistance.
-        PagingConfig(pageSize = 10)
+        PagingConfig(pageSize = 30)
     ) {
         ArticlePagingSource(apiService)
     }.flow.cachedIn(viewModelScope)
@@ -55,21 +54,21 @@ class ArticleViewModel : BaseViewModel() {
 }
 
 
-class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int, ContentBean>() {
+class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int, DataItem>() {
 
-    override fun getRefreshKey(state: PagingState<Int, ContentBean>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, DataItem>): Int? {
 //        return state.anchorPosition?.let { anchorPosition ->
 //            state.closestPageToPosition(anchorPosition)?.nextKey
 //        }
         return null
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ContentBean> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataItem> {
 
         val pageNo = params.key ?: 0
         return try {
             val rsp = apiService.getArticleList(pageNo).data
-            val datas = rsp.datas + listOf(AdBean)
+            val datas = rsp.datas + AdBean
             val next = if (rsp.hasMore) pageNo + 1 else null
             LoadResult.Page(data = datas, prevKey = null, nextKey = next)
         } catch (e: Exception) {

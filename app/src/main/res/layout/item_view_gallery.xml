@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:shapeAppearance="@style/RoundCornerShape16dp"
-        app:src="@{dataItem.id}"
+        app:src="@{dataItem.imageId}"
         tools:src="@drawable/ads">
 
 

@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import androidx.appcompat.widget.AppCompatImageView
 
-class AdImageView(
+class AdImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -32,12 +32,11 @@ class AdImageView(
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        if (drawable == null) return
         minHeight = h
         //获取图片的真实比例，然后按照设定的宽，获得高度
         realHeight = (w.toFloat() / drawable.intrinsicWidth * drawable.intrinsicHeight).toInt()
         drawable.setBounds(0, 0, w, realHeight)
-
-
     }
 
     override fun onDraw(canvas: Canvas) {

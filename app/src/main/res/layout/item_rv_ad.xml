@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="dataItem"
+            type="com.example.rocketcat.ui.fragment.response.AdBean"/>
+    </data>
+
+    <com.example.rocketcat.customview.AdImageView
+        android:src="@drawable/cp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+</layout>
+
+
+

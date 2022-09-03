@@ -2,6 +2,7 @@ package com.example.rocketcat.ui.fragment.response
 
 import android.os.Parcelable
 import android.widget.CompoundButton
+import com.example.common.dsl.DataItem
 import kotlinx.parcelize.Parcelize
 
 
@@ -53,7 +54,7 @@ data class ArticleBean(
     val userId: Int = 0,
     val visible: Int = 0,
     val zan: Int = 0
-) : Parcelable, ContentBean() {
+) : Parcelable, ContentBean(id) {
 
     fun onCheck(v: CompoundButton, isSelect: Boolean) {
         collect = isSelect
@@ -66,5 +67,5 @@ data class Tag(
     val url: String = ""
 ) : Parcelable
 
-sealed class ContentBean
-object AdBean : ContentBean()
+sealed class ContentBean(_id: Int) : DataItem(_id)
+object AdBean : ContentBean(-1)

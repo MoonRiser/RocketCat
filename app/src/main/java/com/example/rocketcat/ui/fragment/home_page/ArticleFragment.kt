@@ -13,8 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
-import com.example.rocketcat.adapter.ArticleAdapter
+import com.example.common.dsl.pagingAdapterOf
+import com.example.common.dsl.withViewHolder
+import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.FragmentArticleBinding
+import com.example.rocketcat.databinding.ItemRvAdBinding
+import com.example.rocketcat.databinding.ItemRvArticleBinding
+import com.example.rocketcat.ui.fragment.response.AdBean
+import com.example.rocketcat.ui.fragment.response.ArticleBean
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,7 +31,10 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
         private const val TAG = "ArticleFragment"
     }
 
-    private val articleAdapter = ArticleAdapter()
+    private val articleAdapter = pagingAdapterOf {
+        withViewHolder<ArticleBean, ItemRvArticleBinding> { }
+        withViewHolder<AdBean, ItemRvAdBinding>()
+    }
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -53,10 +62,10 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                     val lastPosition = linearLayoutManager.findLastVisibleItemPosition()
                     for (i in firstPosition..lastPosition) {
                         val viewHolder = findViewHolderForAdapterPosition(i)
-                        if (viewHolder is ArticleAdapter.AdViewHolder) {
-                            viewHolder.imageView.setOffset(
+                        if (viewHolder?.itemViewType == 2) {
+                            (viewHolder.itemView as AdImageView).setOffset(
                                 recyclerView.height,
-                                viewHolder.imageView.top
+                                viewHolder.itemView.top
                             )
                         }
 

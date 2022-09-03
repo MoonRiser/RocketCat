@@ -5,16 +5,16 @@
 
         <variable
             name="dataItem"
-            type="com.example.common.base.DataItem" />
+            type="com.example.common.dsl.DataItem"/>
 
         <variable
             name="viewModel"
-            type="com.example.common.base.BaseViewModel" />
+            type="com.example.common.base.BaseViewModel"/>
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
 
     </LinearLayout>
 </layout>
