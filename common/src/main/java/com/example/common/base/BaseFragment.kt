@@ -36,7 +36,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): View? {
         return createBinding(inflater, container).let {
             _binding = it
-            it.lifecycleOwner = this
+            it.lifecycleOwner = this.viewLifecycleOwner
             viewModel = createViewModel()
             it.setVariable(BR.viewModel, viewModel)
             it.root

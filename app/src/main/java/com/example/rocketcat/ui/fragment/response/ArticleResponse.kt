@@ -29,7 +29,7 @@ data class ArticleBean(
     val chapterName: String = "",
     var collect: Boolean = false,
     val courseId: Int = 0,
-    val desc: String = "",
+    var desc: String = "",
     val descMd: String = "",
     val envelopePic: String = "",
     val fresh: Boolean = false,
@@ -54,7 +54,7 @@ data class ArticleBean(
     val userId: Int = 0,
     val visible: Int = 0,
     val zan: Int = 0
-) : Parcelable, ContentBean(id) {
+) : Parcelable, DataItem(id) {
 
     fun onCheck(v: CompoundButton, isSelect: Boolean) {
         collect = isSelect
@@ -67,5 +67,5 @@ data class Tag(
     val url: String = ""
 ) : Parcelable
 
-sealed class ContentBean(_id: Int) : DataItem(_id)
-object AdBean : ContentBean(-1)
+
+object AdBean : DataItem(-1)

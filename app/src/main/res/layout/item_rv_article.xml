@@ -3,26 +3,26 @@
 
     <data>
 
-        <import type="android.text.TextUtils" />
+        <import type="android.text.TextUtils"/>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="dataItem"
-            type="com.example.rocketcat.ui.fragment.response.ArticleBean" />
+            type="com.example.rocketcat.ui.fragment.response.ArticleBean"/>
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp">
+                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                       xmlns:tools="http://schemas.android.com/tools"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="wrap_content"
+                                       android:layout_marginVertical="4dp"
+                                       android:layout_marginLeft="8dp"
+                                       android:layout_marginRight="8dp"
+                                       android:foreground="?android:attr/selectableItemBackground"
+                                       app:cardCornerRadius="4dp"
+                                       app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{TextUtils.isEmpty(dataItem.author)?dataItem.shareUser:dataItem.author}"
                     android:textSize="13dp"
-                    tools:text="有何高见" />
+                    tools:text="有何高见"/>
 
                 <TextView
                     android:id="@+id/item_home_top"
@@ -55,7 +55,7 @@
                     android:text="置顶"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="10dp"
-                    android:visibility="@{dataItem.type==1?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{dataItem.type==1?View.VISIBLE:View.GONE}"/>
 
                 <TextView
                     android:id="@+id/item_home_new"
@@ -67,7 +67,7 @@
                     android:text="新"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="10dp"
-                    android:visibility="@{dataItem.fresh?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{dataItem.fresh?View.VISIBLE:View.GONE}"/>
 
                 <TextView
                     android:id="@+id/item_home_type1"
@@ -78,12 +78,12 @@
                     android:paddingRight="3dp"
                     android:text="问答"
                     android:textColor="@android:color/holo_green_dark"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"/>
 
                 <TextView
                     android:id="@+id/item_home_date"
@@ -92,7 +92,7 @@
                     android:layout_marginEnd="8dp"
                     android:text="@{dataItem.niceDate}"
                     android:textSize="13dp"
-                    tools:text="1小时前" />
+                    tools:text="1小时前"/>
             </LinearLayout>
 
             <TextView
@@ -107,7 +107,7 @@
                 android:text="@{dataItem.title}"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                tools:text="这是一个根据JetpackMvvm框架开发玩Android的一个APP" />
+                tools:text="这是一个根据JetpackMvvm框架开发玩Android的一个APP"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -124,7 +124,8 @@
                     android:layout_marginBottom="12dp"
                     android:text='@{dataItem.superChapterName+"·"+dataItem.chapterName}'
                     android:textSize="13dp"
-                    tools:text="分类·项目" />
+                    tools:text="分类·项目"/>
+
 
                 <CheckBox
                     android:id="@+id/item_home_collect"
@@ -136,8 +137,16 @@
                     android:backgroundTint="@drawable/selector_favorite"
                     android:button="@drawable/ic_baseline_favorite_24"
                     android:checked="@{dataItem.collect}"
-                    android:onCheckedChanged="@{dataItem::onCheck}" />
+                    android:onCheckedChanged="@{dataItem::onCheck}"/>
+
             </RelativeLayout>
+
+            <TextView
+                android:layout_margin="8dp"
+                android:text="@{dataItem.desc}"
+                tools:text="-------"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

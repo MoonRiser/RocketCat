@@ -1,8 +1,6 @@
 package com.example.rocketcat.ui.fragment.home_page
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.example.common.base.BaseViewModel
@@ -11,7 +9,10 @@ import com.example.common.dsl.DataItem
 import com.example.rocketcat.ui.fragment.response.AdBean
 import com.example.rocketcat.ui.fragment.response.ApiService
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class ArticleViewModel : BaseViewModel() {
 
@@ -27,29 +28,15 @@ class ArticleViewModel : BaseViewModel() {
         ArticlePagingSource(apiService)
     }.flow.cachedIn(viewModelScope)
 
-    private val _logger = MutableLiveData<Long>()
+    val visibleRange = MutableStateFlow(IntRange.EMPTY)
 
-    val logger = _logger.switchMap<Long, String> {
-        liveData {
-            source(it).collect {
-                emit(it)
-            }
+    val subscription = visibleRange
+        .sample(300)
+        .onEach {
+            Log.d("xres", "sample is:$it")
+        }.flatMapLatest {
+            TemperatureSource.temperaturesOf(*it.toList().toIntArray())
         }
-    }
-
-    private var i = 0L
-    fun change() {
-        i++
-        _logger.value = i * 1000
-    }
-
-    private fun source(delay: Long) = flow {
-        while (true) {
-            delay(delay)
-            emit("current timeStamp with delay $delay : ${System.currentTimeMillis()}")
-        }
-    }
-
 
 }
 
@@ -76,5 +63,54 @@ class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int
         }
 
     }
+
+}
+
+/**
+ * - 温度源；模拟订阅场景
+ */
+object TemperatureSource {
+
+    private const val PERIOD = 1500L
+    private const val TEMP_PERIOD = 800L
+
+    private val DELAY get() = (TEMP_PERIOD..PERIOD).random()
+
+    private val nowFormatted: String
+        get() = DateTimeFormatter
+//        .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+            .ofPattern("HH:mm:ss")
+            .withZone(ZoneOffset.UTC)
+            .format(Instant.now())
+
+    val now = flow {
+        while (true) {
+            delay(DELAY)
+            emit(Unit)
+        }
+    }
+
+    val temperature = flow {
+        while (true) {
+            val n = (-27..47).random()
+            delay(DELAY)
+            emit(n)
+        }
+    }
+
+    val content = now.combine(temperature) { _, t ->
+        "$nowFormatted 气温: $t °C"
+    }
+
+    fun temperatureOf(index: Int) = content.map { "$index # $it" }
+
+    /**
+     * 模拟订阅场景
+     */
+    fun temperaturesOf(vararg indexs: Int): Flow<Pair<Int, String>> =
+        indexs.map { index ->
+            temperatureOf(index).map { index to it }
+        }.merge()
+
 
 }

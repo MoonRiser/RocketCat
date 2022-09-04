@@ -67,7 +67,7 @@ dependencies {
     //  调色盘
     api 'androidx.palette:palette-ktx:1.0.0'
     //  协程Coroutine
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
 
     //retrofit

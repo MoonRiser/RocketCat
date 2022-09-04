@@ -48,6 +48,13 @@ class BindingPagingAdapter(
         holder.bind(dataItem)
     }
 
+    /**
+     * @param block 函数类型返回值决定要不要执行更新操作
+     */
+    fun updateItem(position: Int, block: (dataItem: DataItem?) -> Boolean) {
+        if (block(peek(position))) notifyItemChanged(position)
+    }
+
     fun withRefreshHeaderAndLoadStateFooter(
         header: RefreshHeaderAdapter = RefreshHeaderAdapter(),
         footer: PagingFooterAdapter = PagingFooterAdapter()

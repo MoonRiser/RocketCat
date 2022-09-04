@@ -286,3 +286,10 @@ fun Activity.enableFullScreen() {
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 }
+
+inline fun <reified T> Any.isInstance(block: (T) -> Unit = {}): T? {
+    return if (this is T) {
+        block.invoke(this)
+        this
+    } else null
+}
