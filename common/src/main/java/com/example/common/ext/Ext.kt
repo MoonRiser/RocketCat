@@ -23,9 +23,8 @@ import androidx.fragment.app.FragmentActivity
 import com.example.common.R
 import com.example.common.utils.dp2px
 import com.google.android.material.color.MaterialColors
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.SharedFlow
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -292,4 +291,41 @@ inline fun <reified T> Any.isInstance(block: (T) -> Unit = {}): T? {
         block.invoke(this)
         this
     } else null
+}
+
+suspend inline fun retryBy(
+    controller: SharedFlow<Any>,
+    crossinline block: suspend CoroutineScope.() -> Unit
+) {
+
+    // Instance of the running repeating coroutine
+
+    coroutineScope {
+
+        var launchedJob: Job? = null
+
+        try {
+            if (controller.replayCache.isEmpty()) {
+                launchedJob = this@coroutineScope.launch {
+                    coroutineScope {
+                        block()
+                    }
+                }
+            }
+            controller.collect {
+                launchedJob?.cancel()
+                launchedJob = this@coroutineScope.launch {
+                    coroutineScope {
+                        block()
+                    }
+                }
+
+            }
+        } finally {
+
+        }
+
+
+    }
+
 }
