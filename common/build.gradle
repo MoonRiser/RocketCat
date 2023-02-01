@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 
 android {
-    compileSdkVersion 32
+    compileSdk 32
     android.buildFeatures.dataBinding = true
 
 

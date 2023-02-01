@@ -4,9 +4,9 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 32
+    compileSdk 32
     android.buildFeatures.dataBinding = true
-
+    android.buildFeatures.viewBinding = true
     compileOptions {
 
         // Flag to enable support for the new language APIs

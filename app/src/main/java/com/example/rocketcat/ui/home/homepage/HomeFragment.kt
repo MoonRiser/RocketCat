@@ -29,7 +29,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
 
     override fun initView(view: View, savedInstanceState: Bundle?) {
-        binding.vp2Tab.init(this, fragments)
+        binding.vp2Tab.init(this, fragments, isUserInputEnabled = false)
         TabLayoutMediator(binding.tabHome, binding.vp2Tab) { tab, position ->
             tab.text = "Title" + (position + 1)
         }.also { it.attach() }
