@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.home_page.Tab2Fragment">
+        tools:context=".ui.home.homepage.tab2.Tab2Fragment">
 
         <ImageView
             android:id="@+id/imgGS"
@@ -16,7 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
 
         <TextView

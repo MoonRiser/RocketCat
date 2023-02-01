@@ -1,11 +1,11 @@
-package com.example.rocketcat.ui.fragment.response
+package com.example.rocketcat.ui.home.homepage.article
 
 
 import com.example.common.data.network.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface ApiService {
+interface ArticleApiService {
 
 
     /**

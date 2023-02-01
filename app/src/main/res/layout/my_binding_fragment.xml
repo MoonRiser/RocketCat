@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.example.rocketcat.ui.fragment.home_page.MyBindingViewModel" />
+            type="com.example.rocketcat.ui.home.homepage.tab5.MyBindingViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.home_page.MyBindingFragment">
+        tools:context=".ui.home.homepage.tab5.MyBindingFragment">
 
 
         <EditText

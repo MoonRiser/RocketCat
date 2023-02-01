@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.activity
+package com.example.rocketcat.ui.mainpage
 
 import android.animation.ArgbEvaluator
 import android.content.Context

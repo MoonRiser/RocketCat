@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.response
+package com.example.rocketcat.ui.home.homepage.article
 
 import android.os.Parcelable
 import android.widget.CompoundButton

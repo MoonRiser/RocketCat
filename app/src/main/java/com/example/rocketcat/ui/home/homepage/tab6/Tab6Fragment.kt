@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab6
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -14,7 +14,7 @@ import com.example.common.dsl.withLoadStateHeaderAndFooter
 import com.example.common.dsl.withViewHolder
 import com.example.rocketcat.databinding.FragmentTab6LayoutBinding
 import com.example.rocketcat.databinding.ItemRvTestLayoutBinding
-import com.example.rocketcat.ui.fragment.HomeViewModel
+import com.example.rocketcat.ui.home.homepage.HomeViewModel
 import com.xres.address_selector.ext.showToast
 import java.text.SimpleDateFormat
 import java.util.*

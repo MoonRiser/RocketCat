@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.article
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -6,8 +6,6 @@ import androidx.paging.*
 import com.example.common.base.BaseViewModel
 import com.example.common.data.network.NetworkApi
 import com.example.common.dsl.DataItem
-import com.example.rocketcat.ui.fragment.response.AdBean
-import com.example.rocketcat.ui.fragment.response.ApiService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import java.time.Instant
@@ -17,7 +15,7 @@ import java.time.format.DateTimeFormatter
 class ArticleViewModel : BaseViewModel() {
 
 
-    private val apiService by lazy { NetworkApi.service<ApiService>() }
+    private val articleApiService by lazy { NetworkApi.service<ArticleApiService>() }
 
 
     val articleFlow = Pager(
@@ -25,7 +23,7 @@ class ArticleViewModel : BaseViewModel() {
         // PagingConfig, such as prefetchDistance.
         PagingConfig(pageSize = 30)
     ) {
-        ArticlePagingSource(apiService)
+        ArticlePagingSource(articleApiService)
     }.flow.cachedIn(viewModelScope)
 
     val visibleRange = MutableStateFlow(IntRange.EMPTY)
@@ -41,7 +39,7 @@ class ArticleViewModel : BaseViewModel() {
 }
 
 
-class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int, DataItem>() {
+class ArticlePagingSource(private val articleApiService: ArticleApiService) : PagingSource<Int, DataItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, DataItem>): Int? {
 //        return state.anchorPosition?.let { anchorPosition ->
@@ -54,7 +52,7 @@ class ArticlePagingSource(private val apiService: ApiService) : PagingSource<Int
 
         val pageNo = params.key ?: 0
         return try {
-            val rsp = apiService.getArticleList(pageNo).data
+            val rsp = articleApiService.getArticleList(pageNo).data
             val datas = rsp.datas + AdBean
             val next = if (rsp.hasMore) pageNo + 1 else null
             LoadResult.Page(data = datas, prevKey = null, nextKey = next)

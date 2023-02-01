@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.article
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -18,8 +18,6 @@ import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import com.example.rocketcat.databinding.ItemRvAdBinding
 import com.example.rocketcat.databinding.ItemRvArticleBinding
-import com.example.rocketcat.ui.fragment.response.AdBean
-import com.example.rocketcat.ui.fragment.response.ArticleBean
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

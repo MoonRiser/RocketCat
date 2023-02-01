@@ -9,7 +9,7 @@
 
         <variable
             name="dataItem"
-            type="com.example.rocketcat.ui.fragment.response.ArticleBean"/>
+            type="com.example.rocketcat.ui.home.homepage.article.ArticleBean"/>
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.SplashActivity"
+            android:name=".ui.mainpage.SplashActivity"
             android:theme="@style/NoActionBarTheme"
             android:exported="true">
             <intent-filter>
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.mainpage.MainActivity"
             android:theme="@style/MyMaterialTheme" />
     </application>
 

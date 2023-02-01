@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.rocketcat.ui.fragment.home_page.ArticleViewModel"/>
+            type="com.example.rocketcat.ui.home.homepage.article.ArticleViewModel"/>
     </data>
 
 

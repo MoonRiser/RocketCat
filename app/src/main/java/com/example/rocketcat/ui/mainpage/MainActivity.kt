@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.activity
+package com.example.rocketcat.ui.mainpage
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,10 +12,10 @@ import com.example.common.dialog.customDialogOf
 import com.example.common.ext.init
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.ActivityMainBinding
-import com.example.rocketcat.ui.fragment.BubbleFragment
-import com.example.rocketcat.ui.fragment.DashboardFragment
-import com.example.rocketcat.ui.fragment.HomeFragment
-import com.example.rocketcat.ui.fragment.SettingFragment
+import com.example.rocketcat.ui.home.BubbleFragment
+import com.example.rocketcat.ui.home.DashboardFragment
+import com.example.rocketcat.ui.home.SettingFragment
+import com.example.rocketcat.ui.home.homepage.HomeFragment
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 

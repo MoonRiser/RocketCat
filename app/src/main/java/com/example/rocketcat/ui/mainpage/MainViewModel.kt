@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.activity
+package com.example.rocketcat.ui.mainpage
 
 import android.media.AudioAttributes
 import android.media.AudioAttributes.CONTENT_TYPE_MUSIC

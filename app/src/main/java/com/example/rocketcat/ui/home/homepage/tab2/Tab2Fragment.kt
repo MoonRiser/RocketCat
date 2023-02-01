@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab2
 
 import android.content.res.ColorStateList
 import android.graphics.Color

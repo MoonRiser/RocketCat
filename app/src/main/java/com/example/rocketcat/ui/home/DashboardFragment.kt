@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment
+package com.example.rocketcat.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context

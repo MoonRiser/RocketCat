@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab5
 
 import android.os.Bundle
 import android.view.View

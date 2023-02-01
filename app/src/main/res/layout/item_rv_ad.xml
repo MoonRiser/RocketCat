@@ -4,7 +4,7 @@
     <data>
         <variable
             name="dataItem"
-            type="com.example.rocketcat.ui.fragment.response.AdBean"/>
+            type="com.example.rocketcat.ui.home.homepage.article.AdBean"/>
     </data>
 
     <com.example.rocketcat.customview.AdImageView

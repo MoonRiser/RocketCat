@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab1
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import com.example.common.base.BaseFragment
 import com.example.common.dialog.customDialogOf
 import com.example.common.ext.showToast
 import com.example.rocketcat.databinding.FragmentTab1Binding
-import com.example.rocketcat.ui.fragment.HomeViewModel
+import com.example.rocketcat.ui.home.homepage.HomeViewModel
 import com.xres.address_selector.db.entity.Area
 import com.xres.address_selector.db.entity.City
 import com.xres.address_selector.db.entity.Province
@@ -18,7 +18,6 @@ import com.xres.address_selector.widget.address_selector.AddressSelector
 import com.xres.address_selector.widget.address_selector.OnSelectedListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 

@@ -6,13 +6,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.SplashActivity">
+        tools:context=".ui.mainpage.SplashActivity">
 
         <ImageView
             android:id="@+id/img_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:background="@color/colorPrimary" />
+            tools:background="@color/colorPrimary"/>
 
         <ImageView
             android:id="@+id/img_desert"

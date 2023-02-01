@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.rocketcat.ui.fragment.SettingViewModel" />
+            type="com.example.rocketcat.ui.home.SettingViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

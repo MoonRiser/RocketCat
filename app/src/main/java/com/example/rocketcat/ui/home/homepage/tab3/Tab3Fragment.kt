@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab3
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import com.example.common.ext.enableNestedScroll
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.MyGalleryAdapter
 import com.example.rocketcat.databinding.FragmentTab3Binding
-import com.example.rocketcat.ui.fragment.HomeViewModel
+import com.example.rocketcat.ui.home.homepage.HomeViewModel
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

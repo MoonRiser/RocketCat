@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment
+package com.example.rocketcat.ui.home
 
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +13,7 @@ import com.example.common.ext.dataStore
 import com.example.rocketcat.R
 import com.example.rocketcat.adapter.BlurTransformation
 import com.example.rocketcat.databinding.FragmentSettingBinding
-import com.example.rocketcat.ui.activity.SplashActivity
+import com.example.rocketcat.ui.mainpage.SplashActivity
 import kotlinx.coroutines.launch
 
 

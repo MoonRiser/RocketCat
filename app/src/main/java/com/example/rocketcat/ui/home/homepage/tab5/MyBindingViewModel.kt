@@ -1,4 +1,4 @@
-package com.example.rocketcat.ui.fragment.home_page
+package com.example.rocketcat.ui.home.homepage.tab5
 
 import androidx.databinding.*
 import androidx.lifecycle.MutableLiveData
@@ -10,11 +10,8 @@ import com.example.common.ext.showToast
 import com.example.rocketcat.BR
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 
 class MyBindingViewModel : BaseViewModel() {
 
