@@ -4,7 +4,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 32
+    compileSdk 33
     android.buildFeatures.dataBinding = true
     android.buildFeatures.viewBinding = true
     compileOptions {
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "com.example.rocketcat"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,6 +44,7 @@ android {
         }
 
     }
+    namespace 'com.example.rocketcat'
 
 }
 

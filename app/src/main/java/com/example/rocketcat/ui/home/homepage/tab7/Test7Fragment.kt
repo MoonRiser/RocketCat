@@ -5,15 +5,11 @@ import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.example.rocketcat.R
 import com.example.rocketcat.databinding.FragmentTest7Binding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * @author xres
@@ -42,15 +38,6 @@ class Test7Fragment : Fragment(R.layout.fragment_test7) {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 binding.lifeState.text = event.name
                 Log.i("xres", "page is $name ,event is ${event.name} ")
-                if (event == Lifecycle.Event.ON_RESUME) {
-                    lifecycleScope.launch {
-                        delay(1000)
-                        parentFragmentManager.commit {
-                            setMaxLifecycle(this@Test7Fragment, Lifecycle.State.CREATED)
-                            Log.i("xres", "commit it ")
-                        }
-                    }
-                }
             }
         })
 

@@ -42,7 +42,6 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
     }
 
 
-
     @SuppressLint("ClickableViewAccessibility")
     override fun initView(view: View, savedInstanceState: Bundle?) {
 
@@ -51,11 +50,11 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
         val listener: SimpleOnGestureListener = object : SimpleOnGestureListener() {
 
             //这里return true，下面的双击事件才能响应
-            override fun onDown(e: MotionEvent?): Boolean {
+            override fun onDown(e: MotionEvent): Boolean {
                 return true
             }
 
-            override fun onLongPress(e: MotionEvent?) {
+            override fun onLongPress(e: MotionEvent) {
                 temp.reset()
                 showToast("长按清空手写")
                 super.onLongPress(e)
@@ -63,7 +62,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
 
             // Give a callback with down event of the double-tap
             //onDoubleTap() 回调之后的输入事件(DOWN、MOVE、UP)都会触发这个方法(该方法可以实现一些双击后的控制，如让 View 双击后变得可拖动等)
-            override fun onDoubleTapEvent(e: MotionEvent?): Boolean {
+            override fun onDoubleTapEvent(e: MotionEvent): Boolean {
 //                showToast("double click!")
                 return super.onDoubleTapEvent(e)
             }
@@ -71,7 +70,7 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
             /**
              *  Give a callback with the first tap of the double-tap
              */
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
 //                showToast("double click!")
                 if (animator.isPaused) {
                     animator.resume()
