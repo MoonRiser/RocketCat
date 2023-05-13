@@ -21,7 +21,6 @@
     </scriptDefinition>
     <scriptDefinition className="org.jetbrains.kotlin.idea.core.script.StandardIdeScriptDefinition" definitionName="Kotlin Script">
       <order>6</order>
-      <autoReloadConfigurations>true</autoReloadConfigurations>
     </scriptDefinition>
   </component>
 </project>
