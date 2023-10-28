@@ -80,7 +80,8 @@ class BubbleFragment : BaseFragment<BaseViewModel, FragmentBubbleBinding>() {
                 return super.onDoubleTap(e)
             }
 
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+                if (e1 == null) return false
                 if (!isScroll) {
                     path.moveTo(e1.x, e1.y)
                 }

@@ -46,7 +46,7 @@ class SplashActivity : BaseActivity<BaseViewModel, ActivitySplashBinding>(), Sen
     private val evaluator = ArgbEvaluator()
 
     private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    private val sensor: Sensor by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
+    private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) }
 
     override fun layoutId() = R.layout.activity_splash
 

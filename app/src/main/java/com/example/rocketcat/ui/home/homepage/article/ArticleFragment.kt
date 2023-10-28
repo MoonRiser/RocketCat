@@ -39,6 +39,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
 
         binding.horizontalRv.apply {
             adapter = articleAdapter
+            itemAnimator = null
             layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.HORIZONTAL, false).apply {
                 spanSizeLookup = GridLayoutManager.DefaultSpanSizeLookup()
             }
@@ -48,6 +49,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
         binding.rvArticle.apply {
             val linearLayoutManager: LinearLayoutManager
             adapter = articleAdapter.withRefreshHeaderAndLoadStateFooter()
+            itemAnimator = null
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 RecyclerView.VERTICAL,

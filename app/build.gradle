@@ -4,7 +4,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 33
+    compileSdk 34
     android.buildFeatures.dataBinding = true
     android.buildFeatures.viewBinding = true
     compileOptions {
@@ -45,6 +45,7 @@ android {
 
     }
     namespace 'com.example.rocketcat'
+    buildToolsVersion '34.0.0'
 
 }
 
