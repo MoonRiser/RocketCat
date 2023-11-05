@@ -286,9 +286,9 @@ fun Activity.enableFullScreen() {
     }
 }
 
-inline fun <reified T> Any.isInstance(block: (T) -> Unit = {}): T? {
+inline fun <reified T> Any.isInstance(block: T.(T) -> Unit = {}): T? {
     return if (this is T) {
-        block.invoke(this)
+        block.invoke(this, this)
         this
     } else null
 }

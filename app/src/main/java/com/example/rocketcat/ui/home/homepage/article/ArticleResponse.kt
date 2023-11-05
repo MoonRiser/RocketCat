@@ -69,3 +69,5 @@ data class Tag(
 
 
 object AdBean : DataItem(-1)
+
+object StickyBean : DataItem(-1)

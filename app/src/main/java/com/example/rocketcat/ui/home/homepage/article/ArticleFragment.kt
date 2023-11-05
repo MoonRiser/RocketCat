@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
 import com.example.common.dsl.BindingViewHolder
+import com.example.common.dsl.StickyDecoration
 import com.example.common.dsl.pagingAdapterOf
 import com.example.common.dsl.withViewHolder
 import com.example.common.ext.isInstance
@@ -18,6 +19,7 @@ import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.FragmentArticleBinding
 import com.example.rocketcat.databinding.ItemRvAdBinding
 import com.example.rocketcat.databinding.ItemRvArticleBinding
+import com.example.rocketcat.databinding.ItemRvStickyBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
     private val articleAdapter = pagingAdapterOf {
         withViewHolder<ArticleBean, ItemRvArticleBinding>()
         withViewHolder<AdBean, ItemRvAdBinding>()
+        withViewHolder<StickyBean, ItemRvStickyBinding>()
     }
 
 
@@ -50,6 +53,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
             val linearLayoutManager: LinearLayoutManager
             adapter = articleAdapter.withRefreshHeaderAndLoadStateFooter()
             itemAnimator = null
+            addItemDecoration(StickyDecoration(StickyBean._type))
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 RecyclerView.VERTICAL,

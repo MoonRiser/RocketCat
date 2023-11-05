@@ -2,12 +2,24 @@ package com.example.rocketcat.ui.home.homepage.article
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import androidx.paging.cachedIn
 import com.example.common.base.BaseViewModel
 import com.example.common.data.network.NetworkApi
 import com.example.common.dsl.DataItem
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.sample
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -53,7 +65,7 @@ class ArticlePagingSource(private val articleApiService: ArticleApiService) : Pa
         val pageNo = params.key ?: 0
         return try {
             val rsp = articleApiService.getArticleList(pageNo).data
-            val datas = rsp.datas + AdBean
+            val datas = if (pageNo == 1) rsp.datas + StickyBean else rsp.datas + AdBean
             val next = if (rsp.hasMore) pageNo + 1 else null
             LoadResult.Page(data = datas, prevKey = null, nextKey = next)
         } catch (e: Exception) {
