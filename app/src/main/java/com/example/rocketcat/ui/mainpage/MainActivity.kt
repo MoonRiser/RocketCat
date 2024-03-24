@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -28,6 +29,24 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     )
 
 
+    init {
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                customDialogOf(this@MainActivity) {
+                    title("确定退出吗？")
+                    message("点击确定退出应用")
+                    negativeButton("取消")
+                    positiveButton("确定") {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                        it.dismiss()
+                    }
+                }.show()
+            }
+
+        })
+    }
+
     override fun layoutId() = R.layout.activity_main
 
 
@@ -50,36 +69,29 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                         binding.vp2Home.setCurrentItem(0, false)
                         true
                     }
+
                     R.id.navigation_dashboard -> {
                         binding.vp2Home.setCurrentItem(1, false)
                         true
                     }
+
                     R.id.navigation_bubble -> {
                         binding.vp2Home.setCurrentItem(2, false)
                         true
                     }
+
                     R.id.navigation_setting -> {
                         binding.vp2Home.setCurrentItem(3, false)
                         true
                     }
+
                     else -> false
                 }
             }
 
         }
 
-    }
 
-    override fun onBackPressed() {
-        customDialogOf(this) {
-            title("确定退出吗？")
-            message("点击确定退出应用")
-            negativeButton("取消")
-            positiveButton("确定") {
-                super.onBackPressed()
-                it.dismiss()
-            }
-        }.show()
     }
 
 

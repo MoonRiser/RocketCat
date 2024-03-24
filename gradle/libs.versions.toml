@@ -1,0 +1,52 @@
+[versions]
+coroutine = "1.8.0"
+legacy = "1.0.0"
+retrofit = "2.9.0"
+okhttp = "4.10.0"
+ktx = "1.12.0"
+appcompat = "1.6.1"
+constraintlayout = "2.1.4"
+dynamic-animation = "1.0.0"
+material = "1.11.0"
+prefrence = "1.2.1"
+lifecycle = "2.7.0"
+lifecycle-extension = "2.2.0"
+paging3 = "3.2.1"
+room = "2.6.1"
+dataStore = "1.0.0"
+palette = "1.0.0"
+glide = "4.14.1"
+address-selector = "v1.2"
+junit = "4.13.2"
+androidx-junit = "1.1.5"
+androidx_espresso = "3.5.1"
+rxBinding = "2.2.0"
+
+
+[libraries]
+androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+androix-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+dynamic-animation = { group = "androidx.dynamicanimation", name = "dynamicanimation", version.ref = "dynamic-animation" }
+androidx-prefrence = { group = "androidx.preference", name = "preference", version.ref = "prefrence" }
+lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle-extension" }
+androix-paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging3" }
+androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette" }
+kotlinx-coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutine" }
+androidx-legacy = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacy" }
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+rxBinding = { group = "com.jakewharton.rxbinding2", name = "rxbinding", version.ref = "rxBinding" }
+address-selector = { group = "com.github.MoonRiser", name = "RocketCat", version.ref = "address-selector" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
+androidx-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx_espresso" }
+[plugins]
+

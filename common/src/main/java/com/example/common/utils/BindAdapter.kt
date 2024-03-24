@@ -16,9 +16,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.common.ext.ClickCallback
 import com.jakewharton.rxbinding2.view.RxView
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import java.util.concurrent.TimeUnit
 
 
@@ -106,32 +103,7 @@ fun ViewPager2.setListeners(
 
 }
 
-/**
- * 刷新布局的状态 true：启动刷新 false：完成刷新
- */
-@BindingAdapter(value = ["refresh"])
-fun SmartRefreshLayout.performRefresh(refresh: Boolean?) {
-    refresh?.let {
-        if (it && !isRefreshing) autoRefresh()
-        if (!it) this.finishRefresh()
-    }
-
-}
 
 
-@BindingAdapter(value = ["onRefresh"])
-fun SmartRefreshLayout._setRefreshListener(refresh: OnRefreshListener) {
-    setOnRefreshListener(refresh)
-}
 
-@BindingAdapter(value = ["onLoadMore"])
-fun SmartRefreshLayout._setLoadMoreListener(listener: OnLoadMoreListener) {
-    setOnLoadMoreListener(listener)
-}
-
-@BindingAdapter(value = ["noMoreData"])
-fun SmartRefreshLayout.performLoadMore(noMoreData: Boolean?) {
-    if (noMoreData == true) finishLoadMoreWithNoMoreData() else finishLoadMore()
-
-}
 
