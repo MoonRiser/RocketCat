@@ -4,14 +4,17 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
 import com.example.common.dsl.BindingViewHolder
-import com.example.common.dsl.StickyDecoration
 import com.example.common.dsl.pagingAdapterOf
 import com.example.common.dsl.withViewHolder
 import com.example.common.ext.isInstance
@@ -53,7 +56,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
             val linearLayoutManager: LinearLayoutManager
             adapter = articleAdapter.withRefreshHeaderAndLoadStateFooter()
             itemAnimator = null
-            addItemDecoration(StickyDecoration(StickyBean._type))
+//            addItemDecoration(StickyDecoration(StickyBean._type))
             layoutManager = LinearLayoutManager(
                 requireActivity(),
                 RecyclerView.VERTICAL,
