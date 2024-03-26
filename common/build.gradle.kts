@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     id("kotlin-kapt")
+    alias(libs.plugins.ksp)
 }
 
 
@@ -13,7 +14,7 @@ android {
 
     defaultConfig {
         minSdk = 23
-        targetSdk = 31
+        lint.targetSdk = 31
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -38,8 +39,19 @@ android {
     buildToolsVersion = "34.0.0"
 }
 
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
+    sourceSets.test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin")
+    }
+}
+
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(project(":ksp"))
+    ksp(project(":ksp"))
     //  Androidx
     api(libs.androix.appcompat)
     api(libs.androidx.ktx)

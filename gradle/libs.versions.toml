@@ -1,8 +1,9 @@
 [versions]
+kotlinpoet = "1.14.2"
 kotlinStdlib = "1.9.23"
 coroutine = "1.8.0"
 gradle = "8.3.1"
-kotlinReflect = "1.9.20"
+kotlinReflect = "1.9.23"
 desugar_jdk_libs = "2.0.4"
 legacy = "1.0.0"
 retrofit = "2.9.0"
@@ -25,6 +26,7 @@ junit = "4.13.2"
 androidx-junit = "1.1.5"
 androidx_espresso = "3.5.1"
 rxBinding = "2.2.0"
+symbolProcessingApi = "1.9.23-1.0.19"
 
 
 [libraries]
@@ -34,6 +36,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinReflect" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 dynamic-animation = { group = "androidx.dynamicanimation", name = "dynamicanimation", version.ref = "dynamic-animation" }
 androidx-prefrence = { group = "androidx.preference", name = "preference", version.ref = "prefrence" }
@@ -55,11 +58,14 @@ address-selector = { group = "com.github.MoonRiser", name = "RocketCat", version
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
 androidx-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx_espresso" }
+symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "symbolProcessingApi" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle" }
 android-library = { id = "com.android.library", version.ref = "gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinStdlib" }
+jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinStdlib" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "symbolProcessingApi" }
 
 

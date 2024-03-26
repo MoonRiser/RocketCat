@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/address-selector" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/ksp" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -13,6 +13,7 @@ rootProject.name = "RocketCat"
 include("address-selector")
 include("app")
 include("common")
+include(":ksp")
 //include ':address-selector'
 //include ':app'
 //include ':common'
