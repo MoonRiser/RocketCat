@@ -1,55 +1,51 @@
-package com.example.common.dsl
+package com.example.common.dsl.adapter
 
 import android.annotation.SuppressLint
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.example.common.base.LoadStateFooterAdapter
-import com.example.common.base.RefreshHeaderAdapter
+import com.example.common.dsl.IListItem
+import com.example.common.dsl.IListItemUnique
+import com.example.common.dsl.StickyHeaderCallbacks
+import com.example.common.dsl.paging.LoadStateFooterAdapter
+import com.example.common.dsl.paging.RefreshHeaderAdapter
+import com.example.common.dsl.viewholder.BindingViewHolder
 
 
-class BindingRvAdapter(
-    private val viewHolders: SparseArray<ViewHolderCreator<*, *>>
-) : ListAdapter<DataItem, BindingViewHolder<*, *>>(DIFF_CALLBACK) {
+open class BindingRvAdapter internal constructor(
+    override val configMap: ConfigMap
+) : ListAdapter<IListItemUnique, BindingViewHolder<*, *>>(DIFF_CALLBACK), ListAdapterScope, StickyHeaderCallbacks {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItem>() {
-            override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
-                oldItem::class == newItem::class && oldItem._id == newItem._id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<IListItemUnique>() {
+            override fun areItemsTheSame(oldItem: IListItemUnique, newItem: IListItemUnique): Boolean =
+                oldItem::class == newItem::class && oldItem.uniqueId == newItem.uniqueId
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
+            override fun areContentsTheSame(oldItem: IListItemUnique, newItem: IListItemUnique): Boolean =
                 oldItem::class == newItem::class && oldItem == newItem
         }
 
     }
 
+    override fun isStickyHeader(position: Int): Boolean {
+        return configMap[getItem(position).qualifiedType()]?.isSticky ?: false
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<*, *> =
-        viewHolders[viewType]?.invoke(parent, ::getCurrentList) ?: throw RuntimeException("未找到viewType对应的ViewHolder")
+        configMap[viewType]?.creator?.invoke(parent, ::getCurrentList) ?: throw RuntimeException("未找到viewType对应的ViewHolder")
 
     override fun onBindViewHolder(holder: BindingViewHolder<*, *>, position: Int) {
         val dataItem = getItem(position)
         holder.bind(dataItem)
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position)._type
+    override fun getItemViewType(position: Int): Int = getItem(position).qualifiedType()
 
+    override fun currentList(): List<IListItem> = currentList
 
-}
-
-
-/**
- * listAdapter构建器
- */
-fun listAdapterOf(
-    block: AdapterScope.() -> Unit
-): BindingRvAdapter {
-    val configMap = SparseArray<ViewHolderCreator<*, *>>()
-    configMap.block()
-    return BindingRvAdapter(configMap)
 }
 
 

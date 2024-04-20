@@ -4,7 +4,7 @@ import androidx.databinding.ObservableInt
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.common.base.BaseViewModel
-import com.example.common.base.LoadStateFooterAdapter
+import com.example.common.dsl.paging.LoadStateFooterAdapter
 import com.example.rocketcat.ui.home.homepage.tab6.BookInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.common.base.BaseFragment
-import com.example.common.dsl.BindingViewHolder
-import com.example.common.dsl.pagingAdapterOf
-import com.example.common.dsl.withViewHolder
+import com.example.common.dsl.StickyHeaderLinearLayoutManager
+import com.example.common.dsl.adapter.pagingAdapterOf
+import com.example.common.dsl.adapter.withViewHolder
+import com.example.common.dsl.viewholder.BindingViewHolder
 import com.example.common.ext.isInstance
 import com.example.rocketcat.customview.AdImageView
 import com.example.rocketcat.databinding.FragmentArticleBinding
@@ -36,7 +37,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
     private val articleAdapter = pagingAdapterOf {
         withViewHolder<ArticleBean, ItemRvArticleBinding>()
         withViewHolder<AdBean, ItemRvAdBinding>()
-        withViewHolder<StickyBean, ItemRvStickyBinding>()
+        withViewHolder<StickyBean, ItemRvStickyBinding>(isSticky = true)
     }
 
 
@@ -56,9 +57,8 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
             val linearLayoutManager: LinearLayoutManager
             adapter = articleAdapter.withRefreshHeaderAndLoadStateFooter()
             itemAnimator = null
-//            addItemDecoration(StickyDecoration(StickyBean._type))
-            layoutManager = LinearLayoutManager(
-                requireActivity(),
+            layoutManager = StickyHeaderLinearLayoutManager(
+                requireContext(),
                 RecyclerView.VERTICAL,
                 false
             ).also { linearLayoutManager = it }
@@ -72,7 +72,7 @@ class ArticleFragment : BaseFragment<ArticleViewModel, FragmentArticleBinding>()
                     viewModel.visibleRange.value = globalToLocal(firstPosition)..globalToLocal(lastPosition)
                     for (i in firstPosition..lastPosition) {
                         val viewHolder = findViewHolderForAdapterPosition(i) as? BindingViewHolder<*, *>
-                        if (viewHolder?.binding is ItemRvAdBinding) {
+                        if (viewHolder?.itemBinding is ItemRvAdBinding) {
                             (viewHolder.itemView as AdImageView).setOffset(
                                 recyclerView.height,
                                 viewHolder.itemView.top

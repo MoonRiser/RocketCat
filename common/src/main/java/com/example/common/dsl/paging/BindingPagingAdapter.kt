@@ -1,44 +1,48 @@
-package com.example.common.dsl
+package com.example.common.dsl.paging
 
 import android.annotation.SuppressLint
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.common.base.PagingFooterAdapter
-import com.example.common.base.RefreshHeaderAdapter
+import com.example.common.dsl.IListItemUnique
+import com.example.common.dsl.StickyHeaderCallbacks
+import com.example.common.dsl.adapter.ConfigMap
+import com.example.common.dsl.adapter.ListAdapterScope
+import com.example.common.dsl.viewholder.BindingViewHolder
 
 /**
  * @author xres
  * @date 2022/9/3 17:10
  */
 
-class BindingPagingAdapter(
-    private val viewHolders: SparseArray<ViewHolderCreator<*, *>>
-) : PagingDataAdapter<DataItem, BindingViewHolder<*, *>>(DIFF_CALLBACK) {
+open class BindingPagingAdapter internal constructor(
+    override val configMap: ConfigMap
+) : PagingDataAdapter<IListItemUnique, BindingViewHolder<*, *>>(DIFF_CALLBACK), ListAdapterScope, StickyHeaderCallbacks {
 
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DataItem>() {
-            override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
-                oldItem::class == newItem::class && oldItem._id == newItem._id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<IListItemUnique>() {
+            override fun areItemsTheSame(oldItem: IListItemUnique, newItem: IListItemUnique): Boolean =
+                oldItem::class == newItem::class && oldItem.uniqueId == newItem.uniqueId
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
+            override fun areContentsTheSame(oldItem: IListItemUnique, newItem: IListItemUnique): Boolean =
                 oldItem::class == newItem::class && oldItem == newItem
         }
 
     }
 
+    override fun isStickyHeader(position: Int): Boolean {
+        return configMap[getItemViewType(position)]?.isSticky ?: false
+    }
 
-    override fun getItemViewType(position: Int): Int =
-        peek(position)!!._type
+    override fun getItemViewType(position: Int): Int = peek(position)!!.qualifiedType()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<*, *> {
-        return viewHolders[viewType]?.invoke(parent) { snapshot().toList().filterNotNull() }
+        return configMap[viewType]?.creator?.invoke(parent, ::currentList)
             ?: throw RuntimeException("未找到viewType对应的ViewHolder")
     }
 
@@ -48,10 +52,12 @@ class BindingPagingAdapter(
         holder.bind(dataItem)
     }
 
+    override fun currentList(): List<IListItemUnique> = snapshot().items
+
     /**
      * @param block 函数类型返回值决定要不要执行更新操作
      */
-    fun updateItem(position: Int, block: (dataItem: DataItem?) -> Boolean) {
+    fun updateItem(position: Int, block: (dataItem: IListItemUnique?) -> Boolean) {
         if (block(peek(position))) notifyItemChanged(position)
     }
 
@@ -76,10 +82,3 @@ class BindingPagingAdapter(
 
 }
 
-fun pagingAdapterOf(
-    block: AdapterScope.() -> Unit
-): BindingPagingAdapter {
-    val configMap = SparseArray<ViewHolderCreator<*, *>>()
-    configMap.block()
-    return BindingPagingAdapter(configMap)
-}

@@ -1,4 +1,4 @@
-package com.example.common.base
+package com.example.common.dsl.paging
 
 import android.animation.ValueAnimator
 import android.view.LayoutInflater
@@ -16,7 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.common.R
 import com.example.common.databinding.ItemRvCountDownHeaderLayoutBinding
 import com.example.common.ext.dp
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 

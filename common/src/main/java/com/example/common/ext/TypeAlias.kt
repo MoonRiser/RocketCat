@@ -22,5 +22,5 @@ data class Foo(
 
 fun a() {
     val foo = Foo()
-    foo.sumInts()
+//    foo.sumInts()
 }

@@ -1,4 +1,4 @@
-package com.example.common.base
+package com.example.common.dsl.paging
 
 import android.view.LayoutInflater
 import android.view.View

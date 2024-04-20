@@ -2,7 +2,7 @@ package com.example.rocketcat.ui.home.homepage.article
 
 import android.os.Parcelable
 import android.widget.CompoundButton
-import com.example.common.dsl.DataItem
+import com.example.common.dsl.DataItemUnique
 import kotlinx.parcelize.Parcelize
 
 
@@ -54,7 +54,7 @@ data class ArticleBean(
     val userId: Int = 0,
     val visible: Int = 0,
     val zan: Int = 0
-) : Parcelable, DataItem(id) {
+) : Parcelable, DataItemUnique(id) {
 
     fun onCheck(v: CompoundButton, isSelect: Boolean) {
         collect = isSelect
@@ -68,6 +68,6 @@ data class Tag(
 ) : Parcelable
 
 
-object AdBean : DataItem(-1)
+object AdBean : DataItemUnique(-1)
 
-object StickyBean : DataItem(-1)
+object StickyBean : DataItemUnique(-2)

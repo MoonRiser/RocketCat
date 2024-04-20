@@ -1,15 +1,10 @@
 package com.example.rocketcat.ui.home.homepage.article
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
-import androidx.paging.cachedIn
 import com.example.common.base.BaseViewModel
 import com.example.common.data.network.NetworkApi
-import com.example.common.dsl.DataItem
+import com.example.common.dsl.paging.PagingResponse
+import com.example.common.dsl.paging.pagingDataOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,13 +25,11 @@ class ArticleViewModel : BaseViewModel() {
     private val articleApiService by lazy { NetworkApi.service<ArticleApiService>() }
 
 
-    val articleFlow = Pager(
-        // Configure how data is loaded by passing additional properties to
-        // PagingConfig, such as prefetchDistance.
-        PagingConfig(pageSize = 30)
-    ) {
-        ArticlePagingSource(articleApiService)
-    }.flow.cachedIn(viewModelScope)
+    val articleFlow = pagingDataOf(30) {
+        val rsp = articleApiService.getArticleList(it).data
+        val page = if (it == 0) listOf(StickyBean) + rsp.datas else rsp.datas + AdBean
+        PagingResponse(page, rsp.hasMore)
+    }
 
     val visibleRange = MutableStateFlow(IntRange.EMPTY)
 
@@ -47,32 +40,6 @@ class ArticleViewModel : BaseViewModel() {
         }.flatMapLatest {
             TemperatureSource.temperaturesOf(*it.toList().toIntArray())
         }
-
-}
-
-
-class ArticlePagingSource(private val articleApiService: ArticleApiService) : PagingSource<Int, DataItem>() {
-
-    override fun getRefreshKey(state: PagingState<Int, DataItem>): Int? {
-//        return state.anchorPosition?.let { anchorPosition ->
-//            state.closestPageToPosition(anchorPosition)?.nextKey
-//        }
-        return null
-    }
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, DataItem> {
-
-        val pageNo = params.key ?: 0
-        return try {
-            val rsp = articleApiService.getArticleList(pageNo).data
-            val datas = if (pageNo == 1) rsp.datas + StickyBean else rsp.datas + AdBean
-            val next = if (rsp.hasMore) pageNo + 1 else null
-            LoadResult.Page(data = datas, prevKey = null, nextKey = next)
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
-
-    }
 
 }
 

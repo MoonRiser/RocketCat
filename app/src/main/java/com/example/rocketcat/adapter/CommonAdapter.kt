@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.common.dsl.DataItem
+import com.example.common.dsl.DataItemUnique
 import com.example.rocketcat.databinding.ItemViewGalleryBinding
 
 
@@ -68,4 +68,4 @@ class GalleryViewHolder(private val binding: ItemViewGalleryBinding) :
 }
 
 
-data class ImageItem(val imageId: Int) : DataItem(imageId)
+data class ImageItem(val imageId: Int) : DataItemUnique(imageId)

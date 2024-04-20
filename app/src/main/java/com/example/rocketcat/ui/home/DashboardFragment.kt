@@ -16,8 +16,8 @@ import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.lifecycle.lifecycleScope
 import com.example.common.base.BaseFragment
 import com.example.common.base.BaseViewModel
-import com.example.common.dsl.listAdapterOf
-import com.example.common.dsl.withViewHolder
+import com.example.common.dsl.adapter.listAdapterOf
+import com.example.common.dsl.adapter.withViewHolder
 import com.example.common.ext.showToast
 import com.example.common.ext.springAnimationOf
 import com.example.rocketcat.R
