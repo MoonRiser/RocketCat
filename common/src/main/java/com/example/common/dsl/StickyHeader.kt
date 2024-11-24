@@ -4,12 +4,15 @@ import android.content.Context
 import android.graphics.PointF
 import android.os.Build
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -62,18 +65,24 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
 
     @Suppress("UNCHECKED_CAST")
     private fun setAdapter(newAdapter: RecyclerView.Adapter<*>?) {
-        adapter?.unregisterAdapterDataObserver(headerPositionsObserver)
+        runCatching {
+            adapter?.unregisterAdapterDataObserver(headerPositionsObserver)
+        }
+        adapter = newAdapter
+        headerPositionsObserver.onChanged()
         when (newAdapter) {
-            is StickyHeaderCallbacks -> {
-                adapter = newAdapter
-                adapter?.registerAdapterDataObserver(headerPositionsObserver)
-                headerPositionsObserver.onChanged()
-                if (newAdapter is PagingDataAdapter<*, *>) {
-                    newAdapter.addOnPagesUpdatedListener {
-                        headerPositionsObserver.onChanged()
+            is ConcatAdapter -> {
+                for (adapter in newAdapter.adapters) {
+                    if (adapter is StickyHeaderCallbacks && adapter is PagingDataAdapter<*, *>) {
+                        adapter.addOnPagesUpdatedListener {
+                            headerPositionsObserver.onChanged()
+                        }
                     }
                 }
+            }
 
+            is StickyHeaderCallbacks -> {
+                adapter?.registerAdapterDataObserver(headerPositionsObserver)
             }
 
             else -> {
@@ -238,7 +247,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                 if (isViewValidAnchor(child, params)) {
                     anchorView = child
                     anchorIndex = i
-                    anchorPos = params.viewAdapterPosition
+                    anchorPos = params.absoluteAdapterPosition
                     break
                 }
             }
@@ -527,6 +536,22 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         val scrollOffset: Int
     ) : Parcelable
 
+    fun Adapter<*>.forEachStickyChild(block: (Int) -> Unit) {
+        fun forEachChild(targetAdapter: Adapter<*>?, offset: Int) = repeat(targetAdapter?.itemCount ?: 0) {
+            val isSticky = (targetAdapter as StickyHeaderCallbacks).isStickyHeader(it)
+            Log.d("xres", "forEachChild position :$it ,offset : $offset ,isSticky : $isSticky ")
+            if (isSticky) block(it + offset)
+        }
+
+        if (this is ConcatAdapter) {
+            var offset = 0
+            for (childAdapter in adapters) {
+                if (childAdapter is StickyHeaderCallbacks) forEachChild(childAdapter, offset)
+                offset += childAdapter.itemCount
+            }
+        } else forEachChild(this, 0)
+    }
+
     /**
      * Handles header positions while adapter changes occur.
      *
@@ -536,12 +561,8 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         override fun onChanged() {
             // There's no hint at what changed, so go through the adapter.
             headerPositions.clear()
-            val itemCount = adapter?.itemCount ?: 0
-            for (i in 0 until itemCount) {
-                val isSticky = (adapter as? StickyHeaderCallbacks)?.isStickyHeader(i) ?: false
-                if (isSticky) {
-                    headerPositions.add(i)
-                }
+            adapter?.forEachStickyChild {
+                headerPositions.add(it)
             }
 
             // Remove sticky header immediately if the entry it represents has been removed. A layout will follow.

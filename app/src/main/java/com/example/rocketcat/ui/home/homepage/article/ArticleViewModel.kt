@@ -1,6 +1,8 @@
 package com.example.rocketcat.ui.home.homepage.article
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.common.base.BaseViewModel
 import com.example.common.data.network.NetworkApi
 import com.example.common.dsl.paging.PagingResponse
@@ -27,9 +29,9 @@ class ArticleViewModel : BaseViewModel() {
 
     val articleFlow = pagingDataOf(30) {
         val rsp = articleApiService.getArticleList(it).data
-        val page = if (it == 0) listOf(StickyBean) + rsp.datas else rsp.datas + AdBean
+        val page = if (it == 0) rsp.datas + StickyBean else rsp.datas + AdBean
         PagingResponse(page, rsp.hasMore)
-    }
+    }.cachedIn(viewModelScope)
 
     val visibleRange = MutableStateFlow(IntRange.EMPTY)
 

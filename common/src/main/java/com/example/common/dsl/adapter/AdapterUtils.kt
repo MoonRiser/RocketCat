@@ -16,7 +16,7 @@ import com.example.common.dsl.viewholder.BindingViewHolder
  */
 
 typealias ViewHolderCreator<D, VB> = (parent: ViewGroup, list: () -> List<IListItem>) -> BindingViewHolder<D, VB>
-internal typealias ConfigMap = SparseArray<ViewHolderInfo>
+typealias ConfigMap = SparseArray<ViewHolderInfo>
 
 data class ViewHolderInfo(
     val creator: ViewHolderCreator<*, *>,
@@ -26,11 +26,10 @@ data class ViewHolderInfo(
 /**
  * listAdapter构建器
  */
-fun listAdapterOf(
-    block: ListAdapterScope.() -> Unit
+inline fun listAdapterOf(
+    crossinline block: ListAdapterScope.() -> Unit
 ): BindingRvAdapter {
-    val configMap = ConfigMap()
-    return object : BindingRvAdapter(configMap) {
+    return object : BindingRvAdapter(ConfigMap()) {
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
             super.onAttachedToRecyclerView(recyclerView)
             block.invoke(this)
@@ -38,11 +37,10 @@ fun listAdapterOf(
     }
 }
 
-fun pagingAdapterOf(
-    block: ListAdapterScope.() -> Unit
+inline fun pagingAdapterOf(
+    crossinline block: ListAdapterScope.() -> Unit
 ): BindingPagingAdapter {
-    val configMap = ConfigMap()
-    return object : BindingPagingAdapter(configMap) {
+    return object : BindingPagingAdapter(ConfigMap()) {
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
             super.onAttachedToRecyclerView(recyclerView)
             block.invoke(this)

@@ -1,7 +1,9 @@
 package com.example.common.dsl.paging
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.ViewGroup
+import androidx.core.util.keyIterator
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.ConcatAdapter
@@ -17,7 +19,7 @@ import com.example.common.dsl.viewholder.BindingViewHolder
  * @date 2022/9/3 17:10
  */
 
-open class BindingPagingAdapter internal constructor(
+open class BindingPagingAdapter @PublishedApi internal constructor(
     override val configMap: ConfigMap
 ) : PagingDataAdapter<IListItemUnique, BindingViewHolder<*, *>>(DIFF_CALLBACK), ListAdapterScope, StickyHeaderCallbacks {
 
@@ -35,13 +37,17 @@ open class BindingPagingAdapter internal constructor(
     }
 
     override fun isStickyHeader(position: Int): Boolean {
-        return configMap[getItemViewType(position)]?.isSticky ?: false
+        val isSticky = configMap[getItemViewType(position)]?.isSticky
+        Log.d("xres", "position :$position ,isSticky : $isSticky ")
+        return isSticky ?: false
     }
 
     override fun getItemViewType(position: Int): Int = peek(position)!!.qualifiedType()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<*, *> {
+        Log.d("xres", "configMap:${configMap.keyIterator().asSequence().toList().joinToString()}")
+
         return configMap[viewType]?.creator?.invoke(parent, ::currentList)
             ?: throw RuntimeException("未找到viewType对应的ViewHolder")
     }

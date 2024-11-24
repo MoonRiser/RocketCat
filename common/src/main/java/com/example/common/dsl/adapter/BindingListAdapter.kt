@@ -14,7 +14,7 @@ import com.example.common.dsl.paging.RefreshHeaderAdapter
 import com.example.common.dsl.viewholder.BindingViewHolder
 
 
-open class BindingRvAdapter internal constructor(
+open class BindingRvAdapter @PublishedApi internal constructor(
     override val configMap: ConfigMap
 ) : ListAdapter<IListItemUnique, BindingViewHolder<*, *>>(DIFF_CALLBACK), ListAdapterScope, StickyHeaderCallbacks {
 

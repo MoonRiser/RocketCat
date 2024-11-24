@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     android.buildFeatures.dataBinding = true
     android.buildFeatures.viewBinding = true
     compileOptions {
@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.example.rocketcat"
         minSdk = 23
-        targetSdk = 32
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true

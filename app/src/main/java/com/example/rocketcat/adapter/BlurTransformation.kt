@@ -64,7 +64,7 @@ class BlurTransformation(
 
         blurRadius = if (blurRadius > 25f) 25f else blurRadius
         //可变的原始bitmap
-        val originBitmap = toTransform.copy(toTransform.config, true)
+        val originBitmap = toTransform.copy(toTransform.config!!, true)
         //底部bitmap参数
 
         val (ratioLeft, ratioRight) = ratioX

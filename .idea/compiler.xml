@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="17" />
+    <bytecodeTargetLevel target="17">
+      <module name="RocketCat.address-selector" target="21" />
+      <module name="RocketCat.app" target="21" />
+      <module name="RocketCat.common" target="21" />
+      <module name="RocketCat.ksp" target="21" />
+      <module name="RocketCat.ksp.main" target="21" />
+      <module name="RocketCat.ksp.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
