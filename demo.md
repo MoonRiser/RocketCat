@@ -3,6 +3,7 @@
 private val articleAdapter = pagingAdapterOf { // 创建 adapter 的dsl
     withViewHolder<ArticleBean, ItemRvArticleBinding>(){
         doOnItemClick{ toast("just click $adapterPostion ") }
+        itemBinding.btn.setOnLongClickListener{ "long click $data" }
     }
     withViewHolder<AdBean, ItemRvAdBinding>()
     withViewHolder<StickyBean, ItemRvStickyBinding>(isSticky = true)
